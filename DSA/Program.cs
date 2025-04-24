@@ -1,12 +1,28 @@
 using DSA.API.Extensions;
 using DSA.API.Middleware;
 using DSA.Infrastructure;
+using DSA.Infrastructure.Content.Sources;
+using DSA.Infrastructure.Content;
+using DSA.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Zarejestruj repozytoria
+builder.Services.AddScoped<DSA.Core.Interfaces.ILessonRepository, DSA.Infrastructure.Repositories.LessonRepository>();
+builder.Services.AddScoped<DSA.Core.Interfaces.IModuleRepository, DSA.Infrastructure.Repositories.ModuleRepository>();
+builder.Services.AddScoped<DSA.Core.Interfaces.IUserProgressRepository, DSA.Infrastructure.Repositories.UserProgressRepository>();
+
+
+builder.Services.AddScoped<DSA.Core.Interfaces.ILessonService, DSA.Infrastructure.Services.LessonService>();
+builder.Services.AddScoped<DSA.Core.Interfaces.IUserService, DSA.Infrastructure.Services.UserService>();
+// Zarejestruj serwisy
+
+
 
 builder.Services.AddCors(options =>
 {
@@ -97,12 +113,74 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 
+builder.Services.AddSingleton<DSA.Infrastructure.Content.ContentProvider>();
 var app = builder.Build();
 
+
+
+
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    var dbContext = services.GetRequiredService<ApplicationDbContext>();
+
+    try
+    {
+        // Utwórz i skonfiguruj ContentProvider
+        var contentProvider = services.GetRequiredService<ContentProvider>();
+
+        // Zarejestruj Ÿród³a treœci
+        contentProvider.RegisterContentSource(
+     new JsonFileContentSource(
+         Path.Combine(builder.Environment.ContentRootPath, "SeedData"),
+         services.GetRequiredService<ILogger<JsonFileContentSource>>()
+     )
+ );
+
+        contentProvider.RegisterContentSource(
+    new CharacterEncodingAdapter(
+        services.GetRequiredService<ILogger<CharacterEncodingAdapter>>()
+    )
+);
+
+        // Zarejestruj adapter do naprawy stack-queue
+        contentProvider.RegisterContentSource(
+            new StackQueueAdapter(
+                services.GetRequiredService<ILogger<StackQueueAdapter>>()
+            )
+        );
+
+        // Uruchom ³adowanie danych
+        var contentContext = new ContentContext(dbContext);
+        await contentProvider.LoadAllContentAsync(contentContext);
+
+        // Informacja o wynikach
+        if (contentContext.ValidationReport.HasErrors)
+        {
+            logger.LogWarning("£adowanie treœci zakoñczone z b³êdami. Szczegó³y w logach.");
+            foreach (var issue in contentContext.ValidationReport.Issues
+                .Where(i => i.Severity == ContentIssueSeverity.Error))
+            {
+                logger.LogError($"[{issue.Source}] {issue.Message}");
+            }
+        }
+        else
+        {
+            logger.LogInformation("Pomyœlnie za³adowano wszystkie treœci edukacyjne");
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Wyst¹pi³ b³¹d podczas inicjalizacji ContentProvider");
+    }
+}
 // Configure the HTTP request pipeline
 
 
-    app.UseSwagger();
+app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "DSA Learning API v1");

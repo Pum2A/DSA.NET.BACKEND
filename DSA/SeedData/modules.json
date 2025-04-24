@@ -1,0 +1,32 @@
+
+
+    [
+    {
+      "id": 1,
+      "externalId": "data-structures",
+      "title": "Struktury danych",
+      "description": "Poznaj fundamentalne struktury danych uzywane w programowaniu i informatyce. Ten modul wprowadza podstawowe koncepcje struktur danych od tablic po drzewa i grafy.",
+      "order": 1,
+      "icon": "dataStructure",
+      "iconColor": "#4285F4"
+    },
+    {
+      "id": 2,
+      "externalId": "algorithms",
+      "title": "Algorytmy",
+      "description": "Odkryj kluczowe algorytmy wykorzystywane w rozwiazywaniu problemow informatycznych. Ten modul obejmuje sortowanie, wyszukiwanie i inne popularne techniki algorytmiczne.",
+      "order": 2,
+      "icon": "algorithm",
+      "iconColor": "#34A853"
+    },
+    {
+      "id": 3,
+      "externalId": "complexity",
+      "title": "Zlozonosc obliczeniowa",
+      "description": "Zrozum jak analizowac i optymalizowac wydajnosc algorytmow. Ten modul pomoze Ci oceniac efektywnosc rozwiazan i podejmowac lepsze decyzje projektowe.",
+      "order": 3,
+      "icon": "complexity",
+      "iconColor": "#EA4335"
+    }
+    ]
+ 

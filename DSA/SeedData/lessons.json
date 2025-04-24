@@ -1,0 +1,119 @@
+[
+  {
+    "id": 1,
+    "externalId": "array-introduction",
+    "title": "Wprowadzenie do tablic",
+    "description": "Poznaj podstawy struktur tablicowych i ich zastosowanie w programowaniu",
+    "estimatedTime": "15 min",
+    "xpReward": 50,
+    "moduleId": 1
+  },
+  {
+    "id": 2,
+    "externalId": "linked-list",
+    "title": "Lista powiazana",
+    "description": "Implementacja i praktyczne zastosowania listy jednokierunkowej i dwukierunkowej",
+    "estimatedTime": "25 min",
+    "xpReward": 75,
+    "moduleId": 1
+  },
+  {
+    "id": 3,
+    "externalId": "stack-queue",
+    "title": "Stos i kolejka",
+    "description": "Struktury danych LIFO i FIFO - implementacja i typowe przypadki uzycia",
+    "estimatedTime": "20 min",
+    "xpReward": 60,
+    "moduleId": 1
+  },
+  {
+    "id": 4,
+    "externalId": "binary-tree",
+    "title": "Drzewo binarne",
+    "description": "Struktura, implementacja i zastosowania drzewa binarnego w rozwiazywaniu problemow",
+    "estimatedTime": "30 min",
+    "xpReward": 100,
+    "moduleId": 1
+  },
+  {
+    "id": 5,
+    "externalId": "hash-table",
+    "title": "Tablica haszujaca",
+    "description": "Efektywne przechowywanie i wyszukiwanie danych przy uzyciu funkcji haszujacych",
+    "estimatedTime": "25 min",
+    "xpReward": 80,
+    "moduleId": 1
+  },
+  {
+    "id": 6,
+    "externalId": "sorting-algorithms",
+    "title": "Algorytmy sortowania",
+    "description": "Podstawowe metody sortowania: sortowanie babelkowe, przez wstawianie, przez wybieranie",
+    "estimatedTime": "30 min",
+    "xpReward": 80,
+    "moduleId": 2
+  },
+  {
+    "id": 7,
+    "externalId": "advanced-sorting",
+    "title": "Zaawansowane sortowanie",
+    "description": "Szybsze metody sortowania: quicksort, mergesort, heapsort",
+    "estimatedTime": "35 min",
+    "xpReward": 100,
+    "moduleId": 2
+  },
+  {
+    "id": 8,
+    "externalId": "search-algorithms",
+    "title": "Algorytmy wyszukiwania",
+    "description": "Wyszukiwanie liniowe i binarne - kiedy stosowac odpowiednie metody",
+    "estimatedTime": "20 min",
+    "xpReward": 60,
+    "moduleId": 2
+  },
+  {
+    "id": 9,
+    "externalId": "recursion",
+    "title": "Rekurencja",
+    "description": "Projektowanie i implementacja algorytmow rekurencyjnych",
+    "estimatedTime": "25 min",
+    "xpReward": 70,
+    "moduleId": 2
+  },
+  {
+    "id": 10,
+    "externalId": "dynamic-programming",
+    "title": "Programowanie dynamiczne",
+    "description": "Optymalizacja rozwiazan poprzez zachowanie wynikow podproblemow",
+    "estimatedTime": "40 min",
+    "xpReward": 120,
+    "moduleId": 2
+  },
+  {
+    "id": 11,
+    "externalId": "big-o-notation",
+    "title": "Notacja Big O",
+    "description": "Zrozumienie i analiza zlozonosci czasowej i pamieciowej algorytmow",
+    "estimatedTime": "30 min",
+    "xpReward": 90,
+    "moduleId": 3
+  },
+  {
+    "id": 12,
+    "externalId": "time-complexity",
+    "title": "Zlozonosc czasowa",
+    "description": "Szczegolowa analiza czasu wykonania algorytmow w roznych scenariuszach",
+    "estimatedTime": "25 min",
+    "xpReward": 75,
+    "moduleId": 3
+  },
+  {
+    "id": 13,
+    "externalId": "space-complexity",
+    "title": "Zlozonosc pamieciowa",
+    "description": "Ocena i optymalizacja zuzycia pamieci przez algorytmy",
+    "estimatedTime": "25 min",
+    "xpReward": 75,
+    "moduleId": 3
+  }
+]

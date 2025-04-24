@@ -10,5 +10,7 @@
         public int ExperiencePoints { get; set; }
         public int Level { get; set; }
         public string[] Roles { get; set; }
+
+        public DateTime JoinedAt { get; set; }
     }
 }

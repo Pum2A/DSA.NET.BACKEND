@@ -5,7 +5,7 @@
 namespace DSA.Migrations
 {
     /// <inheritdoc />
-    public partial class TestMigration3 : Migration
+    public partial class AddUserProgressTableSecond2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -13,5 +13,7 @@ namespace DSA.Core.DTOs.Auth
         public string Email { get; set; }
         public string[] Roles { get; set; }
         public string[] Errors { get; set; }
+        public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+
     }
 }

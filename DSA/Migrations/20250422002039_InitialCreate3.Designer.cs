@@ -3,6 +3,7 @@ using System;
 using DSA.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DSA.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250422002039_InitialCreate3")]
+    partial class InitialCreate3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -41,9 +44,6 @@ namespace DSA.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("JoinedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
@@ -102,52 +102,6 @@ namespace DSA.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("DSA.Core.Entities.ContentActivityLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AdditionalData")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ContentId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ContentActivityLogs");
                 });
 
             modelBuilder.Entity("DSA.Core.Entities.Lesson", b =>
@@ -264,10 +218,8 @@ namespace DSA.Migrations
 
             modelBuilder.Entity("DSA.Core.Entities.UserProgress", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("LessonId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("CompletedAt")
@@ -276,31 +228,29 @@ namespace DSA.Migrations
                     b.Property<int>("CurrentStepIndex")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("LessonId1")
+                    b.Property<int>("LessonId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("StartedAt")
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("XpEarned")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("UserId", "LessonId");
+                    b.HasKey("Id");
 
                     b.HasIndex("LessonId");
 
-                    b.HasIndex("LessonId1");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("UserProgress");
+                    b.ToTable("UserProgresses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -456,14 +406,10 @@ namespace DSA.Migrations
             modelBuilder.Entity("DSA.Core.Entities.UserProgress", b =>
                 {
                     b.HasOne("DSA.Core.Entities.Lesson", "Lesson")
-                        .WithMany()
+                        .WithMany("UserProgresses")
                         .HasForeignKey("LessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("DSA.Core.Entities.Lesson", null)
-                        .WithMany("UserProgresses")
-                        .HasForeignKey("LessonId1");
 
                     b.HasOne("DSA.Core.Entities.ApplicationUser", "User")
                         .WithMany("UserProgresses")

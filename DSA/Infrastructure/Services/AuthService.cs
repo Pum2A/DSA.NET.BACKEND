@@ -86,7 +86,8 @@ namespace DSA.Infrastructure.Services
                 UserName = user.UserName,
                 Email = user.Email,
                 Roles = userRoles.ToArray(),
-                Expiration = new JwtSecurityTokenHandler().ReadJwtToken(token).ValidTo.ToString("yyyy-MM-dd HH:mm:ss")
+                Expiration = new JwtSecurityTokenHandler().ReadJwtToken(token).ValidTo.ToString("yyyy-MM-dd HH:mm:ss"),
+                JoinedAt = DateTime.UtcNow
             };
         }
 
@@ -121,7 +122,8 @@ namespace DSA.Infrastructure.Services
                 UserName = user.UserName,
                 Email = user.Email,
                 Roles = userRoles.ToArray(),
-                Expiration = new JwtSecurityTokenHandler().ReadJwtToken(token).ValidTo.ToString("yyyy-MM-dd HH:mm:ss")
+                Expiration = new JwtSecurityTokenHandler().ReadJwtToken(token).ValidTo.ToString("yyyy-MM-dd HH:mm:ss"),
+                JoinedAt = DateTime.UtcNow
             };
         }
 
