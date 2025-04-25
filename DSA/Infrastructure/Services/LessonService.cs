@@ -17,17 +17,20 @@ namespace DSA.Infrastructure.Services
         private readonly IModuleRepository _moduleRepository;
         private readonly IUserProgressRepository _userProgressRepository;
         private readonly ApplicationDbContext _context;
+        private readonly IUserActivityService _userActivityService;
 
         public LessonService(
             ILessonRepository lessonRepository,
             IModuleRepository moduleRepository,
             IUserProgressRepository userProgressRepository,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IUserActivityService userActivityService)
         {
             _lessonRepository = lessonRepository;
             _moduleRepository = moduleRepository;
             _userProgressRepository = userProgressRepository;
             _context = context;
+            _userActivityService = userActivityService;
         }
 
         public async Task<IEnumerable<ModuleDto>> GetAllModulesAsync()
@@ -179,6 +182,7 @@ namespace DSA.Infrastructure.Services
             if (isFirstCompletion)
             {
                 await UpdateUserXpAsync(userId, lesson.XpReward);
+                await _userActivityService.LogActivityAsync(userId, UserActionType.LessonCompleted, lessonId);
             }
 
             return true;

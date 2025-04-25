@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using DSA.Core.Interfaces;
+using DSA.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,7 @@ builder.Services.AddScoped<DSA.Core.Interfaces.IUserProgressRepository, DSA.Infr
 
 builder.Services.AddScoped<DSA.Core.Interfaces.ILessonService, DSA.Infrastructure.Services.LessonService>();
 builder.Services.AddScoped<DSA.Core.Interfaces.IUserService, DSA.Infrastructure.Services.UserService>();
+builder.Services.AddScoped<DSA.Core.Interfaces.IUserActivityService, DSA.Infrastructure.Services.UserActivityService>();
 // Zarejestruj serwisy
 
 

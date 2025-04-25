@@ -21,6 +21,8 @@ namespace DSA.Infrastructure
         public DbSet<Step> Steps { get; set; }
         public DbSet<UserProgress> UserProgresses { get; set; }
 
+        public DbSet<UserActivity> UserActivities { get; set; }
+
         public DbSet<ContentActivityLog> ContentActivityLogs { get; set; }
 
         // I dodaj alias dla zachowania wstecznej kompatybilności

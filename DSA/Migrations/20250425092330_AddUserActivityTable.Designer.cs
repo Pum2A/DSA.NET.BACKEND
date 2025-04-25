@@ -3,6 +3,7 @@ using System;
 using DSA.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DSA.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250425092330_AddUserActivityTable")]
+    partial class AddUserActivityTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -260,33 +263,6 @@ namespace DSA.Migrations
                     b.HasIndex("LessonId");
 
                     b.ToTable("Steps");
-                });
-
-            modelBuilder.Entity("DSA.Core.Entities.UserActivity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("ActionTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ActionType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AdditionalInfo")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ReferenceId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserActivities");
                 });
 
             modelBuilder.Entity("DSA.Core.Entities.UserProgress", b =>

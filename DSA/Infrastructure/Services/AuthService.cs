@@ -21,17 +21,22 @@ namespace DSA.Infrastructure.Services
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IUserActivityService _userActivityService;
+
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IUserActivityService userActivityService)
+
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _userActivityService = userActivityService;
         }
 
         public async Task<AuthResponse> RegisterUserAsync(RegisterRequest request)
@@ -99,6 +104,8 @@ namespace DSA.Infrastructure.Services
 
             if (!await _userManager.CheckPasswordAsync(user, request.Password))
                 return new AuthResponse { Succeeded = false, Errors = new[] { "Invalid email or password" } };
+            await _userActivityService.LogActivityAsync(user.Id, UserActionType.Login);
+
 
             // Generuj token JWT
             var token = await GenerateJwtToken(user);
