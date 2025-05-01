@@ -14,5 +14,7 @@
         public int XpToNextLevel { get; set; }
         public string[] Roles { get; set; }
         public DateTime JoinedAt { get; set; }
+        public int Streak { get; set; }
+
     }
 }

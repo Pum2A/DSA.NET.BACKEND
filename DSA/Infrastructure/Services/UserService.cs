@@ -177,7 +177,11 @@
         /// </summary>
         private async Task<int> GetCurrentStreakAsync(string userId)
         {
-            // Pobierz wszystkie daty aktywności użytkownika (np. ukończone lekcje)
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentNullException(nameof(userId), "User ID cannot be null or empty.");
+            }
+
             var activityDates = await _context.UserProgress
                 .Where(p => p.UserId == userId && p.IsCompleted)
                 .Select(p => p.CompletedAt.HasValue ? p.CompletedAt.Value.Date : p.StartedAt.Value.Date)

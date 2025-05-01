@@ -3,6 +3,7 @@ using DSA.Core.Helpers;
 using DSA.Core.Interfaces;
 using DSA.Infrastructure;
 using DSA.Infrastructure.Data;
+using DSA.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,15 +23,20 @@ namespace DSA.API.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IUserService _userService;
         private readonly ILogger<UserController> _logger;
+        private readonly RankingService _rankingService;
+
 
         public UserController(
             ApplicationDbContext context,
             IUserService userService,
-            ILogger<UserController> logger)
+            ILogger<UserController> logger,
+            RankingService rankingService)
         {
             _context = context;
             _userService = userService;
             _logger = logger;
+            _rankingService = rankingService;
+            
         }
 
         [HttpGet("stats")]
@@ -221,6 +227,28 @@ namespace DSA.API.Controllers
             }
         }
 
+
+        [HttpGet("ranking/level")]
+        public async Task<IActionResult> GetRankingByLevel(int page = 1, int limit = 10)
+        {
+            var ranking = await _rankingService.GetRankingByLevelAsync(page, limit);
+            return Ok(ranking);
+        }
+
+        [HttpGet("ranking/streak")]
+        public async Task<IActionResult> GetRankingByStreak(int page = 1, int limit = 10)
+        {
+            var ranking = await _rankingService.GetRankingByStreakAsync(page, limit);
+            return Ok(ranking);
+        }
+
+        [HttpGet("ranking/joined-time")]
+        public async Task<IActionResult> GetRankingByJoinedTime(int page = 1, int limit = 10)
+        {
+            var ranking = await _rankingService.GetRankingByJoinedTimeAsync(page, limit);
+            return Ok(ranking);
+        }
+
         // NOWA METODA: ukończenie lekcji!
         [HttpPost("complete-lesson")]
         public async Task<IActionResult> CompleteLesson([FromBody] CompleteLessonRequest request)
@@ -277,8 +305,13 @@ namespace DSA.API.Controllers
                 _logger.LogError(ex, $"Błąd podczas ukończenia lekcji dla usera {userId}: {ex.Message}");
                 return StatusCode(500, new { succeeded = false, errors = new[] { $"Błąd podczas ukończenia lekcji: {ex.Message}" } });
             }
+
+
         }
+
+
     }
+
 
     public class AddExperienceRequest
     {

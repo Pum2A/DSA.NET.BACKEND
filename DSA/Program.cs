@@ -24,6 +24,7 @@ builder.Services.AddScoped<DSA.Core.Interfaces.ILessonService, DSA.Infrastructur
 builder.Services.AddScoped<DSA.Core.Interfaces.IUserService, DSA.Infrastructure.Services.UserService>();
 builder.Services.AddScoped<DSA.Core.Interfaces.IUserActivityService, DSA.Infrastructure.Services.UserActivityService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<RankingService>();
 // Zarejestruj serwisy
 
 
