@@ -1,28 +1,27 @@
-﻿using DSA.Core.Entities;
-using DSA.Core.Interfaces;
-using DSA.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
-
-namespace DSA.Infrastructure.Services
+﻿namespace DSA.Infrastructure.Services
 {
+    using DSA.Core.Achieviements;
+    using DSA.Core.Entities;
+    using DSA.Core.Helpers;
+    using DSA.Core.Interfaces;
+    using Microsoft.EntityFrameworkCore;
+
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<UserService> _logger;
+        private readonly INotificationService _notificationService;
 
-
-        public UserService(ApplicationDbContext context, ILogger<UserService> logger)
+        public UserService(
+            ApplicationDbContext context,
+            ILogger<UserService> logger,
+            INotificationService notificationService
+        )
         {
             _context = context;
             _logger = logger;
-
-
+            _notificationService = notificationService;
         }
-
-
 
         public async Task<ApplicationUser> GetUserByIdAsync(string userId)
         {
@@ -40,25 +39,39 @@ namespace DSA.Infrastructure.Services
                     return false;
                 }
 
-                // Zapisz poprzedni poziom
                 int previousLevel = user.Level;
+                int previousXp = user.ExperiencePoints;
 
-                // Dodaj doświadczenie
                 user.ExperiencePoints += amount;
-                
-                // Zaktualizuj poziom
-                user.Level = CalculateLevel(user.ExperiencePoints);
-                
-                // Zapisz zmiany
+                user.Level = LevelingHelper.GetLevelForXp(user.ExperiencePoints);
+
                 await _context.SaveChangesAsync();
-                
-                // Sprawdź czy nastąpił awans na wyższy poziom
+
+                // Level up notification
                 if (user.Level > previousLevel)
                 {
                     _logger.LogInformation($"User {userId} leveled up from {previousLevel} to {user.Level}");
-                    // Tutaj można dodać kod do obsługi awansu (np. wysłanie powiadomienia)
+                    await _notificationService.SendNotificationAsync(userId,
+                        $"Gratulacje! Awansowałeś na poziom {user.Level} 🚀", "level-up");
                 }
-                
+
+                // Check generic achievements (XP, Level)
+                var completedLessons = await _context.UserProgress
+                    .Where(p => p.UserId == userId && p.IsCompleted)
+                    .CountAsync();
+
+                var ctx = new UserAchievementContext
+                {
+                    PreviousXp = previousXp,
+                    CurrentXp = user.ExperiencePoints,
+                    PreviousLevel = previousLevel,
+                    CurrentLevel = user.Level,
+                    CompletedLessons = completedLessons,
+                    Streak = await GetCurrentStreakAsync(userId)
+                };
+
+                await CheckAndNotifyAchievementsAsync(userId, ctx);
+
                 return true;
             }
             catch (Exception ex)
@@ -74,32 +87,103 @@ namespace DSA.Infrastructure.Services
             return user?.Level ?? 1;
         }
 
-
-
-        // Prosta formuła poziomów na podstawie XP
-        private int CalculateLevel(int xp)
+        /// <summary>
+        /// Sprawdza streak użytkownika i przyznaje osiągnięcia oraz powiadomienia.
+        /// </summary>
+        public async Task CheckAndNotifyStreakAsync(string userId)
         {
-            // Przykładowa formuła: każdy poziom wymaga o 100 więcej XP niż poprzedni
-            // Poziom 1: 0-99 XP
-            // Poziom 2: 100-299 XP
-            // Poziom 3: 300-599 XP
-            // itd.
-            
-            if (xp < 100) return 1;
-            
-            int level = 1;
-            int requiredXp = 100;
-            int totalRequiredXp = 100;
-            
-            while (xp >= totalRequiredXp)
+            int streak = await GetCurrentStreakAsync(userId);
+
+            // milestone streak notifications
+            int[] milestones = { 3, 7, 14, 30, 100, 365 };
+            if (milestones.Contains(streak))
             {
-                level++;
-                requiredXp += 100;
-                totalRequiredXp += requiredXp;
+                string msg = $"Gratulacje! Utrzymujesz streak {streak} dni 🔥. Otrzymujesz dodatkowe XP!";
+                await _notificationService.SendNotificationAsync(userId, msg, "streak");
             }
-            
-            return level;
+
+            // Sprawdź dedykowane achievementy streakowe
+            var previousXp = 0; // streak logic nie wymaga XP, ale context wymaga
+            var previousLevel = 0;
+            var user = await _context.Users.FindAsync(userId);
+            if (user != null)
+            {
+                previousXp = user.ExperiencePoints;
+                previousLevel = user.Level;
+            }
+
+            var completedLessons = await _context.UserProgress
+                .Where(p => p.UserId == userId && p.IsCompleted)
+                .CountAsync();
+
+            var ctx = new UserAchievementContext
+            {
+                PreviousXp = previousXp,
+                CurrentXp = previousXp,
+                PreviousLevel = previousLevel,
+                CurrentLevel = previousLevel,
+                CompletedLessons = completedLessons,
+                Streak = streak
+            };
+
+            await CheckAndNotifyAchievementsAsync(userId, ctx);
         }
 
+        /// <summary>
+        /// Sprawdź i przyznaj osiągnięcia progresu lekcji. Wywołuj po ukończeniu lekcji!
+        /// </summary>
+        public async Task CheckAndNotifyLessonAchievementsAsync(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            var completedLessons = await _context.UserProgress
+                .Where(p => p.UserId == userId && p.IsCompleted)
+                .CountAsync();
+
+            var ctx = new UserAchievementContext
+            {
+                PreviousXp = user?.ExperiencePoints ?? 0,
+                CurrentXp = user?.ExperiencePoints ?? 0,
+                PreviousLevel = user?.Level ?? 1,
+                CurrentLevel = user?.Level ?? 1,
+                CompletedLessons = completedLessons,
+                Streak = await GetCurrentStreakAsync(userId)
+            };
+
+            await CheckAndNotifyAchievementsAsync(userId, ctx);
+        }
+
+        /// <summary>
+        /// Centralna metoda sprawdzająca i przyznająca osiągnięcia (powiadomienia).
+        /// </summary>
+        private async Task CheckAndNotifyAchievementsAsync(string userId, UserAchievementContext ctx)
+        {
+            // Pobierz już przyznane osiągnięcia (po wiadomości)
+            var userAchievements = await _context.Notifications
+                .Where(n => n.UserId == userId && n.Type == "achievement")
+                .Select(n => n.Message)
+                .ToListAsync();
+
+            foreach (var rule in AchievementCatalog.Rules)
+            {
+                if (rule.Condition(ctx) && !userAchievements.Contains(rule.Message))
+                {
+                    await _notificationService.SendNotificationAsync(userId, rule.Message, rule.Type);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Utility: Oblicz streak użytkownika
+        /// </summary>
+        private async Task<int> GetCurrentStreakAsync(string userId)
+        {
+            // Pobierz wszystkie daty aktywności użytkownika (np. ukończone lekcje)
+            var activityDates = await _context.UserProgress
+                .Where(p => p.UserId == userId && p.IsCompleted)
+                .Select(p => p.CompletedAt.HasValue ? p.CompletedAt.Value.Date : p.StartedAt.Value.Date)
+                .ToListAsync();
+
+            return StreakHelper.CalculateStreak(activityDates);
+        }
     }
 }

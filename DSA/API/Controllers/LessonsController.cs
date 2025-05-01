@@ -12,6 +12,7 @@ using System;
 using DSA.Core.Entities;
 using DSA.Infrastructure.Data;
 using DSA.Infrastructure;
+using DSA.Infrastructure.Services;
 
 namespace DSA.API.Controllers
 {
@@ -23,15 +24,18 @@ namespace DSA.API.Controllers
         private readonly ILessonService _lessonService;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<LessonsController> _logger;
+        private readonly IUserService _userService;
 
         public LessonsController(
             ILessonService lessonService,
             ApplicationDbContext context,
-            ILogger<LessonsController> logger)
+            ILogger<LessonsController> logger,
+            IUserService userService)
         {
             _lessonService = lessonService;
             _context = context;
             _logger = logger;
+            _userService = userService;
         }
 
         [HttpGet("modules")]
@@ -125,6 +129,11 @@ namespace DSA.API.Controllers
                     _logger.LogWarning($"[LessonsController] Nie udało się ukończyć lekcji {lessonId} dla użytkownika {userId}");
                     return BadRequest("Nie udało się ukończyć lekcji");
                 }
+
+                // KLUCZ: Wywołaj sprawdzanie osiągnięć!
+                _logger.LogWarning("[DEBUG] Wywołano CheckAndNotifyLessonAchievementsAsync");
+
+                await _userService.CheckAndNotifyLessonAchievementsAsync(userId);
 
                 // Przygotuj odpowiednią odpowiedź
                 if (wasAlreadyCompleted)

@@ -1,4 +1,5 @@
 ﻿using DSA.Core.Entities;
+using DSA.Core.Helpers;
 using DSA.Core.Interfaces;
 using DSA.Infrastructure;
 using DSA.Infrastructure.Data;
@@ -45,7 +46,6 @@ namespace DSA.API.Controllers
             {
                 _logger.LogInformation($"Fetching stats for user {userId}");
 
-                // Pobierz dane użytkownika
                 var user = await _userService.GetUserByIdAsync(userId);
 
                 if (user == null)
@@ -54,15 +54,18 @@ namespace DSA.API.Controllers
                     return NotFound(new { succeeded = false, errors = new[] { "Użytkownik nie znaleziony" } });
                 }
 
-                // Pobierz ukończone lekcje
                 var completedLessons = await _context.UserProgress
                     .Where(p => p.UserId == userId && p.IsCompleted)
                     .CountAsync();
 
-                // Pobierz całkowitą liczbę lekcji
                 var totalLessons = await _context.Lessons.CountAsync();
 
-                // Zwróć statystyki
+                // Nowy system poziomów!
+                var level = LevelingHelper.GetLevelForXp(user.ExperiencePoints);
+                var currentLevelMinXp = LevelingHelper.GetXpForCurrentLevel(level);
+                var requiredXpForNextLevel = LevelingHelper.GetXpForNextLevel(level);
+                var xpToNextLevel = requiredXpForNextLevel - user.ExperiencePoints;
+
                 var stats = new
                 {
                     userId = userId,
@@ -70,12 +73,15 @@ namespace DSA.API.Controllers
                     firstName = user.FirstName,
                     lastName = user.LastName,
                     email = user.Email,
-                    level = user.Level,
+                    level = level,
                     totalXp = user.ExperiencePoints,
+                    currentLevelMinXp = currentLevelMinXp,
+                    requiredXpForNextLevel = requiredXpForNextLevel,
+                    xpToNextLevel = xpToNextLevel,
                     completedLessonsCount = completedLessons,
                     totalLessonsCount = totalLessons,
                     joinedAt = user.JoinedAt,
-                    // Możesz dodać więcej statystyk według potrzeb
+                    // więcej statystyk według potrzeb
                 };
 
                 return Ok(stats);
@@ -214,10 +220,74 @@ namespace DSA.API.Controllers
                 return StatusCode(500, new { succeeded = false, errors = new[] { $"Błąd podczas dodawania XP: {ex.Message}" } });
             }
         }
+
+        // NOWA METODA: ukończenie lekcji!
+        [HttpPost("complete-lesson")]
+        public async Task<IActionResult> CompleteLesson([FromBody] CompleteLessonRequest request)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+            if (request.LessonId <= 0) // Fix: Changed from Guid.Empty to check if LessonId is less than or equal to 0
+            {
+                return BadRequest(new { succeeded = false, errors = new[] { "Nieprawidłowe ID lekcji" } });
+            }
+
+            try
+            {
+                var progress = await _context.UserProgress
+                    .FirstOrDefaultAsync(p => p.UserId == userId && p.LessonId == request.LessonId);
+
+                if (progress == null)
+                {
+                    // Jeśli nie ma progresu, utwórz nowy
+                    progress = new UserProgress
+                    {
+                        UserId = userId,
+                        LessonId = request.LessonId,
+                        IsCompleted = true,
+                        CompletedAt = DateTime.UtcNow,
+                        StartedAt = DateTime.UtcNow,
+                        CurrentStepIndex = 0
+                    };
+                    _context.UserProgress.Add(progress);
+                }
+                else if (!progress.IsCompleted)
+                {
+                    progress.IsCompleted = true;
+                    progress.CompletedAt = DateTime.UtcNow;
+                }
+                else
+                {
+                    // Już ukończona lekcja
+                    return Ok(new { succeeded = true, alreadyCompleted = true });
+                }
+
+                await _context.SaveChangesAsync();
+
+                // KLUCZOWE: sprawdź osiągnięcia!
+                await _userService.CheckAndNotifyLessonAchievementsAsync(userId);
+
+                return Ok(new { succeeded = true });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Błąd podczas ukończenia lekcji dla usera {userId}: {ex.Message}");
+                return StatusCode(500, new { succeeded = false, errors = new[] { $"Błąd podczas ukończenia lekcji: {ex.Message}" } });
+            }
+        }
     }
 
     public class AddExperienceRequest
     {
         public int Amount { get; set; }
     }
+
+    public class CompleteLessonRequest
+    {
+        public int LessonId { get; set; }
+    }
 }
+// Compare this snippet from DSA/Infrastructure/Services/UserService.cs:

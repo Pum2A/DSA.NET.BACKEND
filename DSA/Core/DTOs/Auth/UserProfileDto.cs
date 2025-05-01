@@ -9,8 +9,10 @@
         public string LastName { get; set; }
         public int ExperiencePoints { get; set; }
         public int Level { get; set; }
+        public int CurrentLevelMinXp { get; set; }
+        public int RequiredXpForNextLevel { get; set; }
+        public int XpToNextLevel { get; set; }
         public string[] Roles { get; set; }
-
         public DateTime JoinedAt { get; set; }
     }
 }

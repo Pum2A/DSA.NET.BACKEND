@@ -23,6 +23,9 @@ namespace DSA.Infrastructure
 
         public DbSet<UserActivity> UserActivities { get; set; }
 
+        public DbSet<Notification> Notifications { get; set; }
+
+
         public DbSet<ContentActivityLog> ContentActivityLogs { get; set; }
 
         // I dodaj alias dla zachowania wstecznej kompatybilności
@@ -71,24 +74,6 @@ namespace DSA.Infrastructure
             });
 
 
-            // 6. Konfiguracja dla quizów (opcjonalnie)
-            //if (builder.Entity<Quiz>() != null)
-            //{
-            //    builder.Entity<Quiz>()
-            //        .HasOne(q => q.Lesson)
-            //        .WithMany(l => l.Quizzes)
-            //        .HasForeignKey(q => q.LessonId);
-
-            //    builder.Entity<QuizQuestion>()
-            //        .HasOne(qq => qq.Quiz)
-            //        .WithMany(q => q.Questions)
-            //    .HasForeignKey(qq => qq.QuizId);
-
-            //    builder.Entity<QuizOption>()
-            //        .HasOne(qo => qo.Question)
-            //        .WithMany(qq => qq.Options)
-            //        .HasForeignKey(qo => qo.QuestionId);
-            //}
         }
     }
 
