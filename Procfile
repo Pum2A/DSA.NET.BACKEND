@@ -1,0 +1,1 @@
+web: dotnet DSA.dll --urls http://*:$PORT

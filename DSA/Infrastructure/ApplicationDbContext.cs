@@ -28,27 +28,23 @@ namespace DSA.Infrastructure
 
         public DbSet<ContentActivityLog> ContentActivityLogs { get; set; }
 
-        // I dodaj alias dla zachowania wstecznej kompatybilności
         public DbSet<UserProgress> UserProgress => UserProgresses;
 
 
 
-        // Opcjonalnie, jeśli implementujesz quizy/testy
-        //public DbSet<Quiz> Quizzes { get; set; }
-        //public DbSet<QuizQuestion> QuizQuestions { get; set; }
-        //public DbSet<QuizOption> QuizOptions { get; set; }
-        //public DbSet<UserQuizAttempt> UserQuizAttempts { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Konfiguracje dla modeli związanych z lekcjami
+            // Explicitly map ApplicationUser to the correct table name
+            modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers");
 
-            // 1. Relacja Module -> Lessons (jeden do wielu)
+            // Configure other entities
             modelBuilder.Entity<Step>()
-         .Property(s => s.Code)
-         .IsRequired(false); // To oznacza nullable
+                .Property(s => s.Code)
+                .IsRequired(false);
 
             modelBuilder.Entity<Step>()
                 .Property(s => s.Language)
@@ -64,7 +60,7 @@ namespace DSA.Infrastructure
 
             modelBuilder.Entity<UserProgress>(entity =>
             {
-                entity.HasKey(up => new { up.UserId, up.LessonId }); // Example composite key
+                entity.HasKey(up => new { up.UserId, up.LessonId }); // Composite key
                 entity.HasOne(up => up.User)
                       .WithMany(u => u.UserProgresses)
                       .HasForeignKey(up => up.UserId);
@@ -72,9 +68,8 @@ namespace DSA.Infrastructure
                       .WithMany()
                       .HasForeignKey(up => up.LessonId);
             });
-
-
         }
-    }
 
+
+    }
 }
