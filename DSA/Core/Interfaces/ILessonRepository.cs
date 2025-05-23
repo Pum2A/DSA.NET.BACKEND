@@ -1,4 +1,4 @@
-﻿using DSA.Core.Entities;
+﻿using DSA.Core.Entities.Learning;
 using System.Threading.Tasks;
 
 namespace DSA.Core.Interfaces

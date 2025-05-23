@@ -1,4 +1,4 @@
-﻿using DSA.Core.Entities;
+﻿using DSA.Core.Entities.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

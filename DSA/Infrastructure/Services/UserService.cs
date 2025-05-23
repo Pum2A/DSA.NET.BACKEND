@@ -2,8 +2,10 @@
 {
     using DSA.Core.Achieviements;
     using DSA.Core.Entities;
+    using DSA.Core.Entities.User;
     using DSA.Core.Helpers;
     using DSA.Core.Interfaces;
+    using DSA.Infrastructure.Data;
     using Microsoft.EntityFrameworkCore;
 
     public class UserService : IUserService

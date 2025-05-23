@@ -1,5 +1,5 @@
 ﻿using DSA.Core.DTOs.Auth;
-using DSA.Core.Entities;
+using DSA.Core.Entities.User;
 using DSA.Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

@@ -10,6 +10,8 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using DSA.Core.Interfaces;
 using DSA.Infrastructure.Services;
+using DSA.Core.Mappings;
+using FluentAssertions.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +22,14 @@ builder.Services.AddScoped<DSA.Core.Interfaces.IModuleRepository, DSA.Infrastruc
 builder.Services.AddScoped<DSA.Core.Interfaces.IUserProgressRepository, DSA.Infrastructure.Repositories.UserProgressRepository>();
 
 
-builder.Services.AddScoped<DSA.Core.Interfaces.ILessonService, DSA.Infrastructure.Services.LessonService>();
 builder.Services.AddScoped<DSA.Core.Interfaces.IUserService, DSA.Infrastructure.Services.UserService>();
 builder.Services.AddScoped<DSA.Core.Interfaces.IUserActivityService, DSA.Infrastructure.Services.UserActivityService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
+
 builder.Services.AddScoped<RankingService>();
+builder.Services.AddAutoMapper(typeof(LessonProfile));
+
 // Zarejestruj serwisy
 
 

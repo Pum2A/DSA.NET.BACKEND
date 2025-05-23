@@ -1,1018 +1,428 @@
 ﻿[
   {
-    "id": 1,
-    "lessonId": 1,
-    "type": "text",
-    "title": "Czym sa tablice?",
-    "content": "Tablica to struktura danych, ktora przechowuje elementy tego samego typu, ulozone sekwencyjnie w pamieci. Kazdy element ma swoj indeks, co umozliwia szybki dostep. Tablice sa jedna z najprostszych i najczesciej uzywanych struktur danych w programowaniu.\n\nKluczowe cechy tablic:\n- Staly rozmiar (w wiekszosci jezykow)\n- Ciagly obszar pamieci\n- Szybki dostep do elementow O(1)\n- Elementy tego samego typu\n- Indeksowanie od 0 (w wiekszosci jezykow)",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 2,
-    "lessonId": 1,
-    "type": "code",
-    "title": "Deklaracja tablicy",
-    "content": "Oto jak zadeklarowac i zainicjalizowac tablice w roznych jezykach programowania:",
-    "code": "// JavaScript\nconst array = [1, 2, 3, 4, 5];\n\n// C#\nint[] array = new int[] { 1, 2, 3, 4, 5 };\n\n// Java\nint[] array = {1, 2, 3, 4, 5};\n\n// Python\narray = [1, 2, 3, 4, 5]",
-    "language": "javascript",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 3,
-    "lessonId": 1,
-    "type": "image",
-    "title": "Reprezentacja tablicy w pamieci",
-    "content": "Ponizszy obraz pokazuje, jak tablica jest przechowywana w pamieci komputera. Zwroc uwage na ciaglosc alokacji i indeksowanie od 0.",
-    "imageUrl": "https://www.geeksforgeeks.org/wp-content/uploads/gq/2015/07/Arrays.png",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 4,
-    "lessonId": 1,
-    "type": "text",
-    "title": "Operacje na tablicach",
-    "content": "Podstawowe operacje na tablicach obejmuja:\n\n1. **Dostep do elementu** - uzyskiwanie wartosci pod konkretnym indeksem\n2. **Aktualizacja elementu** - zmiana wartosci pod okreslonym indeksem\n3. **Wstawianie elementu** - w tablicach o stalym rozmiarze wymaga przesuniecia elementow\n4. **Usuwanie elementu** - podobnie jak wstawianie, wymaga reorganizacji\n5. **Przeszukiwanie** - znalezienie okreslonej wartosci\n6. **Sortowanie** - uporzadkowanie elementow wedlug okreslonego kryterium",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 5,
-    "lessonId": 1,
-    "type": "code",
-    "title": "Operacje na tablicach w JavaScript",
-    "content": "Przyklady operacji na tablicach w JavaScript:",
-    "code": "const array = [10, 20, 30, 40, 50];\n\n// Dostep do elementu\nconst element = array[2];  // 30\n\n// Aktualizacja elementu\narray[2] = 35;            // [10, 20, 35, 40, 50]\n\n// Dodanie elementu na koncu\narray.push(60);           // [10, 20, 35, 40, 50, 60]\n\n// Usuniecie ostatniego elementu\narray.pop();              // [10, 20, 35, 40, 50]\n\n// Dodanie elementu na poczatku\narray.unshift(5);         // [5, 10, 20, 35, 40, 50]\n\n// Usuniecie pierwszego elementu\narray.shift();            // [10, 20, 35, 40, 50]\n\n// Znalezienie indeksu elementu\nconst index = array.indexOf(35);  // 2\n\n// Sprawdzenie czy element istnieje\nconst exists = array.includes(40); // true",
-    "language": "javascript",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 6,
-    "lessonId": 1,
-    "type": "quiz",
-    "title": "Sprawdz swoja wiedze",
-    "content": "Wybierz poprawna odpowiedz:",
-    "order": 6,
-    "additionalData": "{\"question\":\"Jaka jest zlozonosc czasowa dostepu do elementu tablicy po indeksie?\",\"options\":[{\"id\":\"1\",\"text\":\"O(1) - staly czas\"},{\"id\":\"2\",\"text\":\"O(log n) - logarytmiczny czas\"},{\"id\":\"3\",\"text\":\"O(n) - liniowy czas\"}],\"correctAnswer\":\"1\",\"explanation\":\"Dostep do elementu tablicy po indeksie ma zlozonosc O(1), poniewaz adres elementu mozna obliczyc bezposrednio na podstawie adresu bazowego i indeksu.\"}"
-  },
-  {
-    "id": 7,
-    "lessonId": 1,
-    "type": "interactive",
-    "title": "Odwracanie tablicy",
-    "content": "Uzupelnij ponizszą funkcje, ktora odwraca kolejnosc elementow w tablicy. Funkcja powinna dzialac 'w miejscu', czyli nie tworzyc nowej tablicy.",
-    "code": "function reverseArray(arr) {\n  // Twoj kod tutaj\n  // Funkcja powinna odwrocic kolejnosc elementow w tablicy arr\n  // Nie tworz nowej tablicy!\n  \n  return arr;\n}",
-    "language": "javascript",
-    "order": 7,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"[1, 2, 3, 4, 5]\",\"expectedOutput\":\"[5, 4, 3, 2, 1]\",\"description\":\"Odwrocenie tablicy [1, 2, 3, 4, 5]\"},{\"id\":\"2\",\"input\":\"[10, 20]\",\"expectedOutput\":\"[20, 10]\",\"description\":\"Odwrocenie tablicy [10, 20]\"},{\"id\":\"3\",\"input\":\"[42]\",\"expectedOutput\":\"[42]\",\"description\":\"Odwrocenie tablicy jednoelementowej [42]\"}],\"initialCode\":\"function reverseArray(arr) {\\n  // Twoj kod tutaj\\n  \\n  return arr;\\n}\",\"solution\":\"function reverseArray(arr) {\\n  let left = 0;\\n  let right = arr.length - 1;\\n  \\n  while (left < right) {\\n    // Zamien elementy\\n    let temp = arr[left];\\n    arr[left] = arr[right];\\n    arr[right] = temp;\\n    \\n    // Przesun wskazniki\\n    left++;\\n    right--;\\n  }\\n  \\n  return arr;\\n}\",\"hint\":\"Uzyj dwoch wskaznikow - jeden od poczatku tablicy, drugi od konca. Zamieniaj elementy miejscami, przesuwajac wskazniki do srodka.\"}"
-  },
-  {
-    "id": 8,
-    "lessonId": 2,
-    "type": "text",
-    "title": "Czym jest lista powiazana?",
-    "content": "Lista powiazana to dynamiczna struktura danych, skladajaca sie z wezlow, ktore zawieraja dane oraz wskaznik (lub wskazniki) do innych wezlow. W przeciwienstwie do tablic, elementy listy powiazanej nie musza byc przechowywane w ciaglym obszarze pamieci.\n\nIstniejace rodzaje list powiazanych:\n\n1. **Lista jednokierunkowa** - kazdy wezel wskazuje na nastepny\n2. **Lista dwukierunkowa** - kazdy wezel wskazuje na nastepny i poprzedni\n3. **Lista cykliczna** - ostatni wezel wskazuje na pierwszy, tworzac cykl",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 9,
-    "lessonId": 2,
-    "type": "image",
-    "title": "Struktura listy jednokierunkowej",
-    "content": "Ponizszy diagram przedstawia strukture listy jednokierunkowej. Kazdy wezel zawiera wartosc oraz wskaznik do nastepnego wezla. Ostatni wezel wskazuje na null.",
-    "imageUrl": "https://media.geeksforgeeks.org/wp-content/cdn-uploads/gq/2013/03/Linkedlist.png",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 10,
-    "lessonId": 2,
-    "type": "code",
-    "title": "Implementacja wezla listy",
-    "content": "Oto przykladowa implementacja wezla listy powiazanej w C#:",
-    "code": "public class Node<T>\n{\n    public T Value { get; set; }\n    public Node<T> Next { get; set; }\n\n    public Node(T value)\n    {\n        Value = value;\n        Next = null;\n    }\n}",
-    "language": "csharp",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 11,
-    "lessonId": 2,
-    "type": "code",
-    "title": "Implementacja listy jednokierunkowej",
-    "content": "Ponizej znajduje sie prosta implementacja listy jednokierunkowej w C#:",
-    "code": "public class LinkedList<T>\n{\n    public Node<T> Head { get; private set; }\n    \n    // Dodaj element na poczatek listy\n    public void AddFirst(T value)\n    {\n        var newNode = new Node<T>(value);\n        \n        if (Head == null)\n        {\n            Head = newNode;\n            return;\n        }\n        \n        newNode.Next = Head;\n        Head = newNode;\n    }\n    \n    // Dodaj element na koniec listy\n    public void AddLast(T value)\n    {\n        var newNode = new Node<T>(value);\n        \n        if (Head == null)\n        {\n            Head = newNode;\n            return;\n        }\n        \n        var current = Head;\n        while (current.Next != null)\n        {\n            current = current.Next;\n        }\n        \n        current.Next = newNode;\n    }\n    \n    // Usun pierwszy element z listy\n    public bool RemoveFirst()\n    {\n        if (Head == null)\n            return false;\n            \n        Head = Head.Next;\n        return true;\n    }\n    \n    // Wypisz wszystkie elementy listy\n    public void PrintList()\n    {\n        var current = Head;\n        while (current != null)\n        {\n            Console.Write($\"{current.Value} -> \");\n            current = current.Next;\n        }\n        Console.WriteLine(\"null\");\n    }\n}",
-    "language": "csharp",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 12,
-    "lessonId": 2,
-    "type": "text",
-    "title": "Zalety i wady list powiazanych",
-    "content": "**Zalety list powiazanych:**\n\n1. Dynamiczny rozmiar - moga rosnac i kurczyc sie w trakcie dzialania programu\n2. Efektywne wstawianie i usuwanie elementow (na poczatku lub przy znanej pozycji)\n3. Latwe implementowanie struktur takich jak stos czy kolejka\n\n**Wady list powiazanych:**\n\n1. Brak dostepu bezposredniego (jak w tablicy) - trzeba przejsc przez liste od poczatku\n2. Wieksze zuzycie pamieci (dodatkowy wskaznik dla kazdego elementu)\n3. Mniej efektywne wykorzystanie pamieci podrecznej\n4. Trudniejsza implementacja niz w przypadku tablic",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 13,
-    "lessonId": 2,
-    "type": "quiz",
-    "title": "Quiz wiedzy o listach powiazanych",
-    "content": "Sprawdz swoja wiedze o listach powiazanych:",
-    "order": 6,
-    "additionalData": "{\"question\":\"Jaka jest zlozonosc czasowa dostepu do n-tego elementu listy jednokierunkowej?\",\"options\":[{\"id\":\"1\",\"text\":\"O(1) - staly czas\"},{\"id\":\"2\",\"text\":\"O(log n) - logarytmiczny czas\"},{\"id\":\"3\",\"text\":\"O(n) - liniowy czas\"}],\"correctAnswer\":\"3\",\"explanation\":\"Dostep do n-tego elementu listy jednokierunkowej wymaga przejscia przez wszystkie poprzednie elementy, co daje zlozonosc O(n).\"}"
-  },
-  {
-    "id": 14,
-    "lessonId": 2,
-    "type": "interactive",
-    "title": "Znajdz srodkowy element listy",
-    "content": "Uzupelnij ponizszą funkcje, ktora znajduje srodkowy element listy jednokierunkowej. W przypadku parzystej liczby elementow, zwroc drugi z dwoch srodkowych elementow.",
-    "code": "function findMiddle(head) {\n  // Twoj kod tutaj\n  // Funkcja powinna zwrocic wartosc srodkowego elementu listy\n  // head to pierwszy wezel listy\n  \n}",
-    "language": "javascript",
-    "order": 7,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"1->2->3->4->5\",\"expectedOutput\":\"3\",\"description\":\"Lista z 5 elementami\"},{\"id\":\"2\",\"input\":\"1->2->3->4\",\"expectedOutput\":\"3\",\"description\":\"Lista z 4 elementami\"},{\"id\":\"3\",\"input\":\"1\",\"expectedOutput\":\"1\",\"description\":\"Lista z 1 elementem\"}],\"initialCode\":\"function findMiddle(head) {\\n  // Twoj kod tutaj\\n  \\n}\",\"solution\":\"function findMiddle(head) {\\n  if (!head) return null;\\n  \\n  let slow = head;\\n  let fast = head;\\n  \\n  while (fast && fast.next) {\\n    slow = slow.next;\\n    fast = fast.next.next;\\n  }\\n  \\n  return slow.value;\\n}\",\"hint\":\"Uzyj techniki 'wolnego i szybkiego wskaznika'. Jeden wskaznik przesuwa sie o jeden element, drugi o dwa na raz. Gdy szybki wskaznik dojdzie do konca, wolny bedzie w srodku.\"}"
-  },
-  {
-    "id": 15,
-    "lessonId": 3,
-    "type": "text",
-    "title": "Czym sa stos i kolejka?",
-    "content": "Stos i kolejka to liniowe struktury danych, ktore roznia sie sposobem dostepu do elementow.\n\n**Stos (Stack)** dziala na zasadzie LIFO (Last In, First Out) - element dodany jako ostatni jest pobierany jako pierwszy. Mozna go porownac do stosu ksiazek - mozesz dodawac i usuwac ksiazki tylko z wierzchu stosu.\n\nOperacje na stosie:\n- Push - dodanie elementu na gore stosu\n- Pop - usuniecie elementu z gory stosu\n- Peek/Top - sprawdzenie elementu na gorze stosu bez usuwania go\n\n**Kolejka (Queue)** dziala na zasadzie FIFO (First In, First Out) - element dodany jako pierwszy jest pobierany jako pierwszy. Jest jak kolejka ludzi - osoba, ktora przyszla pierwsza, zostaje obslugiwana jako pierwsza.\n\nOperacje na kolejce:\n- Enqueue - dodanie elementu na koniec kolejki\n- Dequeue - usuniecie elementu z poczatku kolejki\n- Peek/Front - sprawdzenie elementu na poczatku kolejki bez usuwania go",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 16,
-    "lessonId": 3,
-    "type": "image",
-    "title": "Wizualizacja stosu i kolejki",
-    "content": "Ponizszy obrazek przedstawia roznice miedzy stosem (LIFO) a kolejka (FIFO):",
-    "imageUrl": "https://prepbytes-misc-images.s3.ap-south-1.amazonaws.com/assets/1645781536143-stack_queue_insertion_deletion.png",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 17,
-    "lessonId": 3,
-    "type": "code",
-    "title": "Implementacja stosu",
-    "content": "Oto prosta implementacja stosu w C#:",
-    "code": "public class Stack<T>\n{\n    private List<T> _items = new List<T>();\n    \n    // Dodaj element na gore stosu\n    public void Push(T item)\n    {\n        _items.Add(item);\n    }\n    \n    // Usun i zwroc element z gory stosu\n    public T Pop()\n    {\n        if (IsEmpty())\n            throw new InvalidOperationException(\"Stos jest pusty\");\n            \n        int lastIndex = _items.Count - 1;\n        T item = _items[lastIndex];\n        _items.RemoveAt(lastIndex);\n        return item;\n    }\n    \n    // Zwroc element z gory stosu bez usuwania\n    public T Peek()\n    {\n        if (IsEmpty())\n            throw new InvalidOperationException(\"Stos jest pusty\");\n            \n        return _items[_items.Count - 1];\n    }\n    \n    // Sprawdz czy stos jest pusty\n    public bool IsEmpty()\n    {\n        return _items.Count == 0;\n    }\n    \n    // Zwroc liczbe elementow w stosie\n    public int Count()\n    {\n        return _items.Count;\n    }\n}",
-    "language": "csharp",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 18,
-    "lessonId": 3,
-    "type": "code",
-    "title": "Implementacja kolejki",
-    "content": "Oto prosta implementacja kolejki w C#:",
-    "code": "public class Queue<T>\n{\n    private List<T> _items = new List<T>();\n    \n    // Dodaj element na koniec kolejki\n    public void Enqueue(T item)\n    {\n        _items.Add(item);\n    }\n    \n    // Usun i zwroc element z poczatku kolejki\n    public T Dequeue()\n    {\n        if (IsEmpty())\n            throw new InvalidOperationException(\"Kolejka jest pusta\");\n            \n        T item = _items[0];\n        _items.RemoveAt(0);\n        return item;\n    }\n    \n    // Zwroc element z poczatku kolejki bez usuwania\n    public T Peek()\n    {\n        if (IsEmpty())\n            throw new InvalidOperationException(\"Kolejka jest pusta\");\n            \n        return _items[0];\n    }\n    \n    // Sprawdz czy kolejka jest pusta\n    public bool IsEmpty()\n    {\n        return _items.Count == 0;\n    }\n    \n    // Zwroc liczbe elementow w kolejce\n    public int Count()\n    {\n        return _items.Count;\n    }\n}",
-    "language": "csharp",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 19,
-    "lessonId": 3,
-    "type": "text",
-    "title": "Zastosowania stosu i kolejki",
-    "content": "**Zastosowania stosu:**\n\n1. Cofanie operacji (undo) w edytorach tekstu i programach graficznych\n2. Parsowanie wyrazen i skladni (np. nawiasy w wyrazeniach matematycznych)\n3. Zarzadzanie wywolaniami funkcji (stos wywolan)\n4. Przechodzenie przez drzewo z nawrotami (backtracking)\n5. Algorytmy przeszukiwania w glab (DFS - Depth-First Search)\n\n**Zastosowania kolejki:**\n\n1. Zarzadzanie zadaniami w systemach operacyjnych\n2. Buforowanie danych (np. w drukarkach, odtwarzaczach multimedialnych)\n3. Obsługa zadan asynchronicznych\n4. Algorytmy przeszukiwania wszerz (BFS - Breadth-First Search)\n5. Obsluga zdarzen w interfejsach uzytkownika\n6. Symulacja rzeczywistych kolejek (np. w systemach rezerwacji)",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 20,
-    "lessonId": 3,
-    "type": "quiz",
-    "title": "Quiz o stosach i kolejkach",
-    "content": "Sprawdz swoja wiedze o stosach i kolejkach:",
-    "order": 6,
-    "additionalData": "{\"question\":\"Ktora struktura danych dziala na zasadzie LIFO (Last In, First Out)?\",\"options\":[{\"id\":\"1\",\"text\":\"Stos\"},{\"id\":\"2\",\"text\":\"Kolejka\"},{\"id\":\"3\",\"text\":\"Lista\"},{\"id\":\"4\",\"text\":\"Tablica\"}],\"correctAnswer\":\"1\",\"explanation\":\"Stos dziala na zasadzie LIFO (Last In, First Out), co oznacza, ze ostatni element dodany do stosu jest pierwszym, ktory zostanie z niego usuniety.\"}"
-  },
-  {
-    "id": 21,
-    "lessonId": 3,
-    "type": "interactive",
-    "title": "Sprawdzanie poprawnosci nawiasow",
-    "content": "Uzupelnij ponizszą funkcje, ktora sprawdza, czy ciag nawiasow jest poprawny. Nawiasy sa poprawne, jesli kazdy nawias otwierajacy ma odpowiadajacy mu nawias zamykajacy w odpowiedniej kolejnosci.",
-    "code": "function areParenthesesValid(s) {\n  // Twoj kod tutaj\n  // Funkcja powinna zwrocic true, jesli nawiasy sa poprawne, false w przeciwnym przypadku\n  // Nawiasy moga byc roznego typu: (), [], {}\n  \n}",
-    "language": "javascript",
-    "order": 7,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"()\",\"expectedOutput\":\"true\",\"description\":\"Proste nawiasy okragle\"},{\"id\":\"2\",\"input\":\"()[]{}\",\"expectedOutput\":\"true\",\"description\":\"Rozne typy nawiasow\"},{\"id\":\"3\",\"input\":\"(]\",\"expectedOutput\":\"false\",\"description\":\"Niepasujace nawiasy\"},{\"id\":\"4\",\"input\":\"([)]\",\"expectedOutput\":\"false\",\"description\":\"Niepoprawna kolejnosc nawiasow\"},{\"id\":\"5\",\"input\":\"{[]}\",\"expectedOutput\":\"true\",\"description\":\"Zagniezdzone nawiasy\"}],\"initialCode\":\"function areParenthesesValid(s) {\\n  // Twoj kod tutaj\\n  \\n}\",\"solution\":\"function areParenthesesValid(s) {\\n  const stack = [];\\n  const pairs = {\\n    '(': ')',\\n    '[': ']',\\n    '{': '}'\\n  };\\n  \\n  for (let char of s) {\\n    // Jesli to nawias otwierajacy, dodaj go na stos\\n    if (pairs[char]) {\\n      stack.push(char);\\n    } else {\\n      // Jesli to nawias zamykajacy\\n      const last = stack.pop();\\n      \\n      // Sprawdz czy odpowiada otwierajacemu\\n      if (pairs[last] !== char) {\\n        return false;\\n      }\\n    }\\n  }\\n  \\n  // Jesli stos jest pusty, wszystkie nawiasy sa poprawne\\n  return stack.length === 0;\\n}\",\"hint\":\"Uzyj stosu do sledzenia nawiasow otwierajacych. Gdy napotkasz nawias zamykajacy, sprawdz czy odpowiada on ostatniemu nawiasowi otwierajacemu na stosie.\"}"
-  },
-  {
-    "id": 22,
-    "lessonId": 4,
-    "type": "text",
-    "title": "Czym jest drzewo binarne?",
-    "content": "Drzewo binarne to hierarchiczna struktura danych, w ktorej kazdy wezel moze miec maksymalnie dwoch potomkow, zwykle nazywanych lewym i prawym dzieckiem. Drzewa binarne sa szeroko stosowane w informatyce ze wzgledu na ich wydajnosc w zakresie wyszukiwania i sortowania.\n\nPodstawowe pojecia dotyczace drzew binarnych:\n\n1. **Korzen** - wezel poczatkowy drzewa, nie ma rodzica\n2. **Wezel wewnetrzny** - wezel, ktory ma co najmniej jedno dziecko\n3. **Lisc** - wezel bez dzieci\n4. **Glebokosc wezla** - dlugosc sciezki od korzenia do danego wezla\n5. **Wysokosc drzewa** - maksymalna glebokosc w drzewie",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 23,
-    "lessonId": 4,
-    "type": "image",
-    "title": "Struktura drzewa binarnego",
-    "content": "Ponizszy diagram przedstawia przykladowe drzewo binarne. Wezel A jest korzeniem, wezly B i C sa jego dziecmi, itd.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Binary_search_tree.svg/1200px-Binary_search_tree.svg.png",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 24,
-    "lessonId": 4,
-    "type": "code",
-    "title": "Implementacja wezla drzewa binarnego",
-    "content": "Oto prosta implementacja wezla drzewa binarnego w C#:",
-    "code": "public class TreeNode<T>\n{\n    public T Value { get; set; }\n    public TreeNode<T> Left { get; set; }\n    public TreeNode<T> Right { get; set; }\n\n    public TreeNode(T value)\n    {\n        Value = value;\n        Left = null;\n        Right = null;\n    }\n}",
-    "language": "csharp",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 25,
-    "lessonId": 4,
-    "type": "text",
-    "title": "Rodzaje drzew binarnych",
-    "content": "Istnieje kilka specjalnych rodzajow drzew binarnych:\n\n1. **Pelne drzewo binarne** - kazdy wezel ma 0 lub 2 dzieci\n2. **Kompletne drzewo binarne** - wszystkie poziomy sa wypelnione, poza ostatnim, ktory jest wypelniony od lewej strony\n3. **Idealnie zbalansowane drzewo** - roznica wysokosci miedzy lewym i prawym poddrzewem kazdego wezla jest maksymalnie 1\n4. **Drzewo BST (Binary Search Tree)** - dla kazdego wezla, wszystkie wartosci w lewym poddrzewie sa mniejsze, a w prawym wieksze od wartosci wezla\n5. **Drzewo AVL** - samobalansujace sie drzewo BST\n6. **Drzewo czerwono-czarne** - samobalansujace sie drzewo BST z dodatkowym atrybutem koloru",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 26,
-    "lessonId": 4,
-    "type": "code",
-    "title": "Przechodzenie przez drzewo binarne",
-    "content": "Istnieja trzy glowne sposoby przechodzenia przez drzewo binarne:",
-    "code": "// Przechodzenie w kolejnosci in-order (lewe poddrzewo, wezel, prawe poddrzewo)\npublic void InOrderTraversal(TreeNode<T> node)\n{\n    if (node == null)\n        return;\n        \n    InOrderTraversal(node.Left);       // Najpierw odwiedz lewe poddrzewo\n    Console.WriteLine(node.Value);     // Nastepnie przetwórz biezacy wezel\n    InOrderTraversal(node.Right);      // Na koncu odwiedz prawe poddrzewo\n}\n\n// Przechodzenie w kolejnosci pre-order (wezel, lewe poddrzewo, prawe poddrzewo)\npublic void PreOrderTraversal(TreeNode<T> node)\n{\n    if (node == null)\n        return;\n        \n    Console.WriteLine(node.Value);     // Najpierw przetworz biezacy wezel\n    PreOrderTraversal(node.Left);      // Nastepnie odwiedz lewe poddrzewo\n    PreOrderTraversal(node.Right);     // Na koncu odwiedz prawe poddrzewo\n}\n\n// Przechodzenie w kolejnosci post-order (lewe poddrzewo, prawe poddrzewo, wezel)\npublic void PostOrderTraversal(TreeNode<T> node)\n{\n    if (node == null)\n        return;\n        \n    PostOrderTraversal(node.Left);     // Najpierw odwiedz lewe poddrzewo\n    PostOrderTraversal(node.Right);    // Nastepnie odwiedz prawe poddrzewo\n    Console.WriteLine(node.Value);     // Na koncu przetworz biezacy wezel\n}",
-    "language": "csharp",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 27,
-    "lessonId": 4,
-    "type": "quiz",
-    "title": "Quiz o drzewach binarnych",
-    "content": "Sprawdz swoja wiedze na temat drzew binarnych:",
-    "order": 6,
-    "additionalData": "{\"question\":\"Ktore z ponizszych twierdzen jest prawdziwe dla drzewa BST (Binary Search Tree)?\",\"options\":[{\"id\":\"1\",\"text\":\"Dla kazdego wezla, wszystkie wartosci w lewym poddrzewie sa wieksze niz wartosc wezla\"},{\"id\":\"2\",\"text\":\"Dla kazdego wezla, wszystkie wartosci w lewym poddrzewie sa mniejsze niz wartosc wezla\"},{\"id\":\"3\",\"text\":\"Wysokosc drzewa BST zawsze wynosi log(n), gdzie n to liczba wezlow\"}],\"correctAnswer\":\"2\",\"explanation\":\"W drzewie BST, dla kazdego wezla, wszystkie wartosci w lewym poddrzewie sa mniejsze niz wartosc wezla, a wszystkie wartosci w prawym poddrzewie sa wieksze niz wartosc wezla. Ta wlasnosc umozliwia efektywne wyszukiwanie.\"}"
-  },
-  {
-    "id": 28,
-    "lessonId": 4,
-    "type": "interactive",
-    "title": "Sprawdzanie czy drzewo jest BST",
-    "content": "Uzupelnij funkcje, ktora sprawdza, czy podane drzewo binarne jest poprawnym drzewem BST (Binary Search Tree).",
-    "code": "function isBST(root) {\n  // Twoj kod tutaj\n  // Funkcja powinna zwracac true, jesli drzewo jest poprawnym BST\n  // i false w przeciwnym przypadku\n  \n}",
-    "language": "javascript",
-    "order": 7,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"4,2,6,1,3,5,7\",\"expectedOutput\":\"true\",\"description\":\"Poprawne drzewo BST\"},{\"id\":\"2\",\"input\":\"4,6,2,1,3,5,7\",\"expectedOutput\":\"false\",\"description\":\"Niepoprawne drzewo BST - 6 na lewo od 4\"},{\"id\":\"3\",\"input\":\"4,2,6,1,5,3,7\",\"expectedOutput\":\"false\",\"description\":\"Niepoprawne drzewo BST - 5 w lewym poddrzewie 4\"}],\"initialCode\":\"function isBST(root) {\\n  // Twoj kod tutaj\\n  \\n}\",\"solution\":\"function isBST(root) {\\n  function validate(node, min, max) {\\n    if (!node) return true;\\n    \\n    if ((min !== null && node.value <= min) || \\n        (max !== null && node.value >= max)) {\\n      return false;\\n    }\\n    \\n    return validate(node.left, min, node.value) && \\n           validate(node.right, node.value, max);\\n  }\\n  \\n  return validate(root, null, null);\\n}\",\"hint\":\"Uzyj rekurencji z dodatkowymi parametrami okreslajacymi dozwolony zakres wartosci dla kazdego poddrzewa. Dla lewego poddrzewa, maksymalna wartosc to wartosc rodzica; dla prawego poddrzewa, minimalna wartosc to wartosc rodzica.\"}"
-  },
-  {
-    "id": 29,
-    "lessonId": 5,
-    "type": "text",
-    "title": "Wprowadzenie do tablic haszujacych",
-    "content": "Tablica haszujaca (hash table) to struktura danych, ktora przechowuje pary klucz-wartosc i umozliwia szybki dostep do wartosci na podstawie klucza. Dziala ona poprzez obliczenie indeksu w tablicy na podstawie klucza za pomoca funkcji haszujacej.\n\nKluczowe pojecia:\n\n1. **Funkcja haszujaca** - przeksztalca klucz w indeks tablicy\n2. **Kolizja** - sytuacja, gdy funkcja haszujaca przypisuje ten sam indeks roznym kluczom\n3. **Rozwiazywanie kolizji** - metody radzenia sobie z kolizjami\n4. **Wspolczynnik wypelnienia** - stosunek liczby elementow do rozmiaru tablicy\n\nSrednia zlozonosc czasowa operacji w tablicy haszujacej to O(1), ale w najgorszym przypadku (np. przy wielu kolizjach) moze byc O(n).",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 30,
-    "lessonId": 5,
-    "type": "image",
-    "title": "Schemat tablicy haszujacej",
-    "content": "Ponizszy diagram pokazuje, jak dziala tablica haszujaca. Klucze sa przeksztalcane przez funkcje haszujaca w indeksy tablicy.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Hash_table_3_1_1_0_1_0_0_SP.svg",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 31,
-    "lessonId": 5,
-    "type": "text",
-    "title": "Funkcje haszujace",
-    "content": "Dobra funkcja haszujaca powinna miec nastepujace cechy:\n\n1. **Deterministycznosc** - ten sam klucz zawsze generuje ten sam indeks\n2. **Efektywnosc** - obliczenie indeksu powinno byc szybkie\n3. **Rownomiernosc** - indeksy powinny byc rozlozone rownomiernie w dostepnej przestrzeni\n4. **Minimalizacja kolizji** - rozne klucze powinny generowac rozne indeksy\n\nPrzykladowe metody haszowania:\n\n1. **Metoda dzielenia** - h(k) = k mod m, gdzie m to rozmiar tablicy\n2. **Metoda mnozenia** - h(k) = floor(m * (kA mod 1)), gdzie A jest stala pomiedzy 0 a 1\n3. **Funkcje uniwersalne** - rodzina funkcji wybieranych losowo\n4. **Kryptograficzne funkcje haszujace** - MD5, SHA-1, SHA-256 (bezpieczne, ale wolniejsze)",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 32,
-    "lessonId": 5,
-    "type": "code",
-    "title": "Prosta funkcja haszujaca dla stringow",
-    "content": "Oto przykład prostej funkcji haszujacej dla stringow w C#:",
-    "code": "public int HashString(string key, int tableSize)\n{\n    int hash = 0;\n    \n    foreach (char c in key)\n    {\n        hash = (hash * 31 + c) % tableSize;\n    }\n    \n    return hash;\n}",
-    "language": "csharp",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 33,
-    "lessonId": 5,
-    "type": "text",
-    "title": "Metody rozwiazywania kolizji",
-    "content": "Istnieje kilka sposobow radzenia sobie z kolizjami w tablicach haszujacych:\n\n1. **Lancuchowanie (Chaining)** - kazdy element tablicy jest początkiem listy elementow o tym samym haszu\n\n2. **Adresowanie otwarte (Open Addressing)** - szukanie alternatywnej pozycji w tablicy:\n   - **Probkowanie liniowe** - sprawdzanie kolejnych pozycji (i+1, i+2, ...)  \n   - **Probkowanie kwadratowe** - sprawdzanie pozycji (i+1², i+2², i+3², ...)\n   - **Podwojne haszowanie** - uzycie drugiej funkcji haszujacej do wyznaczenia kroku\n\n3. **Rehashing** - gdy tablica staje sie zbyt wypelniona, zwieksza sie jej rozmiar i przelicza wszystkie hasze",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 34,
-    "lessonId": 5,
-    "type": "code",
-    "title": "Implementacja tablicy haszujacej z lancuchowaniem",
-    "content": "Oto prosta implementacja tablicy haszujacej z użyciem lancuchowania w C#:",
-    "code": "public class HashTable<TKey, TValue>\n{\n    private const int DefaultCapacity = 16;\n    private const double LoadFactorThreshold = 0.75;\n    \n    private LinkedList<KeyValuePair<TKey, TValue>>[] _buckets;\n    private int _count;\n    \n    public HashTable(int capacity = DefaultCapacity)\n    {\n        _buckets = new LinkedList<KeyValuePair<TKey, TValue>>[capacity];\n        _count = 0;\n    }\n    \n    public void Add(TKey key, TValue value)\n    {\n        // Sprawdz, czy trzeba powiekszyc tablice\n        if ((double)_count / _buckets.Length >= LoadFactorThreshold)\n        {\n            Resize(_buckets.Length * 2);\n        }\n        \n        int bucketIndex = GetBucketIndex(key);\n        \n        // Utworz nowy lancuch, jesli nie istnieje\n        if (_buckets[bucketIndex] == null)\n        {\n            _buckets[bucketIndex] = new LinkedList<KeyValuePair<TKey, TValue>>();\n        }\n        \n        // Sprawdz, czy klucz juz istnieje\n        foreach (var pair in _buckets[bucketIndex])\n        {\n            if (pair.Key.Equals(key))\n            {\n                throw new ArgumentException(\"Klucz juz istnieje\");\n            }\n        }\n        \n        // Dodaj nowa pare klucz-wartosc\n        _buckets[bucketIndex].AddLast(new KeyValuePair<TKey, TValue>(key, value));\n        _count++;\n    }\n    \n    public bool TryGetValue(TKey key, out TValue value)\n    {\n        int bucketIndex = GetBucketIndex(key);\n        \n        if (_buckets[bucketIndex] != null)\n        {\n            foreach (var pair in _buckets[bucketIndex])\n            {\n                if (pair.Key.Equals(key))\n                {\n                    value = pair.Value;\n                    return true;\n                }\n            }\n        }\n        \n        value = default(TValue);\n        return false;\n    }\n    \n    public bool Remove(TKey key)\n    {\n        int bucketIndex = GetBucketIndex(key);\n        \n        if (_buckets[bucketIndex] != null)\n        {\n            LinkedListNode<KeyValuePair<TKey, TValue>> current = _buckets[bucketIndex].First;\n            \n            while (current != null)\n            {\n                if (current.Value.Key.Equals(key))\n                {\n                    _buckets[bucketIndex].Remove(current);\n                    _count--;\n                    return true;\n                }\n                \n                current = current.Next;\n            }\n        }\n        \n        return false;\n    }\n    \n    private int GetBucketIndex(TKey key)\n    {\n        return Math.Abs(key.GetHashCode()) % _buckets.Length;\n    }\n    \n    private void Resize(int newCapacity)\n    {\n        var oldBuckets = _buckets;\n        _buckets = new LinkedList<KeyValuePair<TKey, TValue>>[newCapacity];\n        _count = 0;\n        \n        // Przenies wszystkie elementy do nowej tablicy\n        foreach (var bucket in oldBuckets)\n        {\n            if (bucket != null)\n            {\n                foreach (var pair in bucket)\n                {\n                    Add(pair.Key, pair.Value);\n                }\n            }\n        }\n    }\n}",
-    "language": "csharp",
-    "order": 6,
-    "additionalData": ""
-  },
-  {
-    "id": 35,
-    "lessonId": 5,
-    "type": "quiz",
-    "title": "Quiz o tablicach haszujacych",
-    "content": "Sprawdz swoja wiedze o tablicach haszujacych:",
-    "order": 7,
-    "additionalData": "{\"question\":\"Jaka jest srednia zlozonosc czasowa operacji wyszukiwania w tablicy haszujacej?\",\"options\":[{\"id\":\"1\",\"text\":\"O(1) - staly czas\"},{\"id\":\"2\",\"text\":\"O(log n) - logarytmiczny czas\"},{\"id\":\"3\",\"text\":\"O(n) - liniowy czas\"}],\"correctAnswer\":\"1\",\"explanation\":\"Srednia zlozonosc czasowa operacji wyszukiwania w tablicy haszujacej to O(1) - staly czas. Jednakze, w najgorszym przypadku (np. gdy wszystkie klucze maja ten sam hasz), zlozonosc moze wzrosnac do O(n).\"}"
-  },
-  {
-    "id": 36,
-    "lessonId": 5,
-    "type": "interactive",
-    "title": "Znajdowanie duplikatow",
-    "content": "Uzupelnij ponizszą funkcje, ktora znajduje pierwszy duplikat w tablicy liczb całkowitych. Jesli nie ma duplikatow, zwroc -1.",
-    "code": "function findFirstDuplicate(nums) {\n  // Twoj kod tutaj\n  // Funkcja powinna zwrocic pierwsza liczbe, ktora pojawia sie wiecej niz raz\n  // Jesli nie ma duplikatow, zwroc -1\n  \n}",
-    "language": "javascript",
-    "order": 8,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"[1, 2, 3, 4, 5]\",\"expectedOutput\":\"-1\",\"description\":\"Brak duplikatow\"},{\"id\":\"2\",\"input\":\"[1, 2, 3, 4, 2, 5]\",\"expectedOutput\":\"2\",\"description\":\"Duplikat 2\"},{\"id\":\"3\",\"input\":\"[3, 1, 3, 4, 2]\",\"expectedOutput\":\"3\",\"description\":\"Duplikat 3\"}],\"initialCode\":\"function findFirstDuplicate(nums) {\\n  // Twoj kod tutaj\\n  \\n}\",\"solution\":\"function findFirstDuplicate(nums) {\\n  const seen = new Set();\\n  \\n  for (const num of nums) {\\n    if (seen.has(num)) {\\n      return num;\\n    }\\n    seen.add(num);\\n  }\\n  \\n  return -1;\\n}\",\"hint\":\"Uzyj struktury Set (zbior) do sledzenia juz napotkanych liczb. Set zapewnia operacje sprawdzania obecnosci elementu w czasie O(1), co jest idealne do tego zadania.\"}"
-  },
-  {
-    "id": 37,
-    "lessonId": 6,
-    "type": "text",
-    "title": "Wprowadzenie do algorytmow sortowania",
-    "content": "Sortowanie to proces organizowania elementow w okreslonej kolejnosci (zazwyczaj rosnacej lub malejacej). Jest to jedna z najczesciej wykonywanych operacji w informatyce.\n\nAlgorytmy sortowania mozna klasyfikowac wedlug roznych kryteriow:\n\n1. **Zlozonosc czasowa** - ile czasu zajmuje sortowanie (O(n²), O(n log n), itp.)\n2. **Zlozonosc pamieciowa** - ile dodatkowej pamieci jest potrzebne\n3. **Stabilnosc** - czy elementy o tych samych kluczach zachowuja swoja pierwotna kolejnosc\n4. **Metoda** - porownywanie, wstawianie, zliczanie, itp.\n\nW tej lekcji poznamy trzy podstawowe algorytmy sortowania: sortowanie babelkowe, przez wstawianie i przez wybieranie. Wszystkie maja zlozonosc O(n²), ale sa latwe do zrozumienia i implementacji.",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 38,
-    "lessonId": 6,
-    "type": "code",
-    "title": "Sortowanie babelkowe (Bubble Sort)",
-    "content": "Sortowanie babelkowe wielokrotnie przechodzi przez liste, porownujac sasiednie elementy i zamieniajac je, jesli sa w zlej kolejnosci. Proces jest powtarzany, az do momentu, gdy lista jest posortowana.",
-    "code": "public void BubbleSort(int[] arr)\n{\n    int n = arr.Length;\n    \n    for (int i = 0; i < n - 1; i++)\n    {\n        // Flaga do optymalizacji - jesli nie bylo zamian, tablica jest juz posortowana\n        bool swapped = false;\n        \n        for (int j = 0; j < n - i - 1; j++)\n        {\n            if (arr[j] > arr[j + 1])\n            {\n                // Zamiana elementow\n                int temp = arr[j];\n                arr[j] = arr[j + 1];\n                arr[j + 1] = temp;\n                swapped = true;\n            }\n        }\n        \n        // Jesli w danym przejsciu nie bylo zamian, przerwij\n        if (!swapped)\n            break;\n    }\n}",
-    "language": "csharp",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 39,
-    "lessonId": 6,
-    "type": "image",
-    "title": "Wizualizacja sortowania babelkowego",
-    "content": "Ponizszy obraz przedstawia dzialanie sortowania babelkowego. W kazdym przejsciu najwiekszy element \"wypływa\" na koniec tablicy, podobnie jak babelki w wodzie.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Bubble-sort-example-300px.gif",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 40,
-    "lessonId": 6,
-    "type": "code",
-    "title": "Sortowanie przez wstawianie (Insertion Sort)",
-    "content": "Sortowanie przez wstawianie buduje posortowana tablice po jednym elemencie na raz. Dziala podobnie jak sortowanie kart w reku - bierzesz jedna karte i wstawiasz ja we wlasciwe miejsce wsrod juz posortowanych kart.",
-    "code": "public void InsertionSort(int[] arr)\n{\n    int n = arr.Length;\n    \n    for (int i = 1; i < n; i++)\n    {\n        int key = arr[i];\n        int j = i - 1;\n        \n        // Przesuwaj elementy wieksze od key o jedna pozycje do przodu\n        while (j >= 0 && arr[j] > key)\n        {\n            arr[j + 1] = arr[j];\n            j--;\n        }\n        \n        arr[j + 1] = key;\n    }\n}",
-    "language": "csharp",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 41,
-    "lessonId": 6,
-    "type": "image",
-    "title": "Wizualizacja sortowania przez wstawianie",
-    "content": "Ponizszy obraz pokazuje, jak dziala sortowanie przez wstawianie. Czesc po lewej jest juz posortowana, a kazdy nowy element jest wstawiany we wlasciwe miejsce.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Insertion-sort-example-300px.gif",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 42,
-    "lessonId": 6,
-    "type": "code",
-    "title": "Sortowanie przez wybieranie (Selection Sort)",
-    "content": "Sortowanie przez wybieranie dzieli tablice na dwie czesci: posortowana i nieposortowana. W kazdym kroku znajduje najmniejszy element w nieposortowanej czesci i zamienia go z pierwszym elementem nieposortowanej czesci.",
-    "code": "public void SelectionSort(int[] arr)\n{\n    int n = arr.Length;\n    \n    // Przechodzimy przez cala tablice\n    for (int i = 0; i < n - 1; i++)\n    {\n        // Znajdz indeks najmniejszego elementu w nieposortowanej czesci\n        int minIndex = i;\n        for (int j = i + 1; j < n; j++)\n        {\n            if (arr[j] < arr[minIndex])\n            {\n                minIndex = j;\n            }\n        }\n        \n        // Zamien znaleziony najmniejszy element z pierwszym elementem\n        int temp = arr[minIndex];\n        arr[minIndex] = arr[i];\n        arr[i] = temp;\n    }\n}",
-    "language": "csharp",
-    "order": 6,
-    "additionalData": ""
-  },
-  {
-    "id": 43,
-    "lessonId": 6,
-    "type": "image",
-    "title": "Wizualizacja sortowania przez wybieranie",
-    "content": "Ponizszy obraz pokazuje, jak dziala sortowanie przez wybieranie. W kazdym kroku najmniejszy element nieposortowanej czesci jest przenoszony na koniec posortowanej czesci.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/94/Selection-Sort-Animation.gif",
-    "order": 7,
-    "additionalData": ""
-  },
-  {
-    "id": 44,
-    "lessonId": 6,
-    "type": "text",
-    "title": "Porownanie podstawowych algorytmow sortowania",
-    "content": "Oto porownanie trzech przedstawionych algorytmow sortowania:\n\n| Algorytm | Zlozonosc czasowa (srednia) | Zlozonosc czasowa (najgorsza) | Zlozonosc pamieciowa | Stabilnosc |\n|----------|-------------------------------|--------------------------------|---------------------|------------|\n| Bubble Sort | O(n²) | O(n²) | O(1) | Tak |\n| Insertion Sort | O(n²) | O(n²) | O(1) | Tak |\n| Selection Sort | O(n²) | O(n²) | O(1) | Nie |\n\nWarto zauwazyc, ze:\n\n1. Bubble Sort jest najprostszy, ale zazwyczaj najmniej wydajny\n2. Insertion Sort jest wydajny dla prawie posortowanych tablic\n3. Selection Sort zawsze wykonuje taka sama liczbe porownan, niezaleznie od poczatkowego stanu tablicy",
-    "order": 8,
-    "additionalData": ""
-  },
-  {
-    "id": 45,
-    "lessonId": 6,
-    "type": "quiz",
-    "title": "Quiz o podstawowych algorytmach sortowania",
-    "content": "Sprawdz swoja wiedze o podstawowych algorytmach sortowania:",
-    "order": 9,
-    "additionalData": "{\"question\":\"Ktory z ponizszych algorytmow sortowania jest najbardziej wydajny dla prawie posortowanych tablic?\",\"options\":[{\"id\":\"1\",\"text\":\"Sortowanie babelkowe (Bubble Sort)\"},{\"id\":\"2\",\"text\":\"Sortowanie przez wstawianie (Insertion Sort)\"},{\"id\":\"3\",\"text\":\"Sortowanie przez wybieranie (Selection Sort)\"}],\"correctAnswer\":\"2\",\"explanation\":\"Sortowanie przez wstawianie (Insertion Sort) jest najbardziej wydajne dla prawie posortowanych tablic, poniewaz w najlepszym przypadku (gdy tablica jest juz posortowana) ma zlozonosc O(n).\"}"
-  },
-  {
-    "id": 46,
-    "lessonId": 6,
-    "type": "interactive",
-    "title": "Implementacja sortowania babelkowego",
-    "content": "Zaimplementuj algorytm sortowania babelkowego w JavaScript. Funkcja powinna sortowac tablice liczb w porzadku rosnacym.",
-    "code": "function bubbleSort(arr) {\n  // Twoj kod tutaj\n  // Funkcja powinna sortowac tablice arr w porzadku rosnacym\n  // Uzyj algorytmu sortowania babelkowego\n  \n  return arr;\n}",
-    "language": "javascript",
-    "order": 10,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"[5, 3, 8, 4, 2]\",\"expectedOutput\":\"[2, 3, 4, 5, 8]\",\"description\":\"Sortowanie losowej tablicy\"},{\"id\":\"2\",\"input\":\"[1, 2, 3, 4, 5]\",\"expectedOutput\":\"[1, 2, 3, 4, 5]\",\"description\":\"Sortowanie juz posortowanej tablicy\"},{\"id\":\"3\",\"input\":\"[5, 4, 3, 2, 1]\",\"expectedOutput\":\"[1, 2, 3, 4, 5]\",\"description\":\"Sortowanie tablicy posortowanej odwrotnie\"}],\"initialCode\":\"function bubbleSort(arr) {\\n  // Twoj kod tutaj\\n  \\n  return arr;\\n}\",\"solution\":\"function bubbleSort(arr) {\\n  const n = arr.length;\\n  \\n  for (let i = 0; i < n - 1; i++) {\\n    let swapped = false;\\n    \\n    for (let j = 0; j < n - i - 1; j++) {\\n      if (arr[j] > arr[j + 1]) {\\n        // Zamiana elementow\\n        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];\\n        swapped = true;\\n      }\\n    }\\n    \\n    // Jesli w danym przejsciu nie bylo zamian, przerwij\\n    if (!swapped) break;\\n  }\\n  \\n  return arr;\\n}\",\"hint\":\"Algorytm sortowania babelkowego wymaga dwoch petli: zewnetrznej, ktora kontroluje liczbe przejsc, i wewnetrznej, ktora porownuje sasiednie elementy i zamienia je, jesli sa w zlej kolejnosci.\"}"
-  },
-  {
-    "id": 47,
-    "lessonId": 7,
-    "type": "text",
-    "title": "Zaawansowane algorytmy sortowania",
-    "content": "Podstawowe algorytmy sortowania (bubble sort, insertion sort, selection sort) maja zlozonosc O(n²), co czyni je nieefektywnymi dla duzych zbiorow danych. Zaawansowane algorytmy sortowania oferuja lepsza zlozonosc, zazwyczaj O(n log n).\n\nW tej lekcji omowimy trzy popularne zaawansowane algorytmy sortowania:\n\n1. **Quicksort** - algorytm dziel i zwyciezaj, ktory wybiera element centralny (pivot) i dzieli liste na elementy mniejsze i wieksze\n\n2. **Mergesort** - algorytm dziel i zwyciezaj, ktory dzieli liste na polowy, sortuje je rekurencyjnie, a nastepnie laczy (merge)\n\n3. **Heapsort** - algorytm wykorzystujacy strukture danych kopiec (heap)",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 48,
-    "lessonId": 7,
-    "type": "code",
-    "title": "Quicksort",
-    "content": "Quicksort jest jednym z najczesciej uzywanych algorytmow sortowania. Dziala on wedlug strategii dziel i zwyciezaj (divide and conquer).",
-    "code": "public void QuickSort(int[] arr, int low, int high)\n{\n    if (low < high)\n    {\n        // Znajdz indeks elementu podzialu (pivot)\n        int pivotIndex = Partition(arr, low, high);\n        \n        // Rekurencyjnie sortuj elementy przed i po elemencie podzialu\n        QuickSort(arr, low, pivotIndex - 1);\n        QuickSort(arr, pivotIndex + 1, high);\n    }\n}\n\nprivate int Partition(int[] arr, int low, int high)\n{\n    // Wybierz ostatni element jako pivot\n    int pivot = arr[high];\n    \n    // Indeks mniejszego elementu\n    int i = low - 1;\n    \n    for (int j = low; j < high; j++)\n    {\n        // Jesli biezacy element jest mniejszy lub rowny pivot\n        if (arr[j] <= pivot)\n        {\n            i++;\n            \n            // Zamien arr[i] i arr[j]\n            int temp = arr[i];\n            arr[i] = arr[j];\n            arr[j] = temp;\n        }\n    }\n    \n    // Zamien arr[i+1] i arr[high] (pivot)\n    int temp = arr[i + 1];\n    arr[i + 1] = arr[high];\n    arr[high] = temp;\n    \n    return i + 1;\n}",
-    "language": "csharp",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 49,
-    "lessonId": 7,
-    "type": "image",
-    "title": "Wizualizacja Quicksort",
-    "content": "Ponizszy obraz pokazuje, jak dziala algorytm Quicksort. Czerwony element to pivot, ktory dzieli tablice na dwie czesci.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Sorting_quicksort_anim.gif",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 50,
-    "lessonId": 7,
-    "type": "code",
-    "title": "Mergesort",
-    "content": "Mergesort to algorytm sortowania wykorzystujacy strategie dziel i zwyciezaj. Dzieli on tablice na dwie polowy, sortuje je rekurencyjnie, a nastepnie laczy (merge).",
-    "code": "public void MergeSort(int[] arr, int left, int right)\n{\n    if (left < right)\n    {\n        // Znajdz srodkowy punkt\n        int mid = left + (right - left) / 2;\n        \n        // Sortuj pierwsza i druga polowe\n        MergeSort(arr, left, mid);\n        MergeSort(arr, mid + 1, right);\n        \n        // Polacz posortowane polowy\n        Merge(arr, left, mid, right);\n    }\n}\n\nprivate void Merge(int[] arr, int left, int mid, int right)\n{\n    // Oblicz rozmiary dwoch podtablic\n    int n1 = mid - left + 1;\n    int n2 = right - mid;\n    \n    // Stworz tymczasowe tablice\n    int[] L = new int[n1];\n    int[] R = new int[n2];\n    \n    // Skopiuj dane do tymczasowych tablic\n    for (int i = 0; i < n1; ++i)\n        L[i] = arr[left + i];\n    for (int j = 0; j < n2; ++j)\n        R[j] = arr[mid + 1 + j];\n    \n    // Polacz tymczasowe tablice\n    int i = 0, j = 0;\n    int k = left;\n    \n    while (i < n1 && j < n2)\n    {\n        if (L[i] <= R[j])\n        {\n            arr[k] = L[i];\n            i++;\n        }\n        else\n        {\n            arr[k] = R[j];\n            j++;\n        }\n        k++;\n    }\n    \n    // Skopiuj pozostale elementy L[], jesli jakies zostaly\n    while (i < n1)\n    {\n        arr[k] = L[i];\n        i++;\n        k++;\n    }\n    \n    // Skopiuj pozostale elementy R[], jesli jakies zostaly\n    while (j < n2)\n    {\n        arr[k] = R[j];\n        j++;\n        k++;\n    }\n}",
-    "language": "csharp",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 51,
-    "lessonId": 7,
-    "type": "image",
-    "title": "Wizualizacja Mergesort",
-    "content": "Ponizszy obraz pokazuje, jak dziala algorytm Mergesort. Tablica jest dzielona na mniejsze czesci, ktore sa sortowane, a nastepnie lączone.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Merge-sort-example-300px.gif",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 52,
-    "lessonId": 7,
-    "type": "code",
-    "title": "Heapsort",
-    "content": "Heapsort to algorytm sortowania wykorzystujacy strukture danych kopiec (heap). Kopiec jest drzewem binarnym, ktore spelnia wlasnosc kopca: wartosc w kazdym wezle jest wieksza lub rowna (w przypadku kopca typu max) wartosciom jego dzieci.",
-    "code": "public void HeapSort(int[] arr)\n{\n    int n = arr.Length;\n    \n    // Buduj kopiec (reorganizacja tablicy)\n    for (int i = n / 2 - 1; i >= 0; i--)\n        Heapify(arr, n, i);\n    \n    // Jeden po drugim ekstrahuj elementy z kopca\n    for (int i = n - 1; i > 0; i--)\n    {\n        // Przenies biezacy korzen na koniec\n        int temp = arr[0];\n        arr[0] = arr[i];\n        arr[i] = temp;\n        \n        // Wywolaj max heapify na zredukowanym kopcu\n        Heapify(arr, i, 0);\n    }\n}\n\n// Funkcja przeksztalcajaca poddrzewo o korzeniu i w kopiec\n// n to rozmiar kopca\nprivate void Heapify(int[] arr, int n, int i)\n{\n    int largest = i; // Inicjalizuj largest jako korzen\n    int left = 2 * i + 1; // lewy = 2*i + 1\n    int right = 2 * i + 2; // prawy = 2*i + 2\n    \n    // Jesli lewe dziecko jest wieksze niz korzen\n    if (left < n && arr[left] > arr[largest])\n        largest = left;\n    \n    // Jesli prawe dziecko jest wieksze niz largest do tej pory\n    if (right < n && arr[right] > arr[largest])\n        largest = right;\n    \n    // Jesli largest nie jest korzeniem\n    if (largest != i)\n    {\n        int swap = arr[i];\n        arr[i] = arr[largest];\n        arr[largest] = swap;\n        \n        // Rekurencyjnie twórz kopiec w nizszych poziomach\n        Heapify(arr, n, largest);\n    }\n}",
-    "language": "csharp",
-    "order": 6,
-    "additionalData": ""
-  },
-  {
-    "id": 53,
-    "lessonId": 7,
-    "type": "text",
-    "title": "Porownanie zaawansowanych algorytmow sortowania",
-    "content": "Oto porownanie trzech przedstawionych zaawansowanych algorytmow sortowania:\n\n| Algorytm | Zlozonosc czasowa (srednia) | Zlozonosc czasowa (najgorsza) | Zlozonosc pamieciowa | Stabilnosc |\n|----------|-------------------------------|--------------------------------|---------------------|------------|\n| Quicksort | O(n log n) | O(n²) | O(log n) | Nie |\n| Mergesort | O(n log n) | O(n log n) | O(n) | Tak |\n| Heapsort | O(n log n) | O(n log n) | O(1) | Nie |\n\nWarto zauwazyc, ze:\n\n1. **Quicksort** zazwyczaj jest najszybszy w praktyce, ale ma najgorsza zlozonosc O(n²), gdy pivot jest zawsze najmniejszym lub najwiekszym elementem\n\n2. **Mergesort** gwarantuje zlozonosc O(n log n) niezaleznie od danych wejsciowych, ale wymaga dodatkowej pamieci O(n)\n\n3. **Heapsort** rowniez gwarantuje zlozonosc O(n log n) i uzywa tylko stalej dodatkowej pamieci, ale jest zazwyczaj wolniejszy niz dobrze zaimplementowany Quicksort",
-    "order": 7,
-    "additionalData": ""
-  },
-  {
-    "id": 54,
-    "lessonId": 7,
-    "type": "quiz",
-    "title": "Quiz o zaawansowanych algorytmach sortowania",
-    "content": "Sprawdz swoja wiedze o zaawansowanych algorytmach sortowania:",
-    "order": 8,
-    "additionalData": "{\"question\":\"Ktory z ponizszych algorytmow sortowania zawsze gwarantuje zlozonosc czasowa O(n log n) i nie wymaga dodatkowej pamieci?\",\"options\":[{\"id\":\"1\",\"text\":\"Quicksort\"},{\"id\":\"2\",\"text\":\"Mergesort\"},{\"id\":\"3\",\"text\":\"Heapsort\"}],\"correctAnswer\":\"3\",\"explanation\":\"Heapsort gwarantuje zlozonosc czasowa O(n log n) niezaleznie od danych wejsciowych i uzywa tylko stalej dodatkowej pamieci O(1). Quicksort moze miec zlozonosc O(n²) w najgorszym przypadku, a Mergesort wymaga dodatkowej pamieci O(n).\"}"
-  },
-  {
-    "id": 55,
-    "lessonId": 7,
-    "type": "interactive",
-    "title": "Implementacja Quicksort",
-    "content": "Zaimplementuj algorytm Quicksort w JavaScript. Funkcja powinna sortowac tablice liczb w porzadku rosnacym.",
-    "code": "function quickSort(arr, low = 0, high = arr.length - 1) {\n  // Twoj kod tutaj\n  // Funkcja powinna implementowac algorytm Quicksort\n  \n  return arr;\n}",
-    "language": "javascript",
-    "order": 9,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"[5, 3, 8, 4, 2]\",\"expectedOutput\":\"[2, 3, 4, 5, 8]\",\"description\":\"Sortowanie losowej tablicy\"},{\"id\":\"2\",\"input\":\"[1, 2, 3, 4, 5]\",\"expectedOutput\":\"[1, 2, 3, 4, 5]\",\"description\":\"Sortowanie juz posortowanej tablicy\"},{\"id\":\"3\",\"input\":\"[5, 4, 3, 2, 1]\",\"expectedOutput\":\"[1, 2, 3, 4, 5]\",\"description\":\"Sortowanie tablicy posortowanej odwrotnie\"}],\"initialCode\":\"function quickSort(arr, low = 0, high = arr.length - 1) {\\n  // Twoj kod tutaj\\n  \\n  return arr;\\n}\",\"solution\":\"function quickSort(arr, low = 0, high = arr.length - 1) {\\n  if (low < high) {\\n    // Znajdz indeks podzialu (pivot)\\n    const pivotIndex = partition(arr, low, high);\\n    \\n    // Rekurencyjnie sortuj elementy przed i po pivot\\n    quickSort(arr, low, pivotIndex - 1);\\n    quickSort(arr, pivotIndex + 1, high);\\n  }\\n  \\n  return arr;\\n}\\n\\nfunction partition(arr, low, high) {\\n  // Wybierz ostatni element jako pivot\\n  const pivot = arr[high];\\n  \\n  // Indeks mniejszego elementu\\n  let i = low - 1;\\n  \\n  for (let j = low; j < high; j++) {\\n    // Jesli biezacy element jest mniejszy lub rowny pivot\\n    if (arr[j] <= pivot) {\\n      i++;\\n      \\n      // Zamien arr[i] i arr[j]\\n      [arr[i], arr[j]] = [arr[j], arr[i]];\\n    }\\n  }\\n  \\n  // Zamien arr[i+1] i arr[high] (pivot)\\n  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];\\n  \\n  return i + 1;\\n}\",\"hint\":\"Quicksort wymaga funkcji pomocniczej 'partition', ktora wybiera element pivot, umieszcza go we wlasciwej pozycji i dzieli tablice na dwie czesci: elementy mniejsze od pivot i elementy wieksze od pivot. Nastepnie rekurencyjnie sortuje te dwie czesci.\"}"
-  },
-  {
-    "id": 56,
-    "lessonId": 8,
-    "type": "text",
-    "title": "Wprowadzenie do algorytmow wyszukiwania",
-    "content": "Wyszukiwanie to operacja znajdowania okreslonego elementu w zbiorze danych. Jest to jedna z podstawowych operacji w informatyce, kluczowa dla wielu aplikacji.\n\nDwa najczesciej uzywane algorytmy wyszukiwania to:\n\n1. **Wyszukiwanie liniowe (Linear Search)** - przegladamy kazdy element po kolei, az znajdziemy szukany element lub przejdziemy przez caly zbior\n\n2. **Wyszukiwanie binarne (Binary Search)** - dziala tylko na posortowanych zbiorach, ale jest znacznie szybsze, poniewaz w kazdym kroku eliminuje polowe pozostalych elementow\n\nKazdy z tych algorytmow ma swoje zalety i wady. Wybor odpowiedniego algorytmu zalezy od kontekstu: rozmiaru zbioru danych, jego organizacji (posortowany czy nie) oraz czestotliwosci wyszukiwania.",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 57,
-    "lessonId": 8,
-    "type": "code",
-    "title": "Wyszukiwanie liniowe (Linear Search)",
-    "content": "Wyszukiwanie liniowe to najprostszy algorytm wyszukiwania. Przegladamy kazdy element zbioru po kolei, az znajdziemy szukany element lub przejdziemy przez caly zbior.",
-    "code": "public int LinearSearch(int[] arr, int target)\n{\n    for (int i = 0; i < arr.Length; i++)\n    {\n        if (arr[i] == target)\n        {\n            return i; // Znaleziono element, zwroc jego indeks\n        }\n    }\n    \n    return -1; // Element nie zostal znaleziony\n}",
-    "language": "csharp",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 58,
-    "lessonId": 8,
-    "type": "image",
-    "title": "Wizualizacja wyszukiwania liniowego",
-    "content": "Ponizszy obraz pokazuje, jak dziala wyszukiwanie liniowe. Przegladamy kazdy element po kolei, az znajdziemy szukany element.",
-    "imageUrl": "https://www.tutorialspoint.com/data_structures_algorithms/images/linear_search.gif",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 59,
-    "lessonId": 8,
-    "type": "text",
-    "title": "Zlozonosc wyszukiwania liniowego",
-    "content": "**Zlozonosc czasowa wyszukiwania liniowego:**\n\n- **Najlepszy przypadek:** O(1) - gdy szukany element jest pierwszym elementem zbioru\n- **Sredni przypadek:** O(n/2) = O(n) - srednio przegladamy polowe elementow\n- **Najgorszy przypadek:** O(n) - gdy szukany element jest ostatnim elementem lub nie wystepuje w zbiorze\n\n**Zlozonosc pamieciowa:** O(1) - uzywa tylko kilku zmiennych niezaleznie od rozmiaru zbioru\n\n**Zalety:**\n- Proste w implementacji\n- Dziala na nieposortowanych zbiorach\n- Nie wymaga zadnych zalozien dotyczacych danych\n\n**Wady:**\n- Nieefektywne dla duzych zbiorow danych\n- Dla duzych zbiorow znacznie wolniejsze niz inne algorytmy (np. wyszukiwanie binarne)",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 60,
-    "lessonId": 8,
-    "type": "code",
-    "title": "Wyszukiwanie binarne (Binary Search)",
-    "content": "Wyszukiwanie binarne to wydajny algorytm wyszukiwania, ktory dziala na posortowanych zbiorach. W kazdym kroku eliminuje polowe pozostalych elementow, znacznie przyspieszajac proces wyszukiwania.",
-    "code": "public int BinarySearch(int[] arr, int target)\n{\n    int left = 0;\n    int right = arr.Length - 1;\n    \n    while (left <= right)\n    {\n        int mid = left + (right - left) / 2;\n        \n        // Sprawdz, czy element znajduje sie w srodku\n        if (arr[mid] == target)\n        {\n            return mid;\n        }\n        \n        // Jesli element jest wiekszy, ignoruj lewa polowe\n        if (arr[mid] < target)\n        {\n            left = mid + 1;\n        }\n        // Jesli element jest mniejszy, ignoruj prawa polowe\n        else\n        {\n            right = mid - 1;\n        }\n    }\n    \n    // Element nie zostal znaleziony\n    return -1;\n}",
-    "language": "csharp",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 61,
-    "lessonId": 8,
-    "type": "image",
-    "title": "Wizualizacja wyszukiwania binarnego",
-    "content": "Ponizszy obraz pokazuje, jak dziala wyszukiwanie binarne. W kazdym kroku porownujemy element srodkowy i eliminujemy polowe pozostalych elementow.",
-    "imageUrl": "https://blog.penjee.com/wp-content/uploads/2015/04/binary-and-linear-search-animations.gif",
-    "order": 6,
-    "additionalData": ""
-  },
-  {
-    "id": 62,
-    "lessonId": 8,
-    "type": "text",
-    "title": "Zlozonosc wyszukiwania binarnego",
-    "content": "**Zlozonosc czasowa wyszukiwania binarnego:**\n\n- **Najlepszy przypadek:** O(1) - gdy szukany element jest w srodku zbioru\n- **Sredni i najgorszy przypadek:** O(log n) - w kazdym kroku eliminujemy polowe pozostalych elementow\n\n**Zlozonosc pamieciowa:**\n- **Iteracyjna implementacja:** O(1) - uzywa tylko kilku zmiennych\n- **Rekurencyjna implementacja:** O(log n) - z powodu stosu wywolan rekurencyjnych\n\n**Zalety:**\n- Bardzo wydajne dla duzych zbiorow danych\n- Znacznie szybsze niz wyszukiwanie liniowe dla duzych zbiorow\n\n**Wady:**\n- Dziala tylko na posortowanych zbiorach\n- Wymaga dostepu swobodnego do elementow (np. w tablicy)\n- Nieco bardziej skomplikowana implementacja niz wyszukiwanie liniowe",
-    "order": 7,
-    "additionalData": ""
-  },
-  {
-    "id": 63,
-    "lessonId": 8,
-    "type": "quiz",
-    "title": "Quiz o algorytmach wyszukiwania",
-    "content": "Sprawdz swoja wiedze o algorytmach wyszukiwania:",
-    "order": 8,
-    "additionalData": "{\"question\":\"Jaka jest zlozonosc czasowa wyszukiwania binarnego w najgorszym przypadku?\",\"options\":[{\"id\":\"1\",\"text\":\"O(1) - staly czas\"},{\"id\":\"2\",\"text\":\"O(log n) - logarytmiczny czas\"},{\"id\":\"3\",\"text\":\"O(n) - liniowy czas\"},{\"id\":\"4\",\"text\":\"O(n²) - kwadratowy czas\"}],\"correctAnswer\":\"2\",\"explanation\":\"Zlozonosc czasowa wyszukiwania binarnego w najgorszym przypadku to O(log n), poniewaz w kazdym kroku algorytm eliminuje polowe pozostalych elementow.\"}"
-  },
-  {
-    "id": 64,
-    "lessonId": 8,
-    "type": "interactive",
-    "title": "Implementacja wyszukiwania binarnego",
-    "content": "Zaimplementuj algorytm wyszukiwania binarnego w JavaScript. Funkcja powinna zwracac indeks szukanego elementu lub -1, jesli element nie zostal znaleziony.",
-    "code": "function binarySearch(arr, target) {\n  // Twoj kod tutaj\n  // Funkcja powinna zwracac indeks elementu target w tablicy arr\n  // Jesli element nie zostal znaleziony, zwroc -1\n  // Zaloz, ze tablica arr jest juz posortowana\n  \n}",
-    "language": "javascript",
-    "order": 9,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"[1, 2, 3, 4, 5], 3\",\"expectedOutput\":\"2\",\"description\":\"Szukanie elementu w srodku tablicy\"},{\"id\":\"2\",\"input\":\"[1, 2, 3, 4, 5], 1\",\"expectedOutput\":\"0\",\"description\":\"Szukanie pierwszego elementu\"},{\"id\":\"3\",\"input\":\"[1, 2, 3, 4, 5], 5\",\"expectedOutput\":\"4\",\"description\":\"Szukanie ostatniego elementu\"},{\"id\":\"4\",\"input\":\"[1, 2, 3, 4, 5], 6\",\"expectedOutput\":\"-1\",\"description\":\"Szukanie nieistniejacego elementu\"}],\"initialCode\":\"function binarySearch(arr, target) {\\n  // Twoj kod tutaj\\n  \\n}\",\"solution\":\"function binarySearch(arr, target) {\\n  let left = 0;\\n  let right = arr.length - 1;\\n  \\n  while (left <= right) {\\n    const mid = Math.floor(left + (right - left) / 2);\\n    \\n    if (arr[mid] === target) {\\n      return mid; // Znaleziono element\\n    }\\n    \\n    if (arr[mid] < target) {\\n      left = mid + 1; // Szukaj w prawej polowie\\n    } else {\\n      right = mid - 1; // Szukaj w lewej polowie\\n    }\\n  }\\n  \\n  return -1; // Element nie zostal znaleziony\\n}\",\"hint\":\"Wyszukiwanie binarne dziala przez porownanie srodkowego elementu z szukana wartoscia. Jesli srodkowy element jest mniejszy, szukaj w prawej polowie. Jesli jest wiekszy, szukaj w lewej polowie. Powtarzaj, az znajdziesz element lub zakres poszukiwan stanie sie pusty.\"}"
-  },
-  {
-    "id": 65,
-    "lessonId": 9,
-    "type": "text",
-    "title": "Wprowadzenie do rekurencji",
-    "content": "Rekurencja to technika programowania, w ktorej funkcja wywoluje sama siebie w celu rozwiazania problemu. Jest to potezne narzedzie, szczegolnie przydatne przy rozwiazywaniu problemow, ktore mozna podzielic na mniejsze podproblemy o tej samej strukturze.\n\nKazde rozwiazanie rekurencyjne sklada sie z dwoch glownych czesci:\n\n1. **Przypadek bazowy (warunek koncowy)** - prosty przypadek, ktory mozna rozwiazac bezposrednio, bez kolejnych wywolan rekurencyjnych\n\n2. **Przypadek rekurencyjny** - zlozony przypadek, ktory rozwiazuje sie poprzez podzial na mniejsze podproblemy i wywolanie funkcji rekurencyjnie\n\nRekurencja jest czesto stosowana w algorytmach sortowania (np. quicksort, mergesort), przechodzeniu przez struktury danych (np. drzewa, grafy) oraz w wielu innych problemach algorytmicznych.",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 66,
-    "lessonId": 9,
-    "type": "code",
-    "title": "Przyklad rekurencji - silnia",
-    "content": "Klasycznym przykladem rekurencji jest obliczanie silni liczby (n!). Silnia liczby n to iloczyn wszystkich liczb naturalnych od 1 do n.",
-    "code": "public int Factorial(int n)\n{\n    // Przypadek bazowy\n    if (n <= 1)\n    {\n        return 1;\n    }\n    \n    // Przypadek rekurencyjny\n    return n * Factorial(n - 1);\n}",
-    "language": "csharp",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 67,
-    "lessonId": 9,
-    "type": "text",
-    "title": "Rozwijanie wywolan rekurencyjnych",
-    "content": "Aby lepiej zrozumiec, jak dziala rekurencja, przyjrzyjmy sie, jak rozwijaja sie wywolania rekurencyjne dla silni liczby 4:\n\n```\nFactorial(4)\n= 4 * Factorial(3)\n= 4 * (3 * Factorial(2))\n= 4 * (3 * (2 * Factorial(1)))\n= 4 * (3 * (2 * 1))\n= 4 * (3 * 2)\n= 4 * 6\n= 24\n```\n\nKazde wywolanie rekurencyjne jest umieszczane na stosie wywolan (call stack), a nastepnie rozwijane od przypadku bazowego w gore. Jezeli przypadek bazowy nie zostanie osiagniety, program bedzie wykonywal wywolania rekurencyjne w nieskonczonosc, co prowadzi do przepelnienia stosu (stack overflow).",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 68,
-    "lessonId": 9,
-    "type": "code",
-    "title": "Przyklad rekurencji - ciag Fibonacciego",
-    "content": "Innym klasycznym przykladem rekurencji jest obliczanie n-tego wyrazu ciagu Fibonacciego. Ciag Fibonacciego to ciag liczb, w ktorym kazdy wyraz jest suma dwoch poprzednich wyrazow: 0, 1, 1, 2, 3, 5, 8, 13, ...",
-    "code": "public int Fibonacci(int n)\n{\n    // Przypadki bazowe\n    if (n <= 0)\n    {\n        return 0;\n    }\n    if (n == 1)\n    {\n        return 1;\n    }\n    \n    // Przypadek rekurencyjny\n    return Fibonacci(n - 1) + Fibonacci(n - 2);\n}",
-    "language": "csharp",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 69,
-    "lessonId": 9,
-    "type": "text",
-    "title": "Zalety i wady rekurencji",
-    "content": "**Zalety rekurencji:**\n\n1. **Czytelnosc** - rozwiazania rekurencyjne sa czesto prostsze i bardziej eleganckie niz ich iteracyjne odpowiedniki\n2. **Naturalnosc** - wiele problemow ma naturalna rekurencyjna strukture (np. algorytmy na drzewach, dziel i zwyciezaj)\n3. **Latwiejsze rozwiazywanie zlozonych problemow** - dekompozycja problemu na mniejsze podproblemy\n\n**Wady rekurencji:**\n\n1. **Wydajnosc** - wywolania rekurencyjne generuja dodatkowy narzut (overhead) zwiazany z zarzadzaniem stosem\n2. **Zuzycie pamieci** - kazde wywolanie rekurencyjne zajmuje miejsce na stosie\n3. **Przepelnienie stosu** - zbyt gleboka rekurencja moze prowadzic do przepelnienia stosu (stack overflow)\n4. **Wielokrotne rozwiazywanie tych samych podproblemow** - w prostej rekurencji, jak w przykladzie Fibonacciego, te same podproblemy sa rozwiazywane wielokrotnie\n\nWiele z tych wad mozna zlagodzic poprzez techniki takie jak **memoizacja** (zapamietywanie wynikow) czy **rekurencja ogonowa** (tail recursion).",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 70,
-    "lessonId": 9,
-    "type": "code",
-    "title": "Optymalizacja - memoizacja",
-    "content": "Memoizacja to technika optymalizacji, ktora polega na zapamietywaniu wynikow wczesniejszych wywolan funkcji. Szczegolnie przydatna dla rekurencji, gdzie te same podproblemy sa rozwiazywane wielokrotnie.\n\nPonizsza implementacja ciagu Fibonacciego z memoizacja jest znacznie bardziej wydajna:",
-    "code": "public int FibonacciMemoized(int n)\n{\n    return FibonacciMemoized(n, new Dictionary<int, int>());\n}\n\nprivate int FibonacciMemoized(int n, Dictionary<int, int> memo)\n{\n    // Przypadki bazowe\n    if (n <= 0)\n    {\n        return 0;\n    }\n    if (n == 1)\n    {\n        return 1;\n    }\n    \n    // Sprawdz, czy wynik jest juz w pamieci\n    if (memo.ContainsKey(n))\n    {\n        return memo[n];\n    }\n    \n    // Oblicz i zapamietaj wynik\n    memo[n] = FibonacciMemoized(n - 1, memo) + FibonacciMemoized(n - 2, memo);\n    return memo[n];\n}",
-    "language": "csharp",
-    "order": 6,
-    "additionalData": ""
-  },
-  {
-    "id": 71,
-    "lessonId": 9,
-    "type": "quiz",
-    "title": "Quiz o rekurencji",
-    "content": "Sprawdz swoja wiedze o rekurencji:",
-    "order": 7,
-    "additionalData": "{\"question\":\"Co musi zawierac kazde poprawne rozwiazanie rekurencyjne?\",\"options\":[{\"id\":\"1\",\"text\":\"Petle for\"},{\"id\":\"2\",\"text\":\"Przypadek bazowy (warunek koncowy)\"},{\"id\":\"3\",\"text\":\"Memoizacje\"},{\"id\":\"4\",\"text\":\"Tablice pomocnicza\"}],\"correctAnswer\":\"2\",\"explanation\":\"Kazde poprawne rozwiazanie rekurencyjne musi zawierac przypadek bazowy (warunek koncowy), ktory przerywa rekurencje. Bez niego funkcja bedzie wywolywac sie w nieskonczonosc, co prowadzi do przepelnienia stosu (stack overflow).\"}"
-  },
-  {
-    "id": 72,
-    "lessonId": 9,
-    "type": "interactive",
-    "title": "Implementacja rekurencyjnego liczenia potegi",
-    "content": "Zaimplementuj funkcje rekurencyjna, ktora oblicza x podniesione do potegi n. Wykorzystaj fakt, ze x^n = x * x^(n-1) dla n > 0.",
-    "code": "function power(x, n) {\n  // Twoj kod tutaj\n  // Funkcja powinna obliczac x^n przy uzyciu rekurencji\n  // Przykladowo: power(2, 3) powinno zwrocic 2^3 = 8\n  \n}",
-    "language": "javascript",
-    "order": 8,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"2, 3\",\"expectedOutput\":\"8\",\"description\":\"2^3 = 8\"},{\"id\":\"2\",\"input\":\"5, 0\",\"expectedOutput\":\"1\",\"description\":\"5^0 = 1\"},{\"id\":\"3\",\"input\":\"3, 4\",\"expectedOutput\":\"81\",\"description\":\"3^4 = 81\"},{\"id\":\"4\",\"input\":\"10, 1\",\"expectedOutput\":\"10\",\"description\":\"10^1 = 10\"}],\"initialCode\":\"function power(x, n) {\\n  // Twoj kod tutaj\\n  \\n}\",\"solution\":\"function power(x, n) {\\n  // Przypadek bazowy\\n  if (n === 0) {\\n    return 1;\\n  }\\n  \\n  // Przypadek rekurencyjny\\n  return x * power(x, n - 1);\\n}\",\"hint\":\"Pamietaj o przypadku bazowym: dowolna liczba podniesiona do potegi 0 jest rowna 1. Dla pozostalych przypadkow, wykorzystaj wzor rekurencyjny: x^n = x * x^(n-1).\"}"
-  },
-  {
-    "id": 73,
-    "lessonId": 10,
-    "type": "text",
-    "title": "Wprowadzenie do programowania dynamicznego",
-    "content": "Programowanie dynamiczne (Dynamic Programming, DP) to technika algorytmiczna, ktora rozwiazuje zlozony problem poprzez podzial go na mniejsze podproblemy oraz zapamietywanie wynikow tych podproblemow, aby uniknac ponownych obliczen.\n\nProgramowanie dynamiczne jest szczegolnie przydatne, gdy:\n\n1. Problem ma **optymalna substrukture** - optymalne rozwiazanie problemu zawiera optymalne rozwiazania podproblemow\n\n2. Problem ma **nakladajace sie podproblemy** - te same podproblemy sa rozwiazywane wielokrotnie\n\nRoznice miedzy zwykla rekurencja a programowaniem dynamicznym:\n- W zwyklej rekurencji te same podproblemy sa rozwiazywane wielokrotnie\n- W programowaniu dynamicznym wyniki podproblemow sa zapamietywane, co eliminuje ponowne obliczenia\n\nDwa glowne podejscia w programowaniu dynamicznym:\n\n1. **Top-down (z gory na dol)** - zaczynamy od glownego problemu i rozwiazujemy go rekurencyjnie, zapamietujac wyniki podproblemow (memoizacja)\n\n2. **Bottom-up (z dolu do gory)** - zaczynamy od najprostszych podproblemow i iteracyjnie budujemy rozwiazania wiekszych problemow (tabelaryzacja)",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 74,
-    "lessonId": 10,
-    "type": "code",
-    "title": "Przyklad - ciag Fibonacciego z programowaniem dynamicznym",
-    "content": "Obliczanie n-tego wyrazu ciagu Fibonacciego jest klasycznym przykladem problemu, ktory mozna rozwiazac za pomoca programowania dynamicznego.",
-    "code": "// Podejscie top-down (memoizacja)\npublic int FibonacciTopDown(int n)\n{\n    Dictionary<int, int> memo = new Dictionary<int, int>();\n    return FibonacciTopDownHelper(n, memo);\n}\n\nprivate int FibonacciTopDownHelper(int n, Dictionary<int, int> memo)\n{\n    if (n <= 0) return 0;\n    if (n == 1) return 1;\n    \n    if (memo.ContainsKey(n))\n    {\n        return memo[n];\n    }\n    \n    memo[n] = FibonacciTopDownHelper(n - 1, memo) + FibonacciTopDownHelper(n - 2, memo);\n    return memo[n];\n}\n\n// Podejscie bottom-up (tabelaryzacja)\npublic int FibonacciBottomUp(int n)\n{\n    if (n <= 0) return 0;\n    if (n == 1) return 1;\n    \n    int[] fib = new int[n + 1];\n    fib[0] = 0;\n    fib[1] = 1;\n    \n    for (int i = 2; i <= n; i++)\n    {\n        fib[i] = fib[i - 1] + fib[i - 2];\n    }\n    \n    return fib[n];\n}",
-    "language": "csharp",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 75,
-    "lessonId": 10,
-    "type": "text",
-    "title": "Przyklad - problem plecakowy (Knapsack Problem)",
-    "content": "Problem plecakowy (Knapsack Problem) to klasyczny problem optymalizacyjny. Mamy plecak o ograniczonej pojemnosci i zestaw przedmiotow, kazdy o okreslonej wadze i wartosci. Celem jest wybranie przedmiotow o maksymalnej calkowitej wartosci, nie przekraczajac pojemnosci plecaka.\n\nProblem ten ma optymalna substrukture i nakladajace sie podproblemy, co czyni go idealnym kandydatem do rozwiazania za pomoca programowania dynamicznego.\n\nWeznmy prosty przyklad:\n- Plecak o pojemnosci 7 kg\n- Dostepne przedmioty: (waga, wartosc)\n  - Przedmiot 1: (3 kg, 4$)\n  - Przedmiot 2: (4 kg, 5$)\n  - Przedmiot 3: (2 kg, 3$)\n\nOptymalne rozwiazanie to wybranie przedmiotow 1 i 3, co daje calkowita wartosc 7$ przy wadze 5 kg.",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 76,
-    "lessonId": 10,
-    "type": "code",
-    "title": "Rozwiazanie problemu plecakowego z programowaniem dynamicznym",
-    "content": "Ponizej znajduje sie implementacja rozwiazania problemu plecakowego z wykorzystaniem programowania dynamicznego (podejscie bottom-up):",
-    "code": "public int KnapsackProblem(int capacity, int[] weights, int[] values, int n)\n{\n    // Tablica DP do przechowywania wynikow podproblemow\n    // dp[i, w] = maksymalna wartosc, ktora mozna osiagnac z pierwszych i przedmiotow\n    // przy pojemnosci plecaka rownej w\n    int[,] dp = new int[n + 1, capacity + 1];\n    \n    // Wypelniamy tablice DP\n    for (int i = 0; i <= n; i++)\n    {\n        for (int w = 0; w <= capacity; w++)\n        {\n            if (i == 0 || w == 0)\n            {\n                // Przypadki bazowe: brak przedmiotow lub brak pojemnosci\n                dp[i, w] = 0;\n            }\n            else if (weights[i - 1] <= w)\n            {\n                // Jesli mozemy wziac i-ty przedmiot, wybieramy maksimum z:\n                // 1. Wziecie i-tego przedmiotu + najlepsza wartosc z pozostalymi przedmiotami i mniejsza pojemnoscia\n                // 2. Niebranie i-tego przedmiotu i najlepsza wartosc z pozostalymi przedmiotami\n                dp[i, w] = Math.Max(\n                    values[i - 1] + dp[i - 1, w - weights[i - 1]],\n                    dp[i - 1, w]\n                );\n            }\n            else\n            {\n                // Jesli nie mozemy wziac i-tego przedmiotu (za ciezki)\n                // to kontynuujemy z ta sama pojemnoscia i pozostalymi przedmiotami\n                dp[i, w] = dp[i - 1, w];\n            }\n        }\n    }\n    \n    return dp[n, capacity];\n}",
-    "language": "csharp",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 77,
-    "lessonId": 10,
-    "type": "text",
-    "title": "Inne klasyczne problemy programowania dynamicznego",
-    "content": "Programowanie dynamiczne znajduje zastosowanie w wielu klasycznych problemach:\n\n1. **Najdluzszy wspolny podciag (Longest Common Subsequence)** - znajdowanie najdluzszego podciagu wspolnego dla dwoch sekwencji\n\n2. **Najdluzsza rosnaca sekwencja (Longest Increasing Subsequence)** - znajdowanie najdluzszej rosnącej sekwencji w tablicy\n\n3. **Problem wydawania reszty (Coin Change)** - znajdowanie minimalnej liczby monet o roznych nominalach potrzebnych do wydania okreslonej kwoty\n\n4. **Algorytm Floyda-Warshalla** - znajdowanie najkrotszych sciezek miedzy wszystkimi parami wierzcholkow w grafie\n\n5. **Mnozenie lancucha macierzy (Matrix Chain Multiplication)** - znajdowanie optymalnego sposobu mnozenia ciagu macierzy\n\n6. **Problem optymalnego drzewa BST** - konstrukcja drzewa BST o minimalnym oczekiwanym koszcie wyszukiwania\n\n7. **Problem komiwojazera (Travelling Salesman Problem)** - znajdowanie najkrotszej trasy odwiedzajacej wszystkie miasta dokladnie raz",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 78,
-    "lessonId": 10,
-    "type": "code",
-    "title": "Przyklad - najdluzszy wspolny podciag",
-    "content": "Problem najdluzszego wspolnego podciagu (Longest Common Subsequence, LCS) polega na znalezieniu najdluzszego podciagu wspolnego dla dwoch sekwencji. Podciag to sekwencja, ktora moze byc uzyskana z pierwotnej sekwencji poprzez usuniecie niektorych elementow bez zmiany kolejnosci pozostalych elementow.",
-    "code": "public int LongestCommonSubsequence(string text1, string text2)\n{\n    int m = text1.Length;\n    int n = text2.Length;\n    \n    // Tablica DP: dp[i,j] = dlugosc LCS dla text1[0...i-1] i text2[0...j-1]\n    int[,] dp = new int[m + 1, n + 1];\n    \n    for (int i = 0; i <= m; i++)\n    {\n        for (int j = 0; j <= n; j++)\n        {\n            if (i == 0 || j == 0)\n            {\n                dp[i, j] = 0; // Pusty ciag nie ma wspolnego podciagu z zadnym innym ciagiem\n            }\n            else if (text1[i - 1] == text2[j - 1])\n            {\n                dp[i, j] = dp[i - 1, j - 1] + 1; // Znaleziono wspolny znak, zwieksz dlugosc o 1\n            }\n            else\n            {\n                dp[i, j] = Math.Max(dp[i - 1, j], dp[i, j - 1]); // Wybierz maksimum z dwoch opcji\n            }\n        }\n    }\n    \n    return dp[m, n];\n}",
-    "language": "csharp",
-    "order": 6,
-    "additionalData": ""
-  },
-  {
-    "id": 79,
-    "lessonId": 10,
-    "type": "quiz",
-    "title": "Quiz o programowaniu dynamicznym",
-    "content": "Sprawdz swoja wiedze o programowaniu dynamicznym:",
-    "order": 7,
-    "additionalData": "{\"question\":\"Ktore z ponizszych stwierdzen najlepiej opisuje programowanie dynamiczne?\",\"options\":[{\"id\":\"1\",\"text\":\"To technika optymalizujaca czas wykonania poprzez wykorzystanie wielu watkow\"},{\"id\":\"2\",\"text\":\"To metoda rozwiazywania problemow przez dzielenie ich na mniejsze podproblemy i zapamietywanie wynikow\"},{\"id\":\"3\",\"text\":\"To sposob organizacji kodu wykorzystujacy wzorce projektowe\"},{\"id\":\"4\",\"text\":\"To technika zwiekszania wydajnosci algorytmow przez zmniejszenie zuzycia pamieci\"}],\"correctAnswer\":\"2\",\"explanation\":\"Programowanie dynamiczne to metoda rozwiazywania problemow przez dzielenie ich na mniejsze, nakladajace sie podproblemy i zapamietywanie (memoizacja) wynikow tych podproblemow, aby uniknac ponownych obliczen. Kluczowe cechy to optymalna substruktura i nakladajace sie podproblemy.\"}"
-  },
-  {
-    "id": 80,
-    "lessonId": 10,
-    "type": "interactive",
-    "title": "Implementacja problemu wydawania reszty",
-    "content": "Zaimplementuj rozwiazanie problemu wydawania reszty (Coin Change). Masz zestaw monet o roznych nominalach i kwote docelowa. Znajdz minimalna liczbe monet potrzebna do wydania kwoty. Jesli nie da sie wydac dokladnej kwoty, zwroc -1.",
-    "code": "function coinChange(coins, amount) {\n  // Twoj kod tutaj\n  // coins - tablica dostepnych nominalow monet\n  // amount - kwota do wydania\n  // Zwroc minimalna liczbe monet potrzebna do wydania kwoty,\n  // lub -1 jesli nie da sie wydac dokladnej kwoty\n  \n}",
-    "language": "javascript",
-    "order": 8,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"[1, 2, 5], 11\",\"expectedOutput\":\"3\",\"description\":\"Optymalne rozwiazanie: 5 + 5 + 1 = 11\"},{\"id\":\"2\",\"input\":\"[2], 3\",\"expectedOutput\":\"-1\",\"description\":\"Nie da sie wydac kwoty 3 uzywajac tylko monet o nominale 2\"},{\"id\":\"3\",\"input\":\"[1, 3, 4, 5], 7\",\"expectedOutput\":\"2\",\"description\":\"Optymalne rozwiazanie: 3 + 4 = 7\"}],\"initialCode\":\"function coinChange(coins, amount) {\\n  // Twoj kod tutaj\\n  \\n}\",\"solution\":\"function coinChange(coins, amount) {\\n  // Tablica dp: dp[i] = minimalna liczba monet potrzebna do wydania kwoty i\\n  // Inicjalizujemy wartoscia amount + 1 (wieksza niz mozliwa odpowiedz)\\n  const dp = Array(amount + 1).fill(amount + 1);\\n  \\n  // Przypadek bazowy\\n  dp[0] = 0;\\n  \\n  // Wypelniamy tablice dp\\n  for (let i = 1; i <= amount; i++) {\\n    for (const coin of coins) {\\n      if (coin <= i) {\\n        dp[i] = Math.min(dp[i], dp[i - coin] + 1);\\n      }\\n    }\\n  }\\n  \\n  // Jesli dp[amount] nie zostal zaktualizowany, to nie da sie wydac kwoty\\n  return dp[amount] > amount ? -1 : dp[amount];\\n}\",\"hint\":\"Uzyj programowania dynamicznego z podejsciem bottom-up. Stworz tablice dp[], gdzie dp[i] to minimalna liczba monet potrzebna do wydania kwoty i. Inicjalizuj wartosci niemozliwe do osiagniecia (np. amount + 1), a dp[0] = 0. Nastepnie dla kazdej kwoty od 1 do amount, sprawdz, czy mozna ja uzyskac przy uzyciu kazdej z dostepnych monet i wybierz minimalna liczbe monet.\"}"
-  },
-  {
-    "id": 81,
-    "lessonId": 11,
-    "type": "text",
-    "title": "Czym jest notacja Big O?",
-    "content": "Notacja Big O to matematyczny sposob wyrazania wydajnosci algorytmu, szczegolnie okreslajacy, jak zmieniaja sie wymagania czasowe lub pamieciowe wraz ze wzrostem rozmiaru danych wejsciowych. Pomaga odpowiedziec na pytanie: \"Jak zachowuje sie algorytm, gdy ilosc danych rosnie?\"\n\nNotacja Big O skupia sie na dominujacym skladniku wzrostu, ignorujac stale mnozniki i skladniki nizszego rzedu, ktore staja sie nieistotne dla duzych danych.\n\nNajczesciej spotykane klasy zlozonosci (od najlepszej do najgorszej):\n\n1. **O(1)** - zlozonosc stala (niezalezna od wielkosci danych)\n2. **O(log n)** - zlozonosc logarytmiczna\n3. **O(n)** - zlozonosc liniowa\n4. **O(n log n)** - zlozonosc liniowo-logarytmiczna\n5. **O(n²)** - zlozonosc kwadratowa\n6. **O(2^n)** - zlozonosc wykladnicza\n7. **O(n!)** - zlozonosc silniowa",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 82,
-    "lessonId": 11,
-    "type": "image",
-    "title": "Porownanie zlozonosci obliczeniowych",
-    "content": "Ponizszy wykres porownuje wzrost roznych funkcji zlozonosci wraz ze wzrostem rozmiaru danych wejsciowych. Zauważ, jak drastycznie roznia sie krzywe dla duzych wartosci n.",
-    "imageUrl": "https://miro.medium.com/max/1400/1*5ZLci3SuR0zM_QlZOADv8Q.jpeg",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 83,
-    "lessonId": 11,
-    "type": "text",
-    "title": "Przyklady zlozonosci obliczeniowej",
-    "content": "Oto kilka praktycznych przykladow zlozonosci obliczeniowej popularnych operacji i algorytmow:\n\n**O(1) - staly czas:**\n- Dostep do elementu tablicy przez indeks\n- Operacje na stosie (push/pop)\n- Operacje na kolejce (enqueue/dequeue)\n- Dostep do elementu w tablicy haszujacej (srednio)\n\n**O(log n) - czas logarytmiczny:**\n- Wyszukiwanie binarne\n- Operacje na zbalansowanych drzewach BST\n- Operacje na kopcu (heap)\n\n**O(n) - czas liniowy:**\n- Przeszukiwanie liniowe\n- Przechodzenie przez liste powiazana\n- Przechodzenie przez tablice\n\n**O(n log n) - czas liniowo-logarytmiczny:**\n- Wydajne algorytmy sortowania (quicksort, mergesort, heapsort)\n\n**O(n²) - czas kwadratowy:**\n- Proste algorytmy sortowania (sortowanie babelkowe, przez wstawianie, przez wybieranie)\n- Porownywanie kazdego elementu z kazdym innym elementem\n\n**O(2^n) - czas wykladniczy:**\n- Rozwiazywanie problemu komiwojazera metoda silowa\n- Generowanie wszystkich podzbiorow zbioru\n\n**O(n!) - czas silniowy:**\n- Generowanie wszystkich permutacji zbioru",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 84,
-    "lessonId": 11,
-    "type": "code",
-    "title": "Analiza zlozonosci algorytmow",
-    "content": "Przyjrzyjmy się kilku przykladom i przeanalizujmy ich zlozonosc obliczeniowa:",
-    "code": "// O(1) - zlozonosc stala\nfunction getFirst(array) {\n    return array[0];\n}\n\n// O(n) - zlozonosc liniowa\nfunction findMax(array) {\n    let max = array[0];\n    for (let i = 1; i < array.length; i++) {\n        if (array[i] > max) {\n            max = array[i];\n        }\n    }\n    return max;\n}\n\n// O(n²) - zlozonosc kwadratowa\nfunction bubbleSort(array) {\n    const n = array.length;\n    for (let i = 0; i < n; i++) {\n        for (let j = 0; j < n - i - 1; j++) {\n            if (array[j] > array[j + 1]) {\n                // Zamien elementy\n                [array[j], array[j + 1]] = [array[j + 1], array[j]];\n            }\n        }\n    }\n    return array;\n}\n\n// O(log n) - zlozonosc logarytmiczna\nfunction binarySearch(array, target) {\n    let left = 0;\n    let right = array.length - 1;\n    \n    while (left <= right) {\n        const mid = Math.floor((left + right) / 2);\n        \n        if (array[mid] === target) {\n            return mid;\n        }\n        \n        if (array[mid] < target) {\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    return -1; // Element nie znaleziony\n}",
-    "language": "javascript",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 85,
-    "lessonId": 11,
-    "type": "text",
-    "title": "Jak okreslic zlozonosc obliczeniowa",
-    "content": "Oto kilka wskazowek, jak okreslic zlozonosc obliczeniowa algorytmu:\n\n1. **Proste operacje** (przypisania, operacje arytmetyczne, porownania, dostep do tablicy) zazwyczaj maja zlozonosc O(1)\n\n2. **Pojedyncza petla** przechodzaca przez n elementow ma zazwyczaj zlozonosc O(n)\n\n3. **Petla zagniezdzona** (petla w petli) moze miec zlozonosc:\n   - Jesli obie petle przechodza przez n elementow: O(n²)\n   - Jesli zewnetrzna petla przechodzi przez n elementow, a wewnetrzna przez m: O(n*m)\n\n4. **Dzielenie problemu na pol** (jak w wyszukiwaniu binarnym) czesto prowadzi do zlozonosci O(log n)\n\n5. **Rekurencja** - zlozonosc zalezy od:\n   - Liczby wywolan rekurencyjnych\n   - Pracy wykonywanej w kazdym wywolaniu\n   - Mozna uzyc rownania rekurencyjnego do obliczenia zlozonosci\n\n6. **Zagniezdzone struktury danych** - zlozonosc zalezy od operacji na kazdej strukturze",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 86,
-    "lessonId": 11,
-    "type": "quiz",
-    "title": "Quiz o notacji Big O",
-    "content": "Sprawdz swoja wiedze o notacji Big O:",
-    "order": 6,
-    "additionalData": "{\"question\":\"Jaka jest zlozonosc czasowa wyszukiwania binarnego w posortowanej tablicy?\",\"options\":[{\"id\":\"1\",\"text\":\"O(1)\"},{\"id\":\"2\",\"text\":\"O(log n)\"},{\"id\":\"3\",\"text\":\"O(n)\"},{\"id\":\"4\",\"text\":\"O(n log n)\"}],\"correctAnswer\":\"2\",\"explanation\":\"Wyszukiwanie binarne ma zlozonosc O(log n), poniewaz w kazdym kroku zmniejszamy obszar wyszukiwania o polowe. To jest znacznie bardziej efektywne niz wyszukiwanie liniowe O(n) dla duzych tablic.\"}"
-  },
-  {
-    "id": 87,
-    "lessonId": 11,
-    "type": "interactive",
-    "title": "Analiza zlozonosci",
-    "content": "Przeanalizuj ponizszy kod i okresl jego zlozonosc czasowa. Uzupelnij funkcje, ktora zwroci poprawna odpowiedz w postaci ciagu znakow (np. 'O(n)', 'O(n^2)', 'O(log n)', itp.).",
-    "code": "function analyzeComplexity() {\n  // Przeanalizuj zlozonosc ponizszego algorytmu\n  function mystery(n) {\n    let result = 0;\n    for (let i = 0; i < n; i++) {\n      let j = 1;\n      while (j < n) {\n        result += 1;\n        j *= 2;\n      }\n    }\n    return result;\n  }\n  \n  // Zwroc zlozonosc jako string, np. 'O(n)', 'O(n^2)', 'O(n log n)'\n  return 'O(?)';\n}",
-    "language": "javascript",
-    "order": 7,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"\",\"expectedOutput\":\"O(n log n)\",\"description\":\"Zlozonosc funkcji mystery\"}],\"initialCode\":\"function analyzeComplexity() {\\n  // Zwroc zlozonosc jako string\\n  return 'O(?)';\\n}\",\"solution\":\"function analyzeComplexity() {\\n  // Zewnetrzna petla wykonuje sie n razy\\n  // Wewnetrzna petla while wykonuje sie log(n) razy, poniewaz j podwaja sie w kazdej iteracji\\n  // Calkowita zlozonosc to O(n * log n)\\n  return 'O(n log n)';\\n}\",\"hint\":\"Zewnetrzna petla wykonuje sie n razy. W wewnetrznej petli zmienna j podwaja sie w kazdej iteracji (j *= 2), co prowadzi do logarytmicznej liczby krokow. Pomysl o liczbie podwojen potrzebnych, aby z 1 dojsc do n.\"}"
-  },
-  {
-    "id": 88,
-    "lessonId": 12,
-    "type": "text",
-    "title": "Wprowadzenie do zlozonosci czasowej",
-    "content": "Zlozonosc czasowa to miara ilosci czasu potrzebnego do wykonania algorytmu jako funkcja rozmiaru danych wejsciowych. Jest to kluczowy aspekt przy ocenie wydajnosci algorytmow, szczegolnie dla duzych zbiorow danych.\n\nZlozonosc czasowa jest zazwyczaj wyrazana w notacji Big O, ktora skupia sie na dominujacym czynniku determinujacym wzrost czasu wykonania przy rosnacym rozmiarze danych wejsciowych.\n\nPrzy analizie zlozonosci czasowej algorytmu, rozpatrujemy trzy przypadki:\n\n1. **Najlepszy przypadek** - minimalny czas wykonania dla danego rozmiaru danych\n2. **Sredni przypadek** - przecietny czas wykonania dla losowych danych wejsciowych\n3. **Najgorszy przypadek** - maksymalny czas wykonania dla danego rozmiaru danych\n\nW praktyce najczescie analizujemy najgorszy przypadek, poniewaz daje nam gorny limit czasu wykonania i jest bardziej przewidywalny niz sredni przypadek.",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 89,
-    "lessonId": 12,
-    "type": "code",
-    "title": "Przyklady roznej zlozonosci czasowej",
-    "content": "Rozpatrzmy kilka przykladow algorytmow o roznej zlozonosci czasowej:",
-    "code": "// O(1) - zlozonosc stala\nfunction constantTime(arr) {\n    return arr[0]; // Zawsze wykonuje jedna operacje niezaleznie od rozmiaru wejscia\n}\n\n// O(log n) - zlozonosc logarytmiczna\nfunction logarithmicTime(n) {\n    let count = 0;\n    for (let i = 1; i < n; i = i * 2) {\n        count += 1; // Petla wykonuje sie log(n) razy\n    }\n    return count;\n}\n\n// O(n) - zlozonosc liniowa\nfunction linearTime(arr) {\n    let sum = 0;\n    for (let i = 0; i < arr.length; i++) {\n        sum += arr[i]; // Petla wykonuje sie n razy\n    }\n    return sum;\n}\n\n// O(n log n) - zlozonosc liniowo-logarytmiczna\nfunction linearLogarithmicTime(arr) {\n    // Przyklad: mergesort\n    if (arr.length <= 1) return arr;\n    \n    const mid = Math.floor(arr.length / 2);\n    const left = linearLogarithmicTime(arr.slice(0, mid));\n    const right = linearLogarithmicTime(arr.slice(mid));\n    \n    return merge(left, right); // Funkcja merge ma zlozonosc O(n)\n}\n\n// O(n²) - zlozonosc kwadratowa\nfunction quadraticTime(arr) {\n    let result = 0;\n    for (let i = 0; i < arr.length; i++) {\n        for (let j = 0; j < arr.length; j++) {\n            result += arr[i] * arr[j]; // Zagniezdzone petle wykonuja sie n*n razy\n        }\n    }\n    return result;\n}\n\n// O(2^n) - zlozonosc wykladnicza\nfunction exponentialTime(n) {\n    if (n <= 1) return n;\n    return exponentialTime(n - 1) + exponentialTime(n - 2); // Rekurencyjne wywolania podwajaja sie z kazdym poziomem\n}",
-    "language": "javascript",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 90,
-    "lessonId": 12,
-    "type": "image",
-    "title": "Porownanie zlozonosci czasowych",
-    "content": "Ponizszy wykres wizualizuje, jak rosnie czas wykonania algorytmow o roznej zlozonosci czasowej w zaleznosci od rozmiaru danych wejsciowych. Zwroc uwage na dramatyczne roznice dla duzych wartosci n.",
-    "imageUrl": "https://www.bigocheatsheet.com/img/big-o-complexity-chart.png",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 91,
-    "lessonId": 12,
-    "type": "text",
-    "title": "Analiza zlozonosci czasowej algorytmow sortowania",
-    "content": "Algorytmy sortowania to dobry przyklad do analizy zlozonosci czasowej, poniewaz rozne metody sortowania maja rozna wydajnosc:\n\n**Proste algorytmy sortowania (O(n²)):**\n- **Sortowanie babelkowe (Bubble Sort)**: O(n²) w najgorszym i srednim przypadku, O(n) w najlepszym przypadku (gdy tablica jest juz posortowana)\n- **Sortowanie przez wstawianie (Insertion Sort)**: O(n²) w najgorszym i srednim przypadku, O(n) w najlepszym przypadku\n- **Sortowanie przez wybieranie (Selection Sort)**: O(n²) we wszystkich przypadkach\n\n**Wydajne algorytmy sortowania (O(n log n)):**\n- **Quicksort**: O(n log n) w srednim przypadku, O(n²) w najgorszym przypadku, O(n log n) w najlepszym przypadku\n- **Mergesort**: O(n log n) we wszystkich przypadkach\n- **Heapsort**: O(n log n) we wszystkich przypadkach\n\n**Specjalne algorytmy sortowania:**\n- **Counting Sort**: O(n + k), gdzie k to rozmiar zakresu kluczy\n- **Radix Sort**: O(d * (n + k)), gdzie d to liczba cyfr, a k to rozmiar podstawy systemu liczbowego\n- **Bucket Sort**: O(n + k) w srednim przypadku, O(n²) w najgorszym przypadku\n\nWybor odpowiedniego algorytmu sortowania zalezy od kontekstu, w tym od rozmiaru danych, stopnia ich uporzadkowania i dostepnej pamieci.",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 92,
-    "lessonId": 12,
-    "type": "text",
-    "title": "Techniki optymalizacji zlozonosci czasowej",
-    "content": "Istnieje wiele strategii optymalizacji zlozonosci czasowej algorytmow:\n\n1. **Wybor lepszych algorytmow** - zastapienie algorytmow o wysokiej zlozonosci tymi o nizszej zlozonosci (np. zastapienie sortowania babelkowego quicksortem)\n\n2. **Optymalizacja kodu** - usuniecie zbednych operacji, optymalizacja petli, rezygnacja z niepotrzebnych alokacji pamieci\n\n3. **Memoizacja** - zapamietywanie wynikow obliczen, aby uniknac ponownego wykonywania tych samych operacji\n\n4. **Indeksowanie** - uzywanie struktur danych (np. tablic haszujacych, drzew BST), ktore umozliwiaja szybszy dostep do danych\n\n5. **Prekompilacja** - wykonanie niektorych obliczen z gory, przed uruchomieniem glownego algorytmu\n\n6. **Wykorzystanie specyfiki problemu** - czasami znajomosc konkretnych wlasciwosci danych pozwala na znaczaca optymalizacje\n\n7. **Algorytmy przyblizonych rozwiazan** - dla niektorych problemow mozna zastosowac szybsze algorytmy, ktore daja przyblizony, ale akceptowalny wynik\n\nPamietaj jednak, ze nadmierna optymalizacja moze prowadzic do mniej czytelnego, trudniejszego w utrzymaniu kodu, co moze nie byc warte niewielkich zyskow wydajnosciowych.",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 93,
-    "lessonId": 12,
-    "type": "code",
-    "title": "Przyklad optymalizacji zlozonosci czasowej",
-    "content": "Rozpatrzmy przyklad optymalizacji algorytmu znajdowania duplikatow w tablicy:",
-    "code": "// Wersja nieoptymalna: O(n²) - zlozonosc kwadratowa\nfunction findDuplicateQuadratic(arr) {\n    for (let i = 0; i < arr.length; i++) {\n        for (let j = i + 1; j < arr.length; j++) {\n            if (arr[i] === arr[j]) {\n                return arr[i]; // Znaleziono duplikat\n            }\n        }\n    }\n    return null; // Brak duplikatow\n}\n\n// Wersja zoptymalizowana: O(n) - zlozonosc liniowa\nfunction findDuplicateLinear(arr) {\n    const seen = new Set();\n    \n    for (const num of arr) {\n        if (seen.has(num)) {\n            return num; // Znaleziono duplikat\n        }\n        seen.add(num);\n    }\n    \n    return null; // Brak duplikatow\n}\n\n// Testy\nconst array = [1, 2, 3, 4, 5, 3, 6, 7];\n\nconsole.time('Quadratic');\nconst resultQuadratic = findDuplicateQuadratic(array);\nconsole.timeEnd('Quadratic');\n\nconsole.time('Linear');\nconst resultLinear = findDuplicateLinear(array);\nconsole.timeEnd('Linear');\n\nconsole.log(`Duplikat: ${resultQuadratic} (quadratic)`); // Powinno wyswietlic: Duplikat: 3 (quadratic)\nconsole.log(`Duplikat: ${resultLinear} (linear)`);       // Powinno wyswietlic: Duplikat: 3 (linear)",
-    "language": "javascript",
-    "order": 6,
-    "additionalData": ""
-  },
-  {
-    "id": 94,
-    "lessonId": 12,
-    "type": "quiz",
-    "title": "Quiz o zlozonosci czasowej",
-    "content": "Sprawdz swoja wiedze o zlozonosci czasowej:",
-    "order": 7,
-    "additionalData": "{\"question\":\"Ktory z ponizszych algorytmow sortowania ma najlepsza zlozonosc czasowa w najgorszym przypadku?\",\"options\":[{\"id\":\"1\",\"text\":\"Quicksort\"},{\"id\":\"2\",\"text\":\"Bubble Sort\"},{\"id\":\"3\",\"text\":\"Mergesort\"},{\"id\":\"4\",\"text\":\"Selection Sort\"}],\"correctAnswer\":\"3\",\"explanation\":\"Mergesort ma zlozonosc czasowa O(n log n) w najgorszym przypadku, co jest lepsze niz Quicksort (ktory moze miec O(n²) w najgorszym przypadku) oraz Bubble Sort i Selection Sort (ktore zawsze maja O(n²)).\"}"
-  },
-  {
-    "id": 95,
-    "lessonId": 12,
-    "type": "interactive",
-    "title": "Optymalizacja zlozonosci funkcji",
-    "content": "Dana jest funkcja, ktora sprawdza, czy tablica zawiera dwie liczby, ktorych suma jest rowna podanej wartosci docelowej. Obecna implementacja ma zlozonosc O(n²). Twoim zadaniem jest zoptymalizowanie jej do zlozonosci O(n).",
-    "code": "function twoSum(nums, target) {\n  // Obecna implementacja: O(n²)\n  for (let i = 0; i < nums.length; i++) {\n    for (let j = i + 1; j < nums.length; j++) {\n      if (nums[i] + nums[j] === target) {\n        return true;\n      }\n    }\n  }\n  return false;\n  \n  // Twoje zadanie: zoptymalizuj powyzszy kod do zlozonosci O(n)\n  // Zwroc true, jesli tablica zawiera dwie liczby, ktorych suma jest rowna target\n  // W przeciwnym razie zwroc false\n}",
-    "language": "javascript",
-    "order": 8,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"[2, 7, 11, 15], 9\",\"expectedOutput\":\"true\",\"description\":\"2 + 7 = 9\"},{\"id\":\"2\",\"input\":\"[3, 5, 2, 4], 6\",\"expectedOutput\":\"true\",\"description\":\"2 + 4 = 6\"},{\"id\":\"3\",\"input\":\"[1, 3, 5, 7], 10\",\"expectedOutput\":\"false\",\"description\":\"Brak dwoch liczb sumujacych sie do 10\"}],\"initialCode\":\"function twoSum(nums, target) {\\n  // Zastap te implementacje lepsza wersja o zlozonosci O(n)\\n  \\n}\",\"solution\":\"function twoSum(nums, target) {\\n  const seen = new Set();\\n  \\n  for (const num of nums) {\\n    // Sprawdz, czy w zbiorze jest liczba dopelniajaca\\n    if (seen.has(target - num)) {\\n      return true;\\n    }\\n    // Dodaj biezaca liczbe do zbioru\\n    seen.add(num);\\n  }\\n  \\n  return false;\\n}\",\"hint\":\"Uzyj struktury Set do zapamietywania juz przetworzonych liczb. Dla kazdej liczby w tablicy sprawdz, czy w zbiorze istnieje liczba dopelniajaca (target - num). Jesli tak, znaleziono pare, jesli nie, dodaj biezaca liczbe do zbioru i kontynuuj.\"}"
-  },
-  {
-    "id": 96,
-    "lessonId": 13,
-    "type": "text",
-    "title": "Wprowadzenie do zlozonosci pamieciowej",
-    "content": "Zlozonosc pamieciowa (przestrzenna) to miara ilosci pamieci, ktora algorytm potrzebuje do wykonania, jako funkcja rozmiaru danych wejsciowych. Podobnie jak zlozonosc czasowa, jest ona zazwyczaj wyrazana w notacji Big O.\n\nZlozonosc pamieciowa obejmuje:\n\n1. **Pamiec wejsciowa** - pamiec potrzebna do przechowywania danych wejsciowych\n2. **Pamiec pomocnicza** - dodatkowa pamiec uzyta przez algorytm poza danymi wejsciowymi\n\nW analizie zlozonosci pamieciowej skupiamy sie glownie na pamieci pomocniczej, poniewaz pamiec wejsciowa jest zdeterminowana przez rozmiar danych wejsciowych i jest na ogol taka sama dla wszystkich algorytmow rozwiazujacych ten sam problem.\n\nPowszechne klasy zlozonosci pamieciowej:\n\n- **O(1)** - stala ilosc pamieci, niezalezna od rozmiaru wejscia\n- **O(log n)** - algorytmy dzielace problem na polowy (np. rekurencyjne implementacje wyszukiwania binarnego)\n- **O(n)** - pamiec zalezna liniowo od rozmiaru wejscia (np. tworzenie nowej tablicy o takim samym rozmiarze)\n- **O(n²)** - pamiec zalezna kwadratowo od rozmiaru wejscia (np. macierz n×n)",
-    "order": 1,
-    "additionalData": ""
-  },
-  {
-    "id": 97,
-    "lessonId": 13,
-    "type": "code",
-    "title": "Przyklady roznej zlozonosci pamieciowej",
-    "content": "Rozpatrzmy kilka przykladow algorytmow o roznej zlozonosci pamieciowej:",
-    "code": "// O(1) - stala zlozonosc pamieciowa\nfunction constantSpace(arr) {\n    let sum = 0;\n    for (let i = 0; i < arr.length; i++) {\n        sum += arr[i];\n    }\n    return sum; // Uzywa tylko stalej ilosci zmiennych, niezaleznie od rozmiaru wejscia\n}\n\n// O(n) - liniowa zlozonosc pamieciowa\nfunction linearSpace(arr) {\n    // Tworzy nowa tablice o takim samym rozmiarze\n    const doubled = new Array(arr.length);\n    for (let i = 0; i < arr.length; i++) {\n        doubled[i] = arr[i] * 2;\n    }\n    return doubled;\n}\n\n// O(n²) - kwadratowa zlozonosc pamieciowa\nfunction quadraticSpace(n) {\n    // Tworzy macierz n x n\n    const matrix = new Array(n);\n    for (let i = 0; i < n; i++) {\n        matrix[i] = new Array(n);\n        for (let j = 0; j < n; j++) {\n            matrix[i][j] = i * j;\n        }\n    }\n    return matrix;\n}\n\n// O(log n) - logarytmiczna zlozonosc pamieciowa\nfunction logarithmicSpace(arr, target, low = 0, high = arr.length - 1) {\n    // Rekurencyjna implementacja wyszukiwania binarnego\n    // Kazde wywolanie rekurencyjne dodaje ramke do stosu wywolan\n    // ale maksymalna glebokosc rekurencji to log(n)\n    if (high < low) return -1;\n    \n    const mid = Math.floor((low + high) / 2);\n    \n    if (arr[mid] === target) return mid;\n    if (arr[mid] > target) return logarithmicSpace(arr, target, low, mid - 1);\n    return logarithmicSpace(arr, target, mid + 1, high);\n}",
-    "language": "javascript",
-    "order": 2,
-    "additionalData": ""
-  },
-  {
-    "id": 98,
-    "lessonId": 13,
-    "type": "text",
-    "title": "Zlozonosc pamieciowa populanych algorytmow",
-    "content": "Przeanalizujmy zlozonosc pamieciowa powszechnie uzywanych algorytmow:\n\n**Algorytmy sortowania:**\n- **Quicksort**: O(log n) do O(n) pamieciowej zlozonosci pomocniczej, zaleznie od implementacji (dla stosu wywolan rekurencyjnych)\n- **Mergesort**: O(n) pamieciowej zlozonosci pomocniczej (dla tablic pomocniczych)\n- **Heapsort**: O(1) pamieciowej zlozonosci pomocniczej (sortowanie w miejscu)\n- **Bubble Sort**: O(1) pamieciowej zlozonosci pomocniczej (sortowanie w miejscu)\n\n**Algorytmy wyszukiwania:**\n- **Wyszukiwanie liniowe**: O(1) pamieciowej zlozonosci pomocniczej\n- **Wyszukiwanie binarne**: O(1) dla implementacji iteracyjnej, O(log n) dla implementacji rekurencyjnej\n\n**Struktury danych:**\n- **Tablica (Array)**: O(n) zlozonosc pamieciowa dla przechowywania elementow\n- **Lista powiazana (Linked List)**: O(n) zlozonosc pamieciowa (plus dodatkowe O(n) na wskazniki)\n- **Drzewo binarne (Binary Tree)**: O(n) zlozonosc pamieciowa\n- **Tablica haszujaca (Hash Table)**: O(n) zlozonosc pamieciowa (w najgorszym przypadku, moze byc wiecej ze wzgledu na kolizje)\n\nPamietaj, ze zlozonosc pamieciowa jest rownie wazna jak zlozonosc czasowa, szczegolnie w:  \n- Systemach wbudowanych z ograniczona pamiecia  \n- Aplikacjach przetwarzajacych bardzo duze zbiory danych  \n- Srodowiskach o ograniczonych zasobach",
-    "order": 3,
-    "additionalData": ""
-  },
-  {
-    "id": 99,
-    "lessonId": 13,
-    "type": "code",
-    "title": "Kompromis miedzy czasem a pamiecia",
-    "content": "Czesto w algorytmach musimy dokonywac kompromisd miedzy zlozonoscia czasowa a pamieciowa. Rozpatrzmy przyklad:",
-    "code": "// Problem: Znalezienie cyfr, ktore wystepuja w ciagu liczbowym\n\n// Podejscie 1: O(n) zlozonosc czasowa, O(1) zlozonosc pamieciowa\nfunction findDigitsConstantSpace(num) {\n    const result = [];\n    const digitExists = Array(10).fill(false); // Stala wielkosc, niezaleznie od input\n    \n    while (num > 0) {\n        const digit = num % 10;\n        if (!digitExists[digit]) {\n            digitExists[digit] = true;\n            result.push(digit);\n        }\n        num = Math.floor(num / 10);\n    }\n    \n    return result.reverse();\n}\n\n// Podejscie 2: O(n log n) zlozonosc czasowa, O(n) zlozonosc pamieciowa\nfunction findDigitsLinearSpace(num) {\n    // Konwersja na string, podzial na cyfry, konwersja z powrotem na liczby\n    const digits = num.toString().split('').map(Number);\n    \n    // Usun duplikaty poprzez konwersje do Set i z powrotem do tablicy\n    return [...new Set(digits)];\n}\n\n// Przyklad:\nconst number = 1223355;\nconsole.log(findDigitsConstantSpace(number)); // [1, 2, 3, 5]\nconsole.log(findDigitsLinearSpace(number));   // [1, 2, 3, 5]",
-    "language": "javascript",
-    "order": 4,
-    "additionalData": ""
-  },
-  {
-    "id": 100,
-    "lessonId": 13,
-    "type": "text",
-    "title": "Techniki optymalizacji zlozonosci pamieciowej",
-    "content": "Istnieje wiele technik, ktore moga pomoc zredukowac zuzycie pamieci w algorytmach:\n\n1. **Przetwarzanie \"w miejscu\" (in-place)** - modyfikacja danych wejsciowych bezposrednio, zamiast tworzenia kopii (np. in-place sortowanie)\n\n2. **Iteracja zamiast rekurencji** - rekurencja zuzywa pamiec na stos wywolan; zamiana na petle moze zaoszczedzic pamiec\n\n3. **Strumieniowe przetwarzanie danych** - przetwarzanie danych sekwencyjnie, bez koniecznosci ladowania wszystkiego do pamieci\n\n4. **Kompresja danych** - przechowywanie danych w formie skompresowanej, odpakowywanie tylko wtedy, gdy jest to konieczne\n\n5. **Wykorzystanie struktur danych oszczedzajacych pamiec** - np. bit array zamiast standardowej tablicy, gdy przechowujemy tylko wartosci boolowskie\n\n6. **Dzielenie danych** - podzial danych na mniejsze czesci i przetwarzanie ich oddzielnie\n\n7. **Zwalnianie pamieci** - w jezykach z recznie zarzadzana pamiecia, zwolnienie pamieci gdy nie jest juz potrzebna\n\nPrzy wyborze techniki optymalizacji pamieciowej waz roznice miedzy zlozonoscia asymptotyczna a faktycznym zuzyciem pamieci dla konkretnego przypadku oraz kompromisy miedzy zuzycie pamieci a czytelnoscia i latwoscia utrzymania kodu.",
-    "order": 5,
-    "additionalData": ""
-  },
-  {
-    "id": 101,
-    "lessonId": 13,
-    "type": "quiz",
-    "title": "Quiz o zlozonosci pamieciowej",
-    "content": "Sprawdz swoja wiedze o zlozonosci pamieciowej:",
-    "order": 6,
-    "additionalData": "{\"question\":\"Ktory z ponizszych algorytmow sortowania ma najlepsza (najmniejsza) zlozonosc pamieciowa pomocnicza?\",\"options\":[{\"id\":\"1\",\"text\":\"Mergesort\"},{\"id\":\"2\",\"text\":\"Heapsort\"},{\"id\":\"3\",\"text\":\"Quicksort (standardowa implementacja)\"},{\"id\":\"4\",\"text\":\"Radix sort\"}],\"correctAnswer\":\"2\",\"explanation\":\"Heapsort ma zlozonosc pamieciowa pomocnicza O(1), poniewaz dziala w miejscu (in-place), nie wymagajac zadnej dodatkowej pamieci zależnej od rozmiaru wejscia. Mergesort zazwyczaj potrzebuje O(n) dodatkowej pamieci, Quicksort w standardowej implementacji wymaga O(log n) pamieci na stos wywolan, a Radix sort wymaga O(n) pamieci pomocniczej.\"}"
-  },
-  {
-    "id": 102,
-    "lessonId": 13,
-    "type": "interactive",
-    "title": "Optymalizacja zlozonosci pamieciowej",
-    "content": "Dana jest funkcja, ktora odwraca slowa w zdaniu. Obecna implementacja ma zlozonosc pamieciowa O(n). Twoim zadaniem jest zoptymalizowanie jej, aby dzialala bezposrednio na przekazanym stringu, z minimalnym uzyciem dodatkowej pamieci.",
-    "code": "function reverseWords(sentence) {\n  // Obecna implementacja: O(n) zlozonosc pamieciowa\n  return sentence.split(' ').reverse().join(' ');\n  \n  // Twoje zadanie: zoptymalizuj powyzszy kod, aby minimalizowac zuzycie pamieci\n  // Funkcja powinna odwracac kolejnosc slow w zdaniu, nie odwracajac samych slow\n  // Przyklad: \"Hello world\" -> \"world Hello\"\n}",
-    "language": "javascript",
-    "order": 7,
-    "additionalData": "{\"testCases\":[{\"id\":\"1\",\"input\":\"Hello world\",\"expectedOutput\":\"world Hello\",\"description\":\"Dwa slowa\"},{\"id\":\"2\",\"input\":\"The quick brown fox\",\"expectedOutput\":\"fox brown quick The\",\"description\":\"Cztery slowa\"},{\"id\":\"3\",\"input\":\"SingleWord\",\"expectedOutput\":\"SingleWord\",\"description\":\"Jedno slowo\"}],\"initialCode\":\"function reverseWords(sentence) {\\n  // Twoja implementacja tutaj\\n  \\n}\",\"solution\":\"function reverseWords(sentence) {\\n  // Niestety, w JavaScript stringi sa niemodyfikowalne,\\n  // wiec pewna ilosc dodatkowej pamieci jest nieunikniona\\n  \\n  // Ale mozemy zoptymalizowac proces, aby nie tworzyc po drodze\\n  // zbednych struktur danych\\n  \\n  // Najpierw rozdzielamy zdanie na slowa\\n  const words = [];\\n  let word = '';\\n  \\n  for (let i = 0; i <= sentence.length; i++) {\\n    if (i === sentence.length || sentence[i] === ' ') {\\n      if (word.length > 0) {\\n        words.push(word);\\n        word = '';\\n      }\\n    } else {\\n      word += sentence[i];\\n    }\\n  }\\n  \\n  // Teraz laczymy slowa w odwrotnej kolejnosci\\n  let result = '';\\n  for (let i = words.length - 1; i >= 0; i--) {\\n    result += words[i];\\n    if (i > 0) result += ' ';\\n  }\\n  \\n  return result;\\n}\",\"hint\":\"W JavaScript stringi sa niemodyfikowalne, wiec zawsze bedzie potrzebna pewna ilosc dodatkowej pamieci. Niemniej, mozesz zminimalizowac ilosc tworzonych obiektow posrednich. Zamiast wywolania split-reverse-join, rozwaz manualnie rozdzielenie zdania na slowa (akumulujac w tablicy), a nastepnie polaczenie ich w odwrotnej kolejnosci.\"}"
+    "Type": "theory",
+    "Title": "Wprowadzenie do sortowania bąbelkowego",
+    "Content": "# Sortowanie bąbelkowe\n\nSortowanie bąbelkowe to algorytm, który:\n- Porównuje sąsiednie elementy\n- Zamienia je miejscami, jeśli są w złej kolejności\n- Powtarza proces aż lista będzie posortowana\n\n## Kluczowe cechy:\n- Prosty w implementacji\n- Efektywny dla małych zbiorów danych\n- Złożoność czasowa: O(n²)\n- Złożoność pamięciowa: O(1)\n\n## Przykład wizualny:\n[5, 3, 8, 1] → [3, 5, 1, 8] → [3, 1, 5, 8] → [1, 3, 5, 8]",
+    "Order": 1,
+    "LessonId": 1
+  },
+  {
+    "Type": "visualization",
+    "Title": "Animowana demonstracja",
+    "Content": "Obserwuj, jak działa sortowanie bąbelkowe na przykładowej tablicy:",
+    "Order": 2,
+    "LessonId": 1,
+    "AdditionalData": {
+      "array": [ 5, 2, 9, 1, 5 ],
+      "steps": [
+        {
+          "array": [ 2, 5, 9, 1, 5 ],
+          "comparing": [ 0, 1 ]
+        },
+        {
+          "array": [ 2, 5, 1, 9, 5 ],
+          "comparing": [ 2, 3 ]
+        },
+        {
+          "array": [ 2, 5, 1, 5, 9 ],
+          "comparing": [ 3, 4 ]
+        },
+        {
+          "array": [ 2, 1, 5, 5, 9 ],
+          "comparing": [ 1, 2 ]
+        },
+        {
+          "array": [ 1, 2, 5, 5, 9 ],
+          "comparing": [ 0, 1 ]
+        }
+      ],
+      "speed": "1000"
+    }
+  },
+  {
+    "Type": "interactive",
+    "Title": "Krok po kroku przez algorytm",
+    "Content": "Przejdź przez kolejne kroki sortowania bąbelkowego, wybierając które elementy należy zamienić miejscami.",
+    "Order": 3,
+    "LessonId": 1,
+    "AdditionalData": {
+      "initialArray": [ 4, 2, 7, 1, 3 ],
+      "steps": [
+        {
+          "question": "Które elementy należy zamienić w pierwszym porównaniu?",
+          "currentArray": [ 4, 2, 7, 1, 3 ],
+          "comparing": [ 0, 1 ],
+          "correctSwap": true
+        },
+        {
+          "question": "Czy należy zamienić te elementy?",
+          "currentArray": [ 2, 4, 7, 1, 3 ],
+          "comparing": [ 1, 2 ],
+          "correctSwap": false
+        },
+        {
+          "question": "Czy należy zamienić te elementy?",
+          "currentArray": [ 2, 4, 7, 1, 3 ],
+          "comparing": [ 2, 3 ],
+          "correctSwap": true
+        },
+        {
+          "question": "Czy należy zamienić te elementy?",
+          "currentArray": [ 2, 4, 1, 7, 3 ],
+          "comparing": [ 3, 4 ],
+          "correctSwap": true
+        },
+        {
+          "question": "Czy należy zamienić te elementy? (Drugi przebieg)",
+          "currentArray": [ 2, 4, 1, 3, 7 ],
+          "comparing": [ 0, 1 ],
+          "correctSwap": false
+        }
+      ]
+    }
+  },
+  {
+    "Type": "quiz",
+    "Title": "Zrozumienie działania",
+    "Order": 4,
+    "LessonId": 1,
+    "AdditionalData": {
+      "question": "Co będzie wynikiem pierwszego pełnego przebiegu sortowania bąbelkowego dla tablicy [5, 3, 8, 1]?",
+      "options": [
+        {
+          "id": "a",
+          "text": "[3, 5, 1, 8]",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "[1, 3, 5, 8]"
+        },
+        {
+          "id": "c",
+          "text": "[5, 1, 3, 8]"
+        }
+      ],
+      "explanation": "W pierwszym przebiegu największy element (8) 'wypływa' na koniec tablicy, a pozostałe elementy są częściowo uporządkowane."
+    }
+  },
+  {
+    "Type": "challenge",
+    "Title": "Mini-implementacja",
+    "Content": "Zaimplementuj funkcję do jednego przebiegu sortowania bąbelkowego.",
+    "Order": 5,
+    "LessonId": 1,
+    "AdditionalData": {
+      "initialCode": "function bubblePass(arr) {\n  // Wykonaj jeden przebieg sortowania bąbelkowego\n  // Zwróć zmodyfikowaną tablicę\n  \n  \n  \n  return arr;\n}",
+      "testCases": [
+        {
+          "id": "1",
+          "input": "[5,3,8,1]",
+          "expectedOutput": "[3,5,1,8]",
+          "description": "Pierwszy przebieg sortowania"
+        },
+        {
+          "id": "2",
+          "input": "[9,8,7,6]",
+          "expectedOutput": "[8,7,6,9]",
+          "description": "Elementy w odwrotnej kolejności"
+        },
+        {
+          "id": "3",
+          "input": "[1,2,3,4]",
+          "expectedOutput": "[1,2,3,4]",
+          "description": "Już posortowana tablica"
+        },
+        {
+          "id": "4",
+          "input": "[5,1,5,2]",
+          "expectedOutput": "[1,5,2,5]",
+          "description": "Tablica z duplikatami"
+        }
+      ],
+      "hint": "Porównuj sąsiednie elementy i zamieniaj je jeśli są w złej kolejności.",
+      "solution": "function bubblePass(arr) {\n  // Tworzymy kopię tablicy\n  const result = [...arr];\n  \n  // Wykonujemy jeden przebieg sortowania\n  for (let i = 0; i < result.length - 1; i++) {\n    // Porównujemy sąsiednie elementy\n    if (result[i] > result[i + 1]) {\n      // Zamiana elementów miejscami\n      [result[i], result[i + 1]] = [result[i + 1], result[i]];\n    }\n  }\n  \n  return result;\n}"
+    }
+  },
+  {
+    "Type": "coding",
+    "Title": "Pełna implementacja",
+    "Content": "Zaimplementuj pełny algorytm sortowania bąbelkowego z optymalizacją zatrzymującą sortowanie, gdy tablica jest już posortowana.",
+    "Order": 6,
+    "LessonId": 1,
+    "AdditionalData": {
+      "initialCode": "function bubbleSort(arr) {\n  // Zaimplementuj sortowanie bąbelkowe\n  // Dodaj optymalizację sprawdzającą czy tablica jest już posortowana\n  \n  \n  \n  return arr;\n}",
+      "testCases": [
+        {
+          "id": "1",
+          "input": "[5,1,4,2,3]",
+          "expectedOutput": "[1,2,3,4,5]",
+          "description": "Przypadek standardowy"
+        },
+        {
+          "id": "2",
+          "input": "[1,2,3,4,5]",
+          "expectedOutput": "[1,2,3,4,5]",
+          "description": "Tablica już posortowana (test optymalizacji)"
+        },
+        {
+          "id": "3",
+          "input": "[5,4,3,2,1]",
+          "expectedOutput": "[1,2,3,4,5]",
+          "description": "Najgorszy przypadek"
+        },
+        {
+          "id": "4",
+          "input": "[3,3,3,1,4]",
+          "expectedOutput": "[1,3,3,3,4]",
+          "description": "Tablica z duplikatami"
+        },
+        {
+          "id": "5",
+          "input": "[]",
+          "expectedOutput": "[]",
+          "description": "Pusta tablica"
+        }
+      ],
+      "hint": "Użyj flagi swapped do sprawdzenia czy w danym przebiegu wykonano jakieś zamiany.",
+      "solution": "function bubbleSort(arr) {\n  // Tworzymy kopię tablicy\n  const result = [...arr];\n  let swapped;\n  \n  do {\n    swapped = false;\n    \n    for (let i = 0; i < result.length - 1; i++) {\n      if (result[i] > result[i + 1]) {\n        // Zamiana elementów miejscami\n        [result[i], result[i + 1]] = [result[i + 1], result[i]];\n        swapped = true;\n      }\n    }\n  } while (swapped);\n  \n  return result;\n}"
+    }
+  },
+  {
+    "Type": "theory",
+    "Title": "Analiza złożoności",
+    "Content": "## Złożoność sortowania bąbelkowego\n\n### Złożoność czasowa:\n- Najlepszy przypadek: O(n) - tablica już posortowana\n- Średni przypadek: O(n²)\n- Najgorszy przypadek: O(n²)\n\n### Zalety:\n- Prosty w implementacji\n- Stabilny (zachowuje kolejność równych elementów)\n- Małe zużycie pamięci\n\n### Wady:\n- Nieefektywny dla dużych zbiorów danych\n- Zawsze wykonuje O(n²) porównań\n\n### Kiedy używać?\n- Małe zbiory danych\n- Nauczanie algorytmów\n- Gdy ważna jest prostota implementacji",
+    "Order": 7,
+    "LessonId": 1
+  },
+  {
+    "Type": "quiz",
+    "Title": "Test końcowy",
+    "Order": 8,
+    "LessonId": 1,
+    "AdditionalData": {
+      "questions": [
+        {
+          "question": "Jaka jest złożoność pamięciowa sortowania bąbelkowego?",
+          "options": [
+            {
+              "id": "a",
+              "text": "O(1)",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "O(n)"
+            },
+            {
+              "id": "c",
+              "text": "O(n²)"
+            }
+          ],
+          "explanation": "Sortowanie bąbelkowe wymaga tylko jednej zmiennej pomocniczej do zamiany elementów."
+        },
+        {
+          "question": "Która optymalizacja może znacząco przyspieszyć sortowanie bąbelkowe?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Sprawdzanie czy tablica jest już posortowana",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Sortowanie od końca tablicy"
+            },
+            {
+              "id": "c",
+              "text": "Sortowanie co drugi element"
+            }
+          ],
+          "explanation": "Zatrzymanie sortowania gdy nie wykonano żadnych zamian w przebiegu oznacza, że tablica jest już posortowana."
+        }
+      ]
+    }
+  },
+  {
+    "Type": "challenge",
+    "Title": "Implementacja sortowania przez wybieranie",
+    "Content": "Zaimplementuj algorytm sortowania przez wybieranie (selection sort). Sortowanie przez wybieranie polega na znajdowaniu najmniejszego elementu i umieszczaniu go na początku tablicy.",
+    "Order": 9,
+    "LessonId": 1,
+    "AdditionalData": {
+      "initialCode": "function selectionSort(arr) {\n  // Zaimplementuj sortowanie przez wybieranie\n  // Znajdź najmniejszy element i przenieś go na początek\n  \n  \n  \n  return arr;\n}",
+      "testCases": [
+        {
+          "id": "1",
+          "input": "[5,3,6,2,10]",
+          "expectedOutput": "[2,3,5,6,10]",
+          "description": "Podstawowy przypadek"
+        },
+        {
+          "id": "2",
+          "input": "[64,25,12,22,11]",
+          "expectedOutput": "[11,12,22,25,64]",
+          "description": "Różnorodne elementy"
+        },
+        {
+          "id": "3",
+          "input": "[1,2,3,4,5]",
+          "expectedOutput": "[1,2,3,4,5]",
+          "description": "Już posortowana tablica"
+        },
+        {
+          "id": "4",
+          "input": "[5,5,5,2,2]",
+          "expectedOutput": "[2,2,5,5,5]",
+          "description": "Tablica z duplikatami"
+        },
+        {
+          "id": "5",
+          "input": "[]",
+          "expectedOutput": "[]",
+          "description": "Pusta tablica"
+        }
+      ],
+      "hint": "W sortowaniu przez wybieranie, w każdej iteracji znajdź indeks najmniejszego elementu w nieposortowanej części tablicy, a następnie zamień go z elementem na początku nieposortowanej części.",
+      "solution": "function selectionSort(arr) {\n  const result = [...arr];\n  const len = result.length;\n  \n  for (let i = 0; i < len - 1; i++) {\n    // Znajdź minimum w nieposortowanej części\n    let minIndex = i;\n    \n    for (let j = i + 1; j < len; j++) {\n      if (result[j] < result[minIndex]) {\n        minIndex = j;\n      }\n    }\n    \n    // Zamień znalezione minimum z pierwszym elementem\n    if (minIndex !== i) {\n      [result[i], result[minIndex]] = [result[minIndex], result[i]];\n    }\n  }\n  \n  return result;\n}"
+    }
+  },
+  {
+    "Type": "challenge",
+    "Title": "Implementacja sortowania przez wstawianie",
+    "Content": "Zaimplementuj algorytm sortowania przez wstawianie (insertion sort). Sortowanie przez wstawianie działa podobnie do sortowania kart w ręce - bierzemy kolejne elementy i wstawiamy je na odpowiednie miejsce wśród już posortowanych.",
+    "Order": 10,
+    "LessonId": 1,
+    "AdditionalData": {
+      "initialCode": "function insertionSort(arr) {\n  // Zaimplementuj sortowanie przez wstawianie\n  // Przenieś każdy element na odpowiednią pozycję\n  \n  \n  \n  return arr;\n}",
+      "testCases": [
+        {
+          "id": "1",
+          "input": "[5,2,4,6,1,3]",
+          "expectedOutput": "[1,2,3,4,5,6]",
+          "description": "Podstawowy przypadek"
+        },
+        {
+          "id": "2",
+          "input": "[31,41,59,26,41,58]",
+          "expectedOutput": "[26,31,41,41,58,59]",
+          "description": "Przypadek z duplikatami"
+        },
+        {
+          "id": "3",
+          "input": "[1,2,3,4,5]",
+          "expectedOutput": "[1,2,3,4,5]",
+          "description": "Już posortowana tablica"
+        },
+        {
+          "id": "4",
+          "input": "[5,4,3,2,1]",
+          "expectedOutput": "[1,2,3,4,5]",
+          "description": "Odwrotnie posortowana tablica"
+        },
+        {
+          "id": "5",
+          "input": "[]",
+          "expectedOutput": "[]",
+          "description": "Pusta tablica"
+        }
+      ],
+      "hint": "W sortowaniu przez wstawianie, przeglądamy tablicę od drugiego elementu i każdy element wstawiamy na odpowiednią pozycję wśród wcześniejszych, już posortowanych elementów.",
+      "solution": "function insertionSort(arr) {\n  const result = [...arr];\n  \n  for (let i = 1; i < result.length; i++) {\n    // Zapamiętaj bieżący element do wstawienia\n    const currentElement = result[i];\n    \n    // Znajdź pozycję, na którą trzeba wstawić element\n    let j = i - 1;\n    while (j >= 0 && result[j] > currentElement) {\n      result[j + 1] = result[j]; // Przesuń element w prawo\n      j--;\n    }\n    \n    // Wstaw element na właściwą pozycję\n    result[j + 1] = currentElement;\n  }\n  \n  return result;\n}"
+    }
+  },
+  {
+    "Type": "coding",
+    "Title": "Funkcja sprawdzająca, czy tablica jest posortowana",
+    "Content": "Zaimplementuj funkcję, która sprawdza, czy tablica jest posortowana (rosnąco). Funkcja powinna zwracać true, jeśli tablica jest posortowana, a false w przeciwnym przypadku.",
+    "Order": 11,
+    "LessonId": 1,
+    "AdditionalData": {
+      "initialCode": "function isSorted(arr) {\n  // Sprawdź, czy tablica jest posortowana rosnąco\n  \n  \n  \n  return true;\n}",
+      "testCases": [
+        {
+          "id": "1",
+          "input": "[1,2,3,4,5]",
+          "expectedOutput": "true",
+          "description": "Posortowana tablica"
+        },
+        {
+          "id": "2",
+          "input": "[5,4,3,2,1]",
+          "expectedOutput": "false",
+          "description": "Odwrotnie posortowana tablica"
+        },
+        {
+          "id": "3",
+          "input": "[1,2,5,4,6]",
+          "expectedOutput": "false",
+          "description": "Częściowo posortowana tablica"
+        },
+        {
+          "id": "4",
+          "input": "[1,1,2,3,3]",
+          "expectedOutput": "true",
+          "description": "Posortowana tablica z duplikatami"
+        },
+        {
+          "id": "5",
+          "input": "[]",
+          "expectedOutput": "true",
+          "description": "Pusta tablica (uznajemy za posortowaną)"
+        },
+        {
+          "id": "6",
+          "input": "[1]",
+          "expectedOutput": "true",
+          "description": "Tablica z jednym elementem"
+        }
+      ],
+      "hint": "Przejdź przez tablicę i sprawdź, czy każdy element jest mniejszy lub równy od następnego.",
+      "solution": "function isSorted(arr) {\n  // Pusta tablica lub tablica z jednym elementem są posortowane\n  if (arr.length <= 1) {\n    return true;\n  }\n  \n  // Sprawdź, czy każdy element jest mniejszy lub równy następnemu\n  for (let i = 0; i < arr.length - 1; i++) {\n    if (arr[i] > arr[i + 1]) {\n      return false;\n    }\n  }\n  \n  return true;\n}"
+    }
+  },
+  {
+    "Type": "challenge",
+    "Title": "Znajdowanie indeksu najmniejszego elementu",
+    "Content": "Zaimplementuj funkcję, która znajduje indeks najmniejszego elementu w tablicy. Ta funkcja jest kluczowym krokiem w algorytmie sortowania przez wybieranie.",
+    "Order": 12,
+    "LessonId": 1,
+    "AdditionalData": {
+      "initialCode": "function findMinIndex(arr, startIndex = 0) {\n  // Znajdź indeks najmniejszego elementu w tablicy\n  // zaczynając od indeksu startIndex\n  \n  \n  \n  return 0;\n}",
+      "testCases": [
+        {
+          "id": "1",
+          "input": "[[5,3,6,2,10], 0]",
+          "expectedOutput": "3",
+          "description": "Najmniejszy element w środku tablicy"
+        },
+        {
+          "id": "2",
+          "input": "[[1,2,3,4,5], 0]",
+          "expectedOutput": "0",
+          "description": "Najmniejszy element na początku"
+        },
+        {
+          "id": "3",
+          "input": "[[5,4,3,2,1], 0]",
+          "expectedOutput": "4",
+          "description": "Najmniejszy element na końcu"
+        },
+        {
+          "id": "4",
+          "input": "[[5,3,6,2,10], 2]",
+          "expectedOutput": "3",
+          "description": "Szukanie od środka tablicy"
+        },
+        {
+          "id": "5",
+          "input": "[[3,3,3,3,3], 0]",
+          "expectedOutput": "0",
+          "description": "Wszystkie elementy równe"
+        }
+      ],
+      "hint": "Zacznij od założenia, że element na startIndex jest najmniejszy, a następnie przejdź przez resztę tablicy, aktualizując minimalny indeks, gdy znajdziesz mniejszy element.",
+      "solution": "function findMinIndex(arr, startIndex = 0) {\n  // Sprawdź, czy tablica jest niepusta\n  if (arr.length === 0) {\n    return -1; // Zwróć -1 dla pustej tablicy\n  }\n  \n  // Zainicjuj minimalny indeks jako startIndex\n  let minIndex = startIndex;\n  \n  // Przejdź przez pozostałe elementy, zaczynając od startIndex + 1\n  for (let i = startIndex + 1; i < arr.length; i++) {\n    if (arr[i] < arr[minIndex]) {\n      minIndex = i;\n    }\n  }\n  \n  return minIndex;\n}"
+    }
   }
 ]

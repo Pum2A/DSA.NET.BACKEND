@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DSA.Infrastructure.Data;
 
 namespace DSA.API.Controllers
 {

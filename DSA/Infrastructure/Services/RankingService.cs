@@ -1,5 +1,6 @@
 ﻿using DSA.Core.DTOs.Auth;
 using DSA.Core.Helpers;
+using DSA.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DSA.Infrastructure.Services

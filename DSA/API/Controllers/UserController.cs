@@ -12,6 +12,8 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DSA.Infrastructure.Data;
+using DSA.Core.Entities.User;
 
 namespace DSA.API.Controllers
 {

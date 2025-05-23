@@ -1,9 +1,10 @@
-﻿using DSA.Core.Entities;
+﻿using DSA.Core.Entities.User;
 using DSA.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DSA.Infrastructure.Data;
 
 namespace DSA.Infrastructure.Repositories
 {
