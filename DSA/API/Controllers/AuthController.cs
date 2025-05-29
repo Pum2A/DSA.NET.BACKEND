@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DSA.Infrastructure.Data;
 
 namespace DSA.API.Controllers
 {
@@ -94,26 +93,52 @@ namespace DSA.API.Controllers
             return Ok(new { succeeded = true });
         }
 
-        [Authorize]
+        [Authorize] // Wymaga ważnego ciasteczka 'jwt' do wywołania
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Prostszy sposób pobrania ID
 
+            // Chociaż [Authorize] to sprawdza, dodatkowa weryfikacja nie zaszkodzi
             if (string.IsNullOrEmpty(userId))
-                return BadRequest("Invalid user");
+            {
+                // _logger?.LogWarning("Logout attempt without valid user identifier in claims.");
+                // Teoretycznie nie powinno się zdarzyć przez [Authorize]
+                return Unauthorized("Invalid session.");
+            }
 
-            var result = await _authService.LogoutAsync(userId);
+            // Opcjonalnie: Wywołaj logikę biznesową (np. unieważnienie refresh tokena w bazie)
+            // To jest dobra praktyka, ale nie wpływa bezpośrednio na usunięcie cookie 'jwt'
+            var serviceResult = await _authService.LogoutAsync(userId);
+            if (!serviceResult)
+            {
+                // _logger?.LogWarning($"Logout service failed for user {userId}. Proceeding to clear cookies anyway.");
+                // Można zalogować błąd, ale kontynuować usuwanie ciasteczek
+            }
 
-            if (!result)
-                return BadRequest("Failed to logout");
 
-            // Usuń ciasteczka
-            Response.Cookies.Delete("jwt");
-            Response.Cookies.Delete("refreshToken");
+            // --- KLUCZOWA POPRAWKA ---
+            // Utwórz obiekt CookieOptions z Domain i Path pasującymi do SetTokenCookies
+            var cookieOptions = new CookieOptions
+            {
+                // HttpOnly i Secure nie są potrzebne przy usuwaniu, ale Domain i Path są KLUCZOWE
+                Domain = "dsadotnet-481e228cd0ec.herokuapp.com", // MUSI pasować do tego z SetTokenCookies
+                Path = "/", // MUSI pasować do tego z SetTokenCookies
+                // SameSite i Secure nie są technicznie wymagane przez specyfikację do usunięcia,
+                // ale dodanie ich nie zaszkodzi i może być wymagane przez niektóre implementacje.
+                Secure = true,
+                SameSite = SameSiteMode.None
+            };
 
+            // Usuń ciasteczka używając tych samych opcji Domain i Path
+            Response.Cookies.Delete("jwt", cookieOptions);
+            Response.Cookies.Delete("refreshToken", cookieOptions);
+            // --- KONIEC POPRAWKI ---
+
+            // _logger?.LogInformation($"User {userId} logged out successfully.");
             return Ok(new { message = "You have been successfully logged out" });
         }
+
 
         [Authorize]
         [HttpGet("user")]
@@ -134,26 +159,28 @@ namespace DSA.API.Controllers
 
         private void SetTokenCookies(string token, string refreshToken)
         {
-            // Konfiguracja ciasteczka JWT
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
                 Expires = DateTime.UtcNow.AddMinutes(60),
-                Secure = false, // Wymagaj HTTPS
-                SameSite = SameSiteMode.Strict,
-                Path = "/"
+                Secure = true, // MUSI BYĆ true dla HTTPS
+                SameSite = SameSiteMode.None, // WYMAGANE dla cross-origin
+                Path = "/",
+                Domain = "dsadotnet-481e228cd0ec.herokuapp.com" // Dodaj swój domain Heroku
             };
+
             Response.Cookies.Append("jwt", token, cookieOptions);
 
-            // Konfiguracja ciasteczka Refresh Token
             var refreshTokenOptions = new CookieOptions
             {
                 HttpOnly = true,
                 Expires = DateTime.UtcNow.AddDays(7),
-                Secure = false,
-                SameSite = SameSiteMode.Strict,
-                Path = "/"
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/",
+                Domain = "dsadotnet-481e228cd0ec.herokuapp.com"
             };
+
             Response.Cookies.Append("refreshToken", refreshToken, refreshTokenOptions);
         }
     }

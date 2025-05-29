@@ -1,10 +1,8 @@
-﻿using DSA.Core.Entities.Learning;
+﻿using DSA.Core.Entities;
 using DSA.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using DSA.Infrastructure.Data;
-
 
 namespace DSA.Infrastructure.Repositories
 {

@@ -1,4 +1,4 @@
-﻿using DSA.Core.Entities.User;
+﻿using DSA.Core.Entities;
 using System.Threading.Tasks;
 
 namespace DSA.Core.Interfaces

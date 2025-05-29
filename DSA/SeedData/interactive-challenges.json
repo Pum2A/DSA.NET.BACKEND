@@ -1,0 +1,118 @@
+﻿[
+  {
+    "id": 7,
+    "lessonId": 1,
+    "stepType": "interactive",
+    "title": "Odwracanie tablicy",
+    "content": "Uzupełnij poniższą funkcję, która odwraca kolejność elementów w tablicy. Funkcja powinna działać 'w miejscu', czyli nie tworzyć nowej tablicy.",
+    "code": "function reverseArray(arr) {\n  // Twój kod tutaj\n  // Funkcja powinna odwrócić kolejność elementów w tablicy arr\n  // Nie twórz nowej tablicy!\n  \n  return arr;\n}",
+    "language": "javascript",
+    "testCases": [
+      {
+        "id": "1",
+        "input": "[1, 2, 3, 4, 5]",
+        "expectedOutput": "[5, 4, 3, 2, 1]",
+        "description": "Odwrócenie tablicy [1, 2, 3, 4, 5]"
+      },
+      {
+        "id": "2",
+        "input": "[10, 20]",
+        "expectedOutput": "[20, 10]",
+        "description": "Odwrócenie tablicy [10, 20]"
+      },
+      {
+        "id": "3",
+        "input": "[42]",
+        "expectedOutput": "[42]",
+        "description": "Odwrócenie tablicy jednoelementowej [42]"
+      }
+    ],
+    "initialCode": "function reverseArray(arr) {\n  // Twój kod tutaj\n  \n  return arr;\n}",
+    "solution": "function reverseArray(arr) {\n  let left = 0;\n  let right = arr.length - 1;\n  \n  while (left < right) {\n    // Zamień elementy\n    let temp = arr[left];\n    arr[left] = arr[right];\n    arr[right] = temp;\n    \n    // Przesuń wskaźniki\n    left++;\n    right--;\n  }\n  \n  return arr;\n}",
+    "hint": "Użyj dwóch wskaźników - jeden od początku tablicy, drugi od końca. Zamieniaj elementy miejscami, przesuwając wskaźniki do środka."
+  },
+  {
+    "id": 14,
+    "lessonId": 2,
+    "stepType": "interactive",
+    "title": "Znajdź środkowy element listy",
+    "content": "Uzupełnij poniższą funkcję, która znajduje środkowy element listy jednokierunkowej. W przypadku parzystej liczby elementów, zwróć drugi z dwóch środkowych elementów.",
+    "code": "function findMiddle(head) {\n  // Twój kod tutaj\n  // Funkcja powinna zwrócić wartość środkowego elementu listy\n  // head to pierwszy węzeł listy\n  \n}",
+    "language": "javascript",
+    "testCases": [
+      {
+        "id": "1",
+        "input": "1->2->3->4->5",
+        "expectedOutput": "3",
+        "description": "Lista z 5 elementami"
+      },
+      {
+        "id": "2",
+        "input": "1->2->3->4",
+        "expectedOutput": "3",
+        "description": "Lista z 4 elementami"
+      },
+      {
+        "id": "3",
+        "input": "1",
+        "expectedOutput": "1",
+        "description": "Lista z 1 elementem"
+      }
+    ],
+    "initialCode": "function findMiddle(head) {\n  // Twój kod tutaj\n  \n}",
+    "solution": "function findMiddle(head) {\n  if (!head) return null;\n  \n  let slow = head;\n  let fast = head;\n  \n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n  }\n  \n  return slow.value;\n}",
+    "hint": "Użyj techniki 'wolnego i szybkiego wskaźnika'. Jeden wskaźnik przesuwa się o jeden element, drugi o dwa na raz. Gdy szybki wskaźnik dojdzie do końca, wolny będzie w środku."
+  },
+  {
+    "id": 21,
+    "lessonId": 4,
+    "stepType": "interactive",
+    "title": "Sprawdzanie czy drzewo jest BST",
+    "content": "Uzupełnij funkcję, która sprawdza, czy podane drzewo binarne jest poprawnym drzewem BST (Binary Search Tree).",
+    "code": "function isBST(root) {\n  // Twój kod tutaj\n  // Funkcja powinna zwracać true, jeśli drzewo jest poprawnym BST\n  // i false w przeciwnym przypadku\n  \n}",
+    "language": "javascript",
+    "testCases": [
+      {
+        "id": "1",
+        "input": "4,2,6,1,3,5,7",
+        "expectedOutput": "true",
+        "description": "Poprawne drzewo BST"
+      },
+      {
+        "id": "2",
+        "input": "4,6,2,1,3,5,7",
+        "expectedOutput": "false",
+        "description": "Niepoprawne drzewo BST - 6 na lewo od 4"
+      },
+      {
+        "id": "3",
+        "input": "4,2,6,1,5,3,7",
+        "expectedOutput": "false",
+        "description": "Niepoprawne drzewo BST - 5 w lewym poddrzewie 4"
+      }
+    ],
+    "initialCode": "function isBST(root) {\n  // Twój kod tutaj\n  \n}",
+    "solution": "function isBST(root) {\n  function validate(node, min, max) {\n    if (!node) return true;\n    \n    if ((min !== null && node.value <= min) || \n        (max !== null && node.value >= max)) {\n      return false;\n    }\n    \n    return validate(node.left, min, node.value) && \n           validate(node.right, node.value, max);\n  }\n  \n  return validate(root, null, null);\n}",
+    "hint": "Użyj rekurencji z dodatkowymi parametrami określającymi dozwolony zakres wartości dla każdego poddrzewa. Dla lewego poddrzewa, maksymalna wartość to wartość rodzica; dla prawego poddrzewa, minimalna wartość to wartość rodzica."
+  },
+  {
+    "id": 28,
+    "lessonId": 11,
+    "stepType": "interactive",
+    "title": "Analiza złożoności",
+    "content": "Przeanalizuj poniższy kod i określ jego złożoność czasową. Uzupełnij funkcję, która zwróci poprawną odpowiedź w postaci ciągu znaków (np. 'O(n)', 'O(n^2)', 'O(log n)', itp.).",
+    "code": "function analyzeComplexity() {\n  // Przeanalizuj złożoność poniższego algorytmu\n  function mystery(n) {\n    let result = 0;\n    for (let i = 0; i < n; i++) {\n      let j = 1;\n      while (j < n) {\n        result += 1;\n        j *= 2;\n      }\n    }\n    return result;\n  }\n  \n  // Zwróć złożoność jako string, np. 'O(n)', 'O(n^2)', 'O(n log n)'\n  return 'O(?)';\n}",
+    "language": "javascript",
+    "testCases": [
+      {
+        "id": "1",
+        "input": "",
+        "expectedOutput": "O(n log n)",
+        "description": "Złożoność funkcji mystery"
+      }
+    ],
+    "initialCode": "function analyzeComplexity() {\n  // Zwróć złożoność jako string\n  return 'O(?)';\n}",
+    "solution": "function analyzeComplexity() {\n  // Zewnętrzna pętla wykonuje się n razy\n  // Wewnętrzna pętla while wykonuje się log(n) razy, ponieważ j podwaja się w każdej iteracji\n  // Całkowita złożoność to O(n * log n)\n  return 'O(n log n)';\n}",
+    "hint": "Zewnętrzna pętla wykonuje się n razy. W wewnętrznej pętli zmienna j podwaja się w każdej iteracji (j *= 2), co prowadzi do logarytmicznej liczby kroków. Pomyśl o liczbie podwojeń potrzebnych, aby z 1 dojść do n."
+  }
+]

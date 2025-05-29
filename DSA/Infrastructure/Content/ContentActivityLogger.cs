@@ -23,8 +23,12 @@ namespace DSA.Infrastructure.Content
         }
 
         public async Task LogActivityAsync(
-            string action, string source, string contentType,
-            string contentId, string message, object additionalData = null)
+            string action,
+            string source,
+            string contentType,
+            string contentId,
+            string message,
+            object additionalData = null)
         {
             try
             {
@@ -45,11 +49,13 @@ namespace DSA.Infrastructure.Content
                 _dbContext.ContentActivityLogs.Add(logEntry);
                 await _dbContext.SaveChangesAsync();
 
-                _logger.LogInformation($"[Content] {action.ToUpper()} - {contentType} {contentId}: {message}");
+                _logger.LogInformation(
+                    $"[Content] {action.ToUpper()} - {contentType} {contentId}: {message} by {_currentUser}");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Błąd podczas logowania aktywności");
+                // Nie pozwól, aby błąd logowania przerwał działanie aplikacji
+                _logger.LogError(ex, $"Błąd podczas zapisywania aktywności treści: {ex.Message}");
             }
         }
     }

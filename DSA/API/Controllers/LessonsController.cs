@@ -13,9 +13,6 @@ using DSA.Core.Entities;
 using DSA.Infrastructure.Data;
 using DSA.Infrastructure;
 using DSA.Infrastructure.Services;
-using DSA.Core.DTOs.Lessons.Learning;
-using DSA.Core.DTOs.Lessons.Interactive;
-using DSA.Core.DTOs.Lessons.Quiz;
 
 namespace DSA.API.Controllers
 {
@@ -70,7 +67,6 @@ namespace DSA.API.Controllers
         }
 
         [HttpGet("{lessonId}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetLesson(string lessonId)
         {
             var lesson = await _lessonService.GetLessonByIdAsync(lessonId);
@@ -91,91 +87,15 @@ namespace DSA.API.Controllers
             return Ok(progress);
         }
 
-        [HttpGet("user/stats")]
-        public async Task<IActionResult> GetUserLearningStats()
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var stats = await _lessonService.GetUserLearningStatsAsync(userId);
-
-                if (stats == null)
-                {
-                    return NotFound("Nie znaleziono statystyk użytkownika.");
-                }
-
-                return Ok(stats);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "[LessonsController] Błąd podczas pobierania statystyk użytkownika");
-                return StatusCode(500, "Wystąpił błąd podczas pobierania statystyk.");
-            }
-        }
-
-        [HttpGet("user/completion-rates")]
-        public async Task<IActionResult> GetModuleCompletionRates()
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var completionRates = await _lessonService.GetModuleCompletionRatesAsync(userId);
-                return Ok(completionRates);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "[LessonsController] Błąd podczas pobierania wskaźników ukończenia modułów");
-                return StatusCode(500, "Wystąpił błąd podczas pobierania wskaźników ukończenia.");
-            }
-        }
-
-        [HttpGet("user/recent-activities")]
-        public async Task<IActionResult> GetRecentActivities([FromQuery] int count = 10)
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var activities = await _lessonService.GetRecentActivitiesAsync(userId, count);
-                return Ok(activities);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "[LessonsController] Błąd podczas pobierania ostatnich aktywności");
-                return StatusCode(500, "Wystąpił błąd podczas pobierania ostatnich aktywności.");
-            }
-        }
-
         [HttpPost("{lessonId}/step/{stepIndex}/complete")]
-        public async Task<IActionResult> CompleteStep(string lessonId, int stepIndex, [FromBody] StepCompletionData completionData)
+        public async Task<IActionResult> CompleteStep(string lessonId, int stepIndex)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _lessonService.CompleteStepAsync(userId, lessonId, stepIndex, completionData);
+            var result = await _lessonService.CompleteStepAsync(userId, lessonId, stepIndex);
             if (!result)
                 return BadRequest("Failed to complete step");
 
             return Ok();
-        }
-
-        [HttpPost("{lessonId}/step/{stepIndex}/verify")]
-        public async Task<IActionResult> VerifyStepAnswer(string lessonId, int stepIndex, [FromBody] object answer)
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var result = await _lessonService.VerifyStepAnswerAsync(userId, lessonId, stepIndex, answer);
-
-                return Ok(new
-                {
-                    isCorrect = result.IsCorrect,
-                    feedback = result.Feedback,
-                    nextStep = result.NextStep
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "[LessonsController] Błąd podczas weryfikacji odpowiedzi");
-                return StatusCode(500, "Wystąpił błąd podczas weryfikacji odpowiedzi.");
-            }
         }
 
         [HttpPost("{lessonId}/complete")]
@@ -185,6 +105,7 @@ namespace DSA.API.Controllers
 
             try
             {
+                // Sprawdź, czy lekcja istnieje
                 var lesson = await _context.Lessons
                     .FirstOrDefaultAsync(l => l.ExternalId == lessonId);
 
@@ -194,11 +115,13 @@ namespace DSA.API.Controllers
                     return NotFound($"Nie znaleziono lekcji o ID {lessonId}");
                 }
 
-                var existingProgress = await _context.UserProgress
+                // Sprawdź, czy lekcja była już ukończona
+                var existingProgress = await _context.UserProgresses
                     .FirstOrDefaultAsync(up => up.UserId == userId && up.LessonId == lesson.Id);
 
                 bool wasAlreadyCompleted = existingProgress != null && existingProgress.IsCompleted;
 
+                // Wywołaj serwis by ukończyć lekcję
                 var result = await _lessonService.CompleteLessonAsync(userId, lessonId);
 
                 if (!result)
@@ -207,9 +130,12 @@ namespace DSA.API.Controllers
                     return BadRequest("Nie udało się ukończyć lekcji");
                 }
 
+                // KLUCZ: Wywołaj sprawdzanie osiągnięć!
                 _logger.LogWarning("[DEBUG] Wywołano CheckAndNotifyLessonAchievementsAsync");
+
                 await _userService.CheckAndNotifyLessonAchievementsAsync(userId);
 
+                // Przygotuj odpowiednią odpowiedź
                 if (wasAlreadyCompleted)
                 {
                     _logger.LogInformation($"[LessonsController] Lekcja {lessonId} była już wcześniej ukończona przez użytkownika {userId}");
@@ -246,6 +172,7 @@ namespace DSA.API.Controllers
             {
                 _logger.LogInformation($"[LessonsController] Pobieranie kroków dla lekcji: {lessonId}");
 
+                // Pobierz lekcję po externalId
                 var lesson = await _context.Lessons
                     .FirstOrDefaultAsync(l => l.ExternalId == lessonId);
 
@@ -257,6 +184,7 @@ namespace DSA.API.Controllers
 
                 _logger.LogInformation($"[LessonsController] Znaleziono lekcję: Id={lesson.Id}, ExternalId={lesson.ExternalId}, Title={lesson.Title}");
 
+                // Pobierz kroki dla lekcji
                 var steps = await _context.Steps
                     .Where(s => s.LessonId == lesson.Id)
                     .OrderBy(s => s.Order)
@@ -267,11 +195,15 @@ namespace DSA.API.Controllers
                 if (!steps.Any())
                 {
                     _logger.LogWarning($"[LessonsController] Brak kroków dla lekcji {lessonId}!");
+
+                    // UWAGA: Zamiast zwracać 404, zwróćmy pustą listę
                     return Ok(new List<object>());
                 }
 
+                // Reszta kodu przetwarzającego kroki bez zmian...
                 var result = steps.Select(step =>
                 {
+                    // Tworzymy słownik, który będzie zawierał wszystkie właściwości
                     var properties = new Dictionary<string, object>
                     {
                         ["id"] = step.Id,
@@ -285,19 +217,24 @@ namespace DSA.API.Controllers
                         ["lessonId"] = step.LessonId
                     };
 
+                    // Jeśli to quiz lub interactive, spróbuj sparsować additionalData
                     if ((step.Type == "quiz" || step.Type == "interactive") && !string.IsNullOrEmpty(step.AdditionalData))
                     {
                         try
                         {
+                            // Konwertuj additionalData na słownik
                             var additionalData = JsonSerializer.Deserialize<Dictionary<string, object>>(step.AdditionalData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
+                            // Przenieś pola additionalData do głównego obiektu
                             foreach (var key in additionalData.Keys)
                             {
                                 properties[key] = additionalData[key];
                             }
 
+                            // Specjalne przetwarzanie dla quiz
                             if (step.Type == "quiz" && additionalData.ContainsKey("options"))
                             {
+                                // Pobierz opcje i przetwórz je poprawnie
                                 var optionsElement = (JsonElement)additionalData["options"];
                                 var options = JsonSerializer.Deserialize<List<object>>(optionsElement.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                                 properties["options"] = options;
@@ -310,6 +247,7 @@ namespace DSA.API.Controllers
                         }
                     }
 
+                    // Zachowaj też oryginalne additionalData
                     properties["additionalData"] = step.AdditionalData;
 
                     return properties;
@@ -323,9 +261,5 @@ namespace DSA.API.Controllers
                 return StatusCode(500, $"Wystąpił błąd podczas przetwarzania żądania: {ex.Message}");
             }
         }
-
-
-
-       
     }
 }

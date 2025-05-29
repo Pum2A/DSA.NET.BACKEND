@@ -1,8 +1,5 @@
-﻿using DSA.Core.DTOs.Lessons.Interactive;
-using DSA.Core.DTOs.Lessons.Learning;
-using DSA.Core.DTOs.Lessons.Quiz;
-using DSA.Core.Entities.Learning;
-using DSA.Core.Entities.User;
+﻿using DSA.Core.DTOs.Lessons;
+using DSA.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +9,7 @@ namespace DSA.Core.Extensions
 {
     public static class MappingExtensions
     {
-        // Module -> ModuleDto
+        // Mapowanie Module -> ModuleDto
         public static ModuleDto ToDto(this Module module)
         {
             if (module == null) return null;
@@ -26,18 +23,17 @@ namespace DSA.Core.Extensions
                 Order = module.Order,
                 Icon = module.Icon,
                 IconColor = module.IconColor,
-                Prerequisites = module.Prerequisites ?? new List<string>(),
-                Lessons = module.Lessons?.Select(l => l.ToDto()).ToList() ?? new List<LessonDto>()
+                Lessons = module.Lessons?.Select(l => l.ToDto()).ToList()
             };
         }
 
-        // IEnumerable<Module> -> IEnumerable<ModuleDto>
+        // Mapowanie IEnumerable<Module> -> IEnumerable<ModuleDto>
         public static IEnumerable<ModuleDto> ToDto(this IEnumerable<Module> modules)
         {
-            return modules?.Select(m => m.ToDto()).ToList() ?? new List<ModuleDto>();
+            return modules?.Select(m => m.ToDto()).ToList();
         }
 
-        // Lesson -> LessonDto
+        // Mapowanie Lesson -> LessonDto
         public static LessonDto ToDto(this Lesson lesson)
         {
             if (lesson == null) return null;
@@ -51,12 +47,11 @@ namespace DSA.Core.Extensions
                 EstimatedTime = lesson.EstimatedTime,
                 XpReward = lesson.XpReward,
                 ModuleId = lesson.ModuleId,
-                RequiredSkills = lesson.RequiredSkills ?? new List<string>(),
-                Steps = lesson.Steps?.OrderBy(s => s.Order).Select(s => s.ToDto()).ToList() ?? new List<StepDto>()
+                Steps = lesson.Steps?.Select(s => s.ToDto()).ToList()
             };
         }
 
-        // Step -> StepDto
+        // Mapowanie Step -> StepDto
         public static StepDto ToDto(this Step step)
         {
             if (step == null) return null;
@@ -71,91 +66,37 @@ namespace DSA.Core.Extensions
                 Language = step.Language,
                 ImageUrl = step.ImageUrl,
                 Order = step.Order,
-                LessonId = step.LessonId,
-                AdditionalData = step.AdditionalData
+                LessonId = step.LessonId
             };
 
-            // Proces tylko jeśli mamy dane
+            // Mapowanie danych dodatkowych
             if (!string.IsNullOrEmpty(step.AdditionalData))
             {
                 try
                 {
-                    switch (step.Type.ToLower())
+                    if (step.Type == "quiz")
                     {
-                        case "quiz":
-                            var quiz = step.GetTypedData<QuizData>();
-                            if (quiz != null)
-                            {
-                                dto.Question = quiz.Question;
-                                dto.Options = quiz.Options;
-                                dto.CorrectAnswer = quiz.CorrectAnswer;
-                                dto.Explanation = quiz.Explanation;
-                                dto.QuizData = quiz;
-                            }
-                            break;
-
-                        case "interactive":
-                            var interactive = step.GetTypedData<InteractiveData>();
-                            if (interactive != null)
-                            {
-                                dto.Items = interactive.Items;
-                                dto.Hint = interactive.TaskDescription;
-                                dto.InteractiveData = interactive;
-                            }
-                            break;
-
-                        case "coding":
-                        case "challenge":
-                            var coding = step.GetTypedData<CodingData>();
-                            if (coding != null)
-                            {
-                                dto.InitialCode = coding.InitialCode;
-                                dto.TestCases = coding.TestCases;
-                                dto.Hint = coding.Hint;
-                                dto.Language = coding.Language;
-
-                                // Konwersja z CodingData na ChallengeData
-                                dto.ChallengeData = new ChallengeData
-                                {
-                                    InitialCode = coding.InitialCode,
-                                    TestCases = coding.TestCases,
-                                    Hint = coding.Hint,
-                                    Language = coding.Language,
-                                    Solution = coding.Solution
-                                };
-                            }
-                            break;
-
-                        case "video":
-                            var videoData = step.GetTypedData<VideoData>();
-                            if (videoData != null)
-                            {
-                                dto.VideoUrl = videoData.Url;
-                                dto.Duration = videoData.Duration;
-                                dto.RequireFullWatch = videoData.RequireFullWatch;
-                                dto.VideoData = videoData;
-                            }
-                            break;
-
-                        case "list":
-                            var listItems = step.GetTypedData<List<ListItemDto>>();
-                            if (listItems != null)
-                            {
-                                dto.Items = listItems;
-                            }
-                            break;
+                        dto.Options = JsonSerializer.Deserialize<List<QuizOptionDto>>(step.AdditionalData);
+                    }
+                    else if (step.Type == "interactive" || step.Type == "challenge")
+                    {
+                        dto.TestCases = JsonSerializer.Deserialize<List<TestCaseDto>>(step.AdditionalData);
+                    }
+                    else if (step.Type == "list")
+                    {
+                        dto.Items = JsonSerializer.Deserialize<List<ListItemDto>>(step.AdditionalData);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine($"Error deserializing AdditionalData for step {step.Id}: {ex.Message}");
+                    // Ignoruj błędy deserializacji
                 }
             }
 
             return dto;
         }
 
-        // UserProgress -> UserProgressDto
+        // Mapowanie UserProgress -> UserProgressDto
         public static UserProgressDto ToDto(this UserProgress progress)
         {
             if (progress == null) return null;
@@ -166,11 +107,10 @@ namespace DSA.Core.Extensions
                 UserId = progress.UserId,
                 LessonId = progress.LessonId,
                 IsCompleted = progress.IsCompleted,
-                StartedAt = progress.StartedAt ?? DateTime.MinValue,
+                StartedAt = (DateTime)progress.StartedAt,
                 CompletedAt = progress.CompletedAt,
                 CurrentStepIndex = progress.CurrentStepIndex,
-                XpEarned = progress.XpEarned,
-                LastUpdated = progress.LastUpdated
+                XpEarned = progress.XpEarned
             };
         }
     }

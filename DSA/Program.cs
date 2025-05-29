@@ -3,45 +3,47 @@ using DSA.API.Middleware;
 using DSA.Infrastructure;
 using DSA.Infrastructure.Content.Sources;
 using DSA.Infrastructure.Content;
-using DSA.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using DSA.Core.Interfaces;
 using DSA.Infrastructure.Services;
-using DSA.Core.Mappings;
-using FluentAssertions.Common;
+using System;
+using DSA.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Register repositories
+builder.Services.AddScoped<ILessonRepository, LessonRepository>();
+builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
+builder.Services.AddScoped<IUserProgressRepository, UserProgressRepository>();
 
-// Zarejestruj repozytoria
-builder.Services.AddScoped<DSA.Core.Interfaces.ILessonRepository, DSA.Infrastructure.Repositories.LessonRepository>();
-builder.Services.AddScoped<DSA.Core.Interfaces.IModuleRepository, DSA.Infrastructure.Repositories.ModuleRepository>();
-builder.Services.AddScoped<DSA.Core.Interfaces.IUserProgressRepository, DSA.Infrastructure.Repositories.UserProgressRepository>();
-
-
-builder.Services.AddScoped<DSA.Core.Interfaces.IUserService, DSA.Infrastructure.Services.UserService>();
-builder.Services.AddScoped<DSA.Core.Interfaces.IUserActivityService, DSA.Infrastructure.Services.UserActivityService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
+// Register services
 builder.Services.AddScoped<ILessonService, LessonService>();
-
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserActivityService, UserActivityService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<RankingService>();
-builder.Services.AddAutoMapper(typeof(LessonProfile));
 
-// Zarejestruj serwisy
-
-
-
+// CORS configuration
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowNextJsApp", builder =>
     {
-        builder.WithOrigins("http://localhost:3000")
+        var origins = new[]
+        {
+            "https://dsa-frontend-nextjs-pkh4.vercel.app",
+            "http://localhost:3000",
+            "http://localhost:5178" // Dodaj port developerski
+        };
+
+        builder.WithOrigins(origins)
                .AllowAnyMethod()
                .AllowAnyHeader()
-               .AllowCredentials();
+               .AllowCredentials()
+               .SetPreflightMaxAge(TimeSpan.FromMinutes(10))
+               .WithExposedHeaders("Content-Disposition", "Authorization");
     });
 });
 
@@ -49,7 +51,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Rozszerzona konfiguracja Swaggera
+// Swagger configuration
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -65,7 +67,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    // Konfiguracja uwierzytelniania JWT w Swagger UI
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -73,7 +74,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\""
+        Description = "JWT Authorization header using the Bearer scheme."
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -91,7 +92,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    // Opcjonalnie: dodanie komentarzy XML do dokumentacji Swagger
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     if (File.Exists(xmlPath))
@@ -101,20 +101,33 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Add DbContext
+var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+var herokuDatabaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+if (!string.IsNullOrEmpty(herokuDatabaseUrl))
+{
+    var databaseUri = new Uri(herokuDatabaseUrl);
+    var userInfo = databaseUri.UserInfo.Split(':');
+    connectionString = $"Host={databaseUri.Host};Port={databaseUri.Port};Database={databaseUri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SslMode=Require;Trust Server Certificate=true";
+}
+else
+{
+    connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+}
+Console.WriteLine($"Using connection string: {connectionString}");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
+    options.UseNpgsql(connectionString));
 
 // Add Auth services
 builder.Services.AddAuthServices(builder.Configuration);
 
-// Poprawiona konfiguracja CORS dla obs³ugi HttpOnly cookies
-
+// Configure authentication with cookies
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.Cookie.HttpOnly = true;
-        options.Cookie.SameSite = SameSiteMode.None; // Dla cross-origin
-        options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Podczas developmentu
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Events.OnRedirectToLogin = context =>
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -122,15 +135,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         };
     });
 
+builder.Services.AddSingleton<ContentProvider>();
 
-builder.Services.AddSingleton<DSA.Infrastructure.Content.ContentProvider>();
 var app = builder.Build();
 
-
-
-
-
-
+// Seed data
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -139,80 +148,60 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        // Utwórz i skonfiguruj ContentProvider
         var contentProvider = services.GetRequiredService<ContentProvider>();
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        var jsonFileLogger = loggerFactory.CreateLogger<JsonFileContentSource>();
+        contentProvider.RegisterContentSource(new JsonFileContentSource(Path.Combine(builder.Environment.ContentRootPath, "SeedData"), jsonFileLogger));
+        var characterEncodingLogger = services.GetRequiredService<ILogger<CharacterEncodingAdapter>>();
+        contentProvider.RegisterContentSource(new CharacterEncodingAdapter(characterEncodingLogger));
+        var stackQueueLogger = services.GetRequiredService<ILogger<StackQueueAdapter>>();
+        contentProvider.RegisterContentSource(new StackQueueAdapter(stackQueueLogger));
 
-        // Zarejestruj Ÿród³a treœci
-        contentProvider.RegisterContentSource(
-     new JsonFileContentSource(
-         Path.Combine(builder.Environment.ContentRootPath, "SeedData"),
-         services.GetRequiredService<ILogger<JsonFileContentSource>>()
-     )
- );
-
-        contentProvider.RegisterContentSource(
-    new CharacterEncodingAdapter(
-        services.GetRequiredService<ILogger<CharacterEncodingAdapter>>()
-    )
-);
-
-        // Zarejestruj adapter do naprawy stack-queue
-        contentProvider.RegisterContentSource(
-            new StackQueueAdapter(
-                services.GetRequiredService<ILogger<StackQueueAdapter>>()
-            )
-        );
-
-        // Uruchom ³adowanie danych
         var contentContext = new ContentContext(dbContext);
         await contentProvider.LoadAllContentAsync(contentContext);
 
-        // Informacja o wynikach
         if (contentContext.ValidationReport.HasErrors)
         {
-            logger.LogWarning("£adowanie treœci zakoñczone z b³êdami. Szczegó³y w logach.");
-            foreach (var issue in contentContext.ValidationReport.Issues
-                .Where(i => i.Severity == ContentIssueSeverity.Error))
+            logger.LogWarning("Content loading completed with errors.");
+            foreach (var issue in contentContext.ValidationReport.Issues.Where(i => i.Severity == ContentIssueSeverity.Error))
             {
                 logger.LogError($"[{issue.Source}] {issue.Message}");
             }
         }
         else
         {
-            logger.LogInformation("Pomyœlnie za³adowano wszystkie treœci edukacyjne");
+            logger.LogInformation("Successfully loaded all educational content");
         }
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "Wyst¹pi³ b³¹d podczas inicjalizacji ContentProvider");
+        logger.LogError(ex, "Error during ContentProvider initialization");
     }
 }
-// Configure the HTTP request pipeline
 
-
+// Middleware pipeline
 app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "DSA Learning API v1");
-        c.RoutePrefix = string.Empty; // Ustaw Swagger UI jako stronê g³ówn¹
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DSA Learning API v1");
+    c.RoutePrefix = string.Empty;
+    c.OAuthUsePkce();
+    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+    c.DefaultModelsExpandDepth(-1);
+    c.DisplayRequestDuration();
+});
 
-        // Konfiguracja wygl¹du
-        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-        c.DefaultModelsExpandDepth(-1); // Ukryj sekcjê Models
-        c.DisplayRequestDuration(); // Poka¿ czas trwania ¿¹dañ
-    });
-
-// Konfiguracja dla œrodowiska developerskiego
-// Zakomentuj tê liniê, jeœli masz problemy z certyfikatem
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 
-
-// U¿ywanie wbudowanej obs³ugi CORS zamiast w³asnego middleware
-app.UseMiddleware<CorsMiddleware>();
+app.UseRouting();
+app.UseCors("AllowNextJsApp"); // Moved before UseRouting, removed custom CorsMiddleware
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<SecureHeadersMiddleware>();
+
 app.MapControllers();
 
 // Auto migrate database

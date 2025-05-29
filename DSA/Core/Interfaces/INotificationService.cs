@@ -1,4 +1,5 @@
-﻿
+﻿using System.Threading.Tasks;
+
 namespace DSA.Core.Interfaces
 {
     public interface INotificationService

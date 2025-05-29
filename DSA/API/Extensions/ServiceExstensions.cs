@@ -1,7 +1,6 @@
-﻿using DSA.Core.Entities.User;
+﻿using DSA.Core.Entities;
 using DSA.Core.Interfaces;
 using DSA.Infrastructure;
-using DSA.Infrastructure.Data;
 using DSA.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

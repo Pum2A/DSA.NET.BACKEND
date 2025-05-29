@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using DSA.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using DSA.Infrastructure.Data;
 
 namespace DSA.API.Controllers
 {
