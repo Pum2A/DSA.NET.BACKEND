@@ -1,79 +1,43 @@
-using DSA.API.Extensions;
-using DSA.API.Middleware;
-using DSA.Infrastructure;
-using DSA.Infrastructure.Content.Sources;
-using DSA.Infrastructure.Content;
-using DSA.Infrastructure.Data;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Text;
+using System.Text.Json.Serialization;
+using DSA.Data;
+using DSA.Services;
+using DSA.Services.Implementation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
-using DSA.Core.Interfaces;
-using DSA.Infrastructure.Services;
-using DSA.Core.Mappings;
-using FluentAssertions.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Log JWT Secret for debugging (remove in production!)
+Console.WriteLine("JWT Secret from config: " + builder.Configuration["Jwt:Secret"]);
 
-// Zarejestruj repozytoria
-builder.Services.AddScoped<DSA.Core.Interfaces.ILessonRepository, DSA.Infrastructure.Repositories.LessonRepository>();
-builder.Services.AddScoped<DSA.Core.Interfaces.IModuleRepository, DSA.Infrastructure.Repositories.ModuleRepository>();
-builder.Services.AddScoped<DSA.Core.Interfaces.IUserProgressRepository, DSA.Infrastructure.Repositories.UserProgressRepository>();
-
-
-builder.Services.AddScoped<DSA.Core.Interfaces.IUserService, DSA.Infrastructure.Services.UserService>();
-builder.Services.AddScoped<DSA.Core.Interfaces.IUserActivityService, DSA.Infrastructure.Services.UserActivityService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
-builder.Services.AddScoped<ILessonService, LessonService>();
-
-builder.Services.AddScoped<RankingService>();
-builder.Services.AddAutoMapper(typeof(LessonProfile));
-
-// Zarejestruj serwisy
-
-
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowNextJsApp", builder =>
+// Add services to the container.
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
     {
-        builder.WithOrigins("http://localhost:3000")
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .AllowCredentials();
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
-});
 
-// Add services to the container
-builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-
-// Rozszerzona konfiguracja Swaggera
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "DSA Learning API",
-        Version = "v1",
-        Description = "API dla aplikacji w stylu Duolingo do nauki Data Structures and Algorithms",
-        Contact = new OpenApiContact
-        {
-            Name = "DSA Learning Team",
-            Email = "contact@dsalearning.com",
-            Url = new Uri("https://dsalearning.com")
-        }
-    });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "DSA Learning API", Version = "v1" });
 
-    // Konfiguracja uwierzytelniania JWT w Swagger UI
+    // Add this line to use full type names including namespace
+    c.CustomSchemaIds(type => type.FullName);
+
+    // Configure Swagger to use JWT authentication
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
+        Description = "JWT Authorization header using the Bearer scheme",
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\""
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -87,139 +51,80 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
-
-    // Opcjonalnie: dodanie komentarzy XML do dokumentacji Swagger
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    if (File.Exists(xmlPath))
-    {
-        c.IncludeXmlComments(xmlPath);
-    }
 });
 
-// Add DbContext
+// Configure DbContext - Updated for PostgreSQL
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
+    options.UseNpgsql(connectionString));
 
-// Add Auth services
-builder.Services.AddAuthServices(builder.Configuration);
-
-// Poprawiona konfiguracja CORS dla obs³ugi HttpOnly cookies
-
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+// Configure Authentication - Updated to match appsettings.json structure
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SameSite = SameSiteMode.None; // Dla cross-origin
-        options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Podczas developmentu
-        options.Events.OnRedirectToLogin = context =>
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return Task.CompletedTask;
-        };
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
+        ValidAudience = builder.Configuration["Jwt:ValidAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"] ??
+            "JWTRefreshTokenHIGHsecuredPasswordVVVp1OH7Xasd707"))
+    };
+});
+
+// Register Services
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<IQuizService, QuizService>();
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.WithOrigins(builder.Configuration["Jwt:ValidAudience"] ?? "http://localhost:3000") // Use configured audience
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
+});
 
-
-builder.Services.AddSingleton<DSA.Infrastructure.Content.ContentProvider>();
 var app = builder.Build();
 
-
-
-
-
-
-using (var scope = app.Services.CreateScope())
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
-    var services = scope.ServiceProvider;
-    var logger = services.GetRequiredService<ILogger<Program>>();
-    var dbContext = services.GetRequiredService<ApplicationDbContext>();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
-    try
+    // Automatically apply migrations during development
+    using (var scope = app.Services.CreateScope())
     {
-        // Utwórz i skonfiguruj ContentProvider
-        var contentProvider = services.GetRequiredService<ContentProvider>();
-
-        // Zarejestruj Ÿród³a treœci
-        contentProvider.RegisterContentSource(
-     new JsonFileContentSource(
-         Path.Combine(builder.Environment.ContentRootPath, "SeedData"),
-         services.GetRequiredService<ILogger<JsonFileContentSource>>()
-     )
- );
-
-        contentProvider.RegisterContentSource(
-    new CharacterEncodingAdapter(
-        services.GetRequiredService<ILogger<CharacterEncodingAdapter>>()
-    )
-);
-
-        // Zarejestruj adapter do naprawy stack-queue
-        contentProvider.RegisterContentSource(
-            new StackQueueAdapter(
-                services.GetRequiredService<ILogger<StackQueueAdapter>>()
-            )
-        );
-
-        // Uruchom ³adowanie danych
-        var contentContext = new ContentContext(dbContext);
-        await contentProvider.LoadAllContentAsync(contentContext);
-
-        // Informacja o wynikach
-        if (contentContext.ValidationReport.HasErrors)
-        {
-            logger.LogWarning("£adowanie treœci zakoñczone z b³êdami. Szczegó³y w logach.");
-            foreach (var issue in contentContext.ValidationReport.Issues
-                .Where(i => i.Severity == ContentIssueSeverity.Error))
-            {
-                logger.LogError($"[{issue.Source}] {issue.Message}");
-            }
-        }
-        else
-        {
-            logger.LogInformation("Pomyœlnie za³adowano wszystkie treœci edukacyjne");
-        }
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "Wyst¹pi³ b³¹d podczas inicjalizacji ContentProvider");
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
     }
 }
-// Configure the HTTP request pipeline
 
+app.UseHttpsRedirection();
 
-app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "DSA Learning API v1");
-        c.RoutePrefix = string.Empty; // Ustaw Swagger UI jako stronê g³ówn¹
-
-        // Konfiguracja wygl¹du
-        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-        c.DefaultModelsExpandDepth(-1); // Ukryj sekcjê Models
-        c.DisplayRequestDuration(); // Poka¿ czas trwania ¿¹dañ
-    });
-
-// Konfiguracja dla œrodowiska developerskiego
-// Zakomentuj tê liniê, jeœli masz problemy z certyfikatem
-// app.UseHttpsRedirection();
-
-
-
-// U¿ywanie wbudowanej obs³ugi CORS zamiast w³asnego middleware
-app.UseMiddleware<CorsMiddleware>();
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
 
-// Auto migrate database
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();
-}
+app.MapControllers();
 
 app.Run();

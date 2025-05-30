@@ -22,7 +22,24 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Database\Context\" />
+    <Folder Include="Database\Migrations\" />
+    <Folder Include="Database\Repositories\" />
+    <Folder Include="Helpers\Validators - Copy\" />
+    <Folder Include="Helpers\Validators\" />
+    <Folder Include="Helpers\Mappers\" />
+    <Folder Include="Models\Shared\" />
+    <Folder Include="Models\Responses\" />
+    <Folder Include="Models\Requests\" />
+    <Folder Include="Models\Database\" />
+    <Folder Include="Services\" />
+    <Folder Include="Core\Models\" />
   </ItemGroup>
 
 </Project>
