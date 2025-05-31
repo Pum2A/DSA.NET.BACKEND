@@ -51,27 +51,21 @@ namespace DSA.Models
     {
         [Key]
         public Guid Id { get; set; }
-
-        public Guid UserId { get; set; }
-
-        public User User { get; set; } = null!;
+        public Guid UserId { get; set; } // Foreign key to User
+        public User User { get; set; } = null!; // Navigation property
 
         public string Token { get; set; } = string.Empty;
-
         public DateTime Expires { get; set; }
-
-        public DateTime Created { get; set; }
-
+        public DateTime CreatedAt { get; set; } // Renamed from 'Created' for clarity
+        public DateTime? RevokedAt { get; set; } // Renamed from 'Revoked' for clarity
+        public string? ReasonRevoked { get; set; }
         public string? ReplacedByToken { get; set; }
 
-        public DateTime? Revoked { get; set; }
-
-        public string? ReasonRevoked { get; set; }
-
+        [NotMapped]
         public bool IsExpired => DateTime.UtcNow >= Expires;
-
-        public bool IsRevoked => Revoked != null;
-
+        [NotMapped]
+        public bool IsRevoked => RevokedAt != null;
+        [NotMapped]
         public bool IsActive => !IsRevoked && !IsExpired;
     }
 }
