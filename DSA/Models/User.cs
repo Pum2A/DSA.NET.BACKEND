@@ -36,6 +36,11 @@ namespace DSA.Models
 
         public int MaxStreak { get; set; }
 
+        public string? VerificationToken { get; set; }
+        public DateTime? VerificationTokenExpires { get; set; }
+        public string? PasswordResetToken { get; set; }
+        public DateTime? PasswordResetTokenExpires { get; set; }
+
         public DateTime? LastActivityDate { get; set; }
 
         // Navigation properties
@@ -44,6 +49,8 @@ namespace DSA.Models
         public List<QuizResult> QuizResults { get; set; } = new();
 
         public List<RefreshToken> RefreshTokens { get; set; } = new();
+
+
 
     }
 

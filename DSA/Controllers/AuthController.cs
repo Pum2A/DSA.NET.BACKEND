@@ -19,6 +19,9 @@ namespace DSA.Controllers
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
 
+        private const string AccessTokenCookieName = "dsa-access-token";
+        private const string RefreshTokenCookieName = "dsa-refresh-token";
+
         public AuthController(IAuthService authService, IConfiguration configuration, ApplicationDbContext context)
         {
             _authService = authService;
@@ -37,7 +40,7 @@ namespace DSA.Controllers
             if (!result.Success)
                 return BadRequest(result);
 
-            SetRefreshTokenCookie(result.RefreshToken);
+            SetAuthCookies(result.Token, result.RefreshToken, result.ExpiresAt);
 
             return Ok(result);
         }
@@ -53,7 +56,7 @@ namespace DSA.Controllers
             if (!result.Success)
                 return BadRequest(result);
 
-            SetRefreshTokenCookie(result.RefreshToken);
+            SetAuthCookies(result.Token, result.RefreshToken, result.ExpiresAt);
 
             return Ok(result);
         }
@@ -62,10 +65,10 @@ namespace DSA.Controllers
         [HttpPost("logout")]
         public async Task<ActionResult> Logout()
         {
-            var refreshToken = Request.Cookies["refreshToken"];
+            var refreshToken = Request.Cookies[RefreshTokenCookieName];
             await _authService.LogoutAsync(refreshToken);
 
-            Response.Cookies.Delete("refreshToken");
+            ClearAuthCookies();
 
             return Ok(new { message = "Logged out successfully" });
         }
@@ -73,7 +76,7 @@ namespace DSA.Controllers
         [HttpPost("refresh")]
         public async Task<ActionResult<AuthResponse>> RefreshToken()
         {
-            var refreshToken = Request.Cookies["refreshToken"];
+            var refreshToken = Request.Cookies[RefreshTokenCookieName];
 
             if (string.IsNullOrEmpty(refreshToken))
                 return BadRequest(new { message = "Refresh token is required" });
@@ -81,9 +84,12 @@ namespace DSA.Controllers
             var result = await _authService.RefreshTokenAsync(refreshToken);
 
             if (!result.Success)
+            {
+                ClearAuthCookies();
                 return BadRequest(result);
+            }
 
-            SetRefreshTokenCookie(result.RefreshToken);
+            SetAuthCookies(result.Token, result.RefreshToken, result.ExpiresAt);
 
             return Ok(result);
         }
@@ -164,13 +170,9 @@ namespace DSA.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        /// Sprawdza czy użytkownik jest zalogowany, a jeśli JWT wygasł, próbuje przywrócić sesję przez refresh token.
-        /// </summary>
         [HttpGet("status")]
         public async Task<IActionResult> Status()
         {
-            // 1. Najpierw spróbuj z JWT
             if (User?.Identity?.IsAuthenticated == true)
             {
                 var userIdClaim = User.FindFirst("id")?.Value;
@@ -198,29 +200,17 @@ namespace DSA.Controllers
                 }
             }
 
-            // 2. Spróbuj odświeżyć JWT przez refresh token z cookie
-            var refreshToken = Request.Cookies["refreshToken"];
+            var refreshToken = Request.Cookies[RefreshTokenCookieName];
             if (!string.IsNullOrEmpty(refreshToken))
             {
                 var storedToken = await _context.RefreshTokens
                     .Include(rt => rt.User)
-                    .SingleOrDefaultAsync(rt => rt.Token == refreshToken && rt.Revoked == null && rt.Expires > DateTime.UtcNow);
+                    .SingleOrDefaultAsync(rt => rt.Token == refreshToken && rt.RevokedAt == null && rt.Expires > DateTime.UtcNow);
 
                 if (storedToken != null && storedToken.User != null)
                 {
-                    // Wygeneruj nowy JWT
                     var token = GenerateJwtToken(storedToken.User);
-
-                    // Możesz ustawiać JWT w cookie albo oddawać na froncie - zależnie od Twojej architektury
-                    // Ustaw JWT w cookie jeśli chcesz
-                    Response.Cookies.Append("token", token, new CookieOptions
-                    {
-                        HttpOnly = true,
-                        Expires = DateTime.UtcNow.AddHours(1),
-                        SameSite = SameSiteMode.Strict,
-                        Secure = true // Set to true in production
-                    });
-
+                    SetAuthCookies(token, refreshToken, DateTime.UtcNow.AddHours(1));
                     return Ok(new
                     {
                         isAuthenticated = true,
@@ -239,24 +229,51 @@ namespace DSA.Controllers
                 }
             }
 
-            // 3. Jak nic nie działa – nie zalogowany
+            ClearAuthCookies();
             return Ok(new { isAuthenticated = false });
         }
 
-        private void SetRefreshTokenCookie(string? refreshToken)
+        private void SetAuthCookies(string? accessToken, string? refreshToken, DateTime? expiresAt)
         {
-            if (string.IsNullOrEmpty(refreshToken))
+            if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken) || !expiresAt.HasValue)
                 return;
 
-            var cookieOptions = new CookieOptions
+            var accessCookie = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = expiresAt.Value,
                 SameSite = SameSiteMode.Strict,
-                Secure = true // Set to true in production with HTTPS
+                Secure = true
             };
+            Response.Cookies.Append(AccessTokenCookieName, accessToken, accessCookie);
 
-            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+            var refreshCookie = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = expiresAt.Value.AddDays(7),
+                SameSite = SameSiteMode.Strict,
+                Secure = true,
+                Path = "/api/Auth"
+            };
+            Response.Cookies.Append(RefreshTokenCookieName, refreshToken, refreshCookie);
+        }
+
+        private void ClearAuthCookies()
+        {
+            Response.Cookies.Delete(AccessTokenCookieName, new CookieOptions
+            {
+                Path = "/",
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict,
+                Secure = true
+            });
+            Response.Cookies.Delete(RefreshTokenCookieName, new CookieOptions
+            {
+                Path = "/api/Auth",
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict,
+                Secure = true
+            });
         }
 
         private string GenerateJwtToken(DSA.Models.User user)

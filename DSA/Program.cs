@@ -81,6 +81,14 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"] ??
             "JWTRefreshTokenHIGHsecuredPasswordVVVp1OH7Xasd707"))
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["dsa-access-token"];
+            return Task.CompletedTask;
+        }
+    };
 });
 
 // Register Services

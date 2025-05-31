@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -32,22 +31,10 @@ namespace DSA.Services
         public async Task<AuthResponse> RegisterAsync(RegisterRequest model)
         {
             if (await _context.Users.AnyAsync(u => u.Email == model.Email))
-            {
-                return new AuthResponse
-                {
-                    Success = false,
-                    Message = "User with this email already exists."
-                };
-            }
+                return new AuthResponse { Success = false, Message = "User with this email already exists." };
 
             if (await _context.Users.AnyAsync(u => u.Username == model.Username))
-            {
-                return new AuthResponse
-                {
-                    Success = false,
-                    Message = "Username is already taken."
-                };
-            }
+                return new AuthResponse { Success = false, Message = "Username is already taken." };
 
             var user = new User
             {
@@ -74,7 +61,7 @@ namespace DSA.Services
                 UserId = user.Id,
                 Token = refreshToken,
                 Expires = DateTime.UtcNow.AddDays(7),
-                Created = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow
             };
             _context.RefreshTokens.Add(refreshTokenEntity);
 
@@ -103,34 +90,26 @@ namespace DSA.Services
                 .SingleOrDefaultAsync(u => u.Email == model.Email);
 
             if (user == null || !PasswordHelper.VerifyPassword(model.Password, user.PasswordHash))
-            {
-                return new AuthResponse
-                {
-                    Success = false,
-                    Message = "Invalid email or password."
-                };
-            }
+                return new AuthResponse { Success = false, Message = "Invalid email or password." };
 
             var now = DateTime.UtcNow;
 
-            // Usuń stare refresh tokeny
             var tokensToDelete = await _context.RefreshTokens
                 .Where(rt =>
                     rt.UserId == user.Id &&
-                    (rt.Revoked != null || rt.Expires <= now || rt.Created.AddDays(7) <= now)
+                    (rt.RevokedAt != null || rt.Expires <= now || rt.CreatedAt.AddDays(7) <= now)
                 ).ToListAsync();
 
             if (tokensToDelete.Any())
                 _context.RefreshTokens.RemoveRange(tokensToDelete);
 
-            // Dodaj nowy refresh token (nie przez user.RefreshTokens, tylko przez DbSet)
             var refreshTokenEntity = new RefreshToken
             {
                 Id = Guid.NewGuid(),
                 UserId = user.Id,
                 Token = GenerateRefreshToken(),
                 Expires = now.AddDays(7),
-                Created = now
+                CreatedAt = now
             };
             _context.RefreshTokens.Add(refreshTokenEntity);
 
@@ -164,7 +143,7 @@ namespace DSA.Services
             if (storedToken == null)
                 return false;
 
-            storedToken.Revoked = DateTime.UtcNow;
+            storedToken.RevokedAt = DateTime.UtcNow;
             storedToken.ReasonRevoked = "Logout";
 
             await _context.SaveChangesAsync();
@@ -178,19 +157,13 @@ namespace DSA.Services
                 .SingleOrDefaultAsync(rt => rt.Token == refreshToken);
 
             if (storedToken == null || !storedToken.IsActive)
-            {
-                return new AuthResponse
-                {
-                    Success = false,
-                    Message = "Invalid or expired refresh token."
-                };
-            }
+                return new AuthResponse { Success = false, Message = "Invalid or expired refresh token." };
 
             var user = storedToken.User;
 
             var newRefreshToken = GenerateRefreshToken();
             storedToken.ReplacedByToken = newRefreshToken;
-            storedToken.Revoked = DateTime.UtcNow;
+            storedToken.RevokedAt = DateTime.UtcNow;
             storedToken.ReasonRevoked = "Refresh token rotation";
 
             user.RefreshTokens.Add(new RefreshToken
@@ -199,7 +172,7 @@ namespace DSA.Services
                 UserId = user.Id,
                 Token = newRefreshToken,
                 Expires = DateTime.UtcNow.AddDays(7),
-                Created = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow
             });
 
             RemoveOldRefreshTokens(user);
@@ -222,11 +195,7 @@ namespace DSA.Services
         public async Task<UserDto?> GetUserByIdAsync(Guid userId)
         {
             var user = await _context.Users.FindAsync(userId);
-
-            if (user == null)
-                return null;
-
-            return MapToUserDto(user);
+            return user == null ? null : MapToUserDto(user);
         }
 
         public async Task<AuthResponse> ChangePasswordAsync(Guid userId, ChangePasswordRequest model)
@@ -234,42 +203,20 @@ namespace DSA.Services
             var user = await _context.Users.FindAsync(userId);
 
             if (user == null)
-            {
-                return new AuthResponse
-                {
-                    Success = false,
-                    Message = "User not found."
-                };
-            }
+                return new AuthResponse { Success = false, Message = "User not found." };
 
             if (!PasswordHelper.VerifyPassword(model.CurrentPassword, user.PasswordHash))
-            {
-                return new AuthResponse
-                {
-                    Success = false,
-                    Message = "Current password is incorrect."
-                };
-            }
+                return new AuthResponse { Success = false, Message = "Current password is incorrect." };
 
             if (model.NewPassword != model.ConfirmNewPassword)
-            {
-                return new AuthResponse
-                {
-                    Success = false,
-                    Message = "New passwords don't match."
-                };
-            }
+                return new AuthResponse { Success = false, Message = "New passwords don't match." };
 
             user.PasswordHash = PasswordHelper.HashPassword(model.NewPassword);
             user.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
-            return new AuthResponse
-            {
-                Success = true,
-                Message = "Password changed successfully."
-            };
+            return new AuthResponse { Success = true, Message = "Password changed successfully." };
         }
 
         public async Task<AuthResponse> ForgotPasswordAsync(string email)
@@ -277,17 +224,11 @@ namespace DSA.Services
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
 
             if (user == null)
-            {
-                return new AuthResponse
-                {
-                    Success = true,
-                    Message = "If your email is registered, you will receive a password reset link."
-                };
-            }
+                return new AuthResponse { Success = true, Message = "If your email is registered, you will receive a password reset link." };
 
             var resetToken = GenerateRandomToken();
 
-            // TODO: Save reset token to database
+            // TODO: Save reset token in database
 
             await _emailService.SendPasswordResetAsync(user.Email, user.Username, resetToken);
 
@@ -303,24 +244,14 @@ namespace DSA.Services
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == model.Email);
 
             if (user == null)
-            {
-                return new AuthResponse
-                {
-                    Success = false,
-                    Message = "Invalid token or email."
-                };
-            }
+                return new AuthResponse { Success = false, Message = "Invalid token or email." };
 
             user.PasswordHash = PasswordHelper.HashPassword(model.Password);
             user.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
-            return new AuthResponse
-            {
-                Success = true,
-                Message = "Password has been reset successfully."
-            };
+            return new AuthResponse { Success = true, Message = "Password has been reset successfully." };
         }
 
         public async Task<AuthResponse> VerifyEmailAsync(string token)
@@ -330,33 +261,21 @@ namespace DSA.Services
             var user = await _context.Users.FindAsync(Guid.Empty); // Replace with actual lookup
 
             if (user == null)
-            {
-                return new AuthResponse
-                {
-                    Success = false,
-                    Message = "Invalid verification token."
-                };
-            }
+                return new AuthResponse { Success = false, Message = "Invalid verification token." };
 
             user.EmailVerified = true;
             user.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
-            return new AuthResponse
-            {
-                Success = true,
-                Message = "Email verified successfully."
-            };
+            return new AuthResponse { Success = true, Message = "Email verified successfully." };
         }
 
         private string GenerateJwtToken(User user)
         {
             var jwtSecret = _configuration["Jwt:Secret"];
             if (string.IsNullOrEmpty(jwtSecret))
-            {
                 throw new InvalidOperationException("JWT key is not configured");
-            }
 
             var key = Encoding.UTF8.GetBytes(jwtSecret);
 
@@ -401,7 +320,7 @@ namespace DSA.Services
             var oldTokens = _context.RefreshTokens
                 .Where(rt =>
                     rt.UserId == user.Id &&
-                    (rt.Revoked != null || rt.Expires <= now || rt.Created.AddDays(7) <= now)
+                    (rt.RevokedAt != null || rt.Expires <= now || rt.CreatedAt.AddDays(7) <= now)
                 ).ToList();
 
             if (oldTokens.Any())
