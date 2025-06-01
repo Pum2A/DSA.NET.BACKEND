@@ -393,6 +393,7 @@ namespace DSA.Services
                 };
 
                 _context.UserProgresses.Add(userProgress);
+                await _context.SaveChangesAsync(); // WAŻNE: zapisuje UserProgress przed tworzeniem StepProgress
             }
 
             // Get or create step progress
@@ -410,6 +411,7 @@ namespace DSA.Services
                 };
 
                 userProgress.StepProgresses.Add(stepProgress);
+                _context.StepProgresses.Add(stepProgress); // TO BYŁO POMINIĘTE - GŁÓWNY PROBLEM
             }
 
             // If already completed, return early

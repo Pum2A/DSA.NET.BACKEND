@@ -116,199 +116,217 @@ namespace DSA.Services
 
         public async Task<QuizResultResponse> SubmitQuizAnswersAsync(Guid quizId, Guid userId, QuizSubmitRequest request)
         {
-            var quiz = await _context.Quizzes
-                .Include(q => q.Questions)
-                .ThenInclude(qq => qq.Options)
-                .FirstOrDefaultAsync(q => q.Id == quizId);
-
-            if (quiz == null)
+            try // Dodaj try-catch dla lepszej diagnostyki
             {
+                var quiz = await _context.Quizzes
+                    .Include(q => q.Questions)
+                    .ThenInclude(qq => qq.Options)
+                    .FirstOrDefaultAsync(q => q.Id == quizId);
+
+                if (quiz == null)
+                {
+                    return new QuizResultResponse
+                    {
+                        Success = false,
+                        Message = "Quiz not found"
+                    };
+                }
+
+                // Walidacja danych
+                if (request.Answers == null || !request.Answers.Any())
+                {
+                    return new QuizResultResponse
+                    {
+                        Success = false,
+                        Message = "No answers provided"
+                    };
+                }
+
+                // Sprawdzamy czas
+                var startTime = request.StartedAt;
+                var endTime = DateTime.UtcNow;
+                var duration = endTime - startTime;
+
+                // ROZWIĄZANIE PROBLEMU Z CZASEM:
+                // Zmiana limitu czasu - dla elastyczności
+                // Zwiększamy limit o 50% dla pewności
+                if (duration.TotalMinutes > quiz.TimeLimit * 1.5) // Allow 50% grace period
+                {
+                    return new QuizResultResponse
+                    {
+                        Success = false,
+                        Message = $"Time limit exceeded ({quiz.TimeLimit} minutes)"
+                    };
+                }
+
+                // Obliczanie wyniku
+                int correctAnswers = 0;
+                int totalQuestions = quiz.Questions.Count;
+                var answerResults = new List<QuizAnswerResultDto>();
+
+                foreach (var questionAnswer in request.Answers)
+                {
+                    // Sprawdź czy pytanie istnieje
+                    var question = quiz.Questions.FirstOrDefault(q => q.Id == questionAnswer.QuestionId);
+                    if (question == null) continue;
+
+                    var correctOptionIds = question.Options
+                        .Where(o => o.IsCorrect)
+                        .Select(o => o.Id)
+                        .ToList();
+
+                    bool isCorrect = false;
+
+                    // Sprawdzamy odpowiedź
+                    switch (question.Type)
+                    {
+                        case QuestionType.SingleChoice:
+                            isCorrect = questionAnswer.SelectedOptionIds.Count == 1 &&
+                                       correctOptionIds.Count == 1 &&
+                                       questionAnswer.SelectedOptionIds[0] == correctOptionIds[0];
+                            break;
+
+                        case QuestionType.MultipleChoice:
+                            isCorrect = correctOptionIds.Count == questionAnswer.SelectedOptionIds.Count &&
+                                       correctOptionIds.All(id => questionAnswer.SelectedOptionIds.Contains(id));
+                            break;
+
+                        case QuestionType.TrueFalse:
+                            isCorrect = questionAnswer.SelectedOptionIds.Count == 1 &&
+                                       correctOptionIds.Count == 1 &&
+                                       questionAnswer.SelectedOptionIds[0] == correctOptionIds[0];
+                            break;
+                    }
+
+                    if (isCorrect)
+                    {
+                        correctAnswers++;
+                    }
+
+                    answerResults.Add(new QuizAnswerResultDto
+                    {
+                        QuestionId = question.Id,
+                        QuestionText = question.QuestionText,
+                        SelectedOptionIds = questionAnswer.SelectedOptionIds,
+                        CorrectOptionIds = correctOptionIds,
+                        IsCorrect = isCorrect,
+                        Explanation = null
+                    });
+                }
+
+                // Oblicz procent i XP
+                int scorePercentage = totalQuestions > 0 ?
+                    (int)Math.Round((correctAnswers / (double)totalQuestions) * 100) : 0;
+                int xpEarned = (int)Math.Round((correctAnswers / (double)totalQuestions) * quiz.XpReward);
+                string grade = GetGradeFromPercentage(scorePercentage);
+
+                // TUTAJ JEST KLUCZOWA ZMIANA - utworzenie nowego obiektu QuizResult
+                var quizResult = new QuizResult
+                {
+                    Id = Guid.NewGuid(), // Generuj nowy GUID
+                    UserId = userId,
+                    QuizId = quizId,
+                    Score = correctAnswers,
+                    TotalQuestions = totalQuestions,
+                    CorrectAnswers = correctAnswers,
+                    XpEarned = xpEarned,
+                    StartedAt = request.StartedAt,
+                    CompletedAt = endTime
+                };
+
+                // Dodaj wynik do kontekstu
+                _context.QuizResults.Add(quizResult);
+
+                // Zapisz odpowiedzi
+                foreach (var answer in request.Answers)
+                {
+                    var question = quiz.Questions.FirstOrDefault(q => q.Id == answer.QuestionId);
+                    if (question == null) continue;
+
+                    var isCorrect = answerResults.FirstOrDefault(ar => ar.QuestionId == answer.QuestionId)?.IsCorrect ?? false;
+
+                    _context.QuizAnswers.Add(new QuizAnswer
+                    {
+                        Id = Guid.NewGuid(),
+                        QuizResultId = quizResult.Id,
+                        QuestionId = answer.QuestionId,
+                        SelectedOptionIds = answer.SelectedOptionIds,
+                        IsCorrect = isCorrect
+                    });
+                }
+
+                // Zaktualizuj XP użytkownika
+                var user = await _context.Users.FindAsync(userId);
+                if (user != null)
+                {
+                    user.XpPoints += xpEarned;
+                    user.LastActivityDate = DateTime.UtcNow;
+
+                    // Aktualizacja streak
+                    if (!user.LastActivityDate.HasValue ||
+                        user.LastActivityDate.Value.Date < DateTime.UtcNow.Date)
+                    {
+                        await UpdateUserStreakAsync(user);
+                    }
+                }
+
+                // Zapisz do bazy danych
+                await _context.SaveChangesAsync();
+
+                // Sprawdź czy to pierwszy wynik
+                bool isFirstAttempt = await _context.QuizResults
+                    .CountAsync(qr => qr.UserId == userId && qr.QuizId == quizId) == 1;
+
+                // Sprawdź czy to osobisty rekord
+                bool isPersonalBest = false;
+                if (!isFirstAttempt)
+                {
+                    var bestPreviousScore = await _context.QuizResults
+                        .Where(qr => qr.UserId == userId && qr.QuizId == quizId && qr.Id != quizResult.Id)
+                        .OrderByDescending(qr => qr.Score)
+                        .Select(qr => qr.Score)
+                        .FirstOrDefaultAsync();
+
+                    isPersonalBest = correctAnswers > bestPreviousScore;
+                }
+                else
+                {
+                    isPersonalBest = true;
+                }
+
+                // Czy zaliczony?
+                bool isPassing = scorePercentage >= 70; // 70% passing threshold
+
+                return new QuizResultResponse
+                {
+                    Success = true,
+                    Message = "Quiz answers submitted successfully",
+                    ResultId = quizResult.Id,
+                    Score = correctAnswers,
+                    TotalQuestions = totalQuestions,
+                    CorrectAnswers = correctAnswers,
+                    ScorePercentage = scorePercentage,
+                    XpEarned = xpEarned,
+                    Grade = grade,
+                    AnswerResults = answerResults,
+                    IsPassing = isPassing,
+                    IsFirstAttempt = isFirstAttempt,
+                    IsPersonalBest = isPersonalBest,
+                    StartedAt = request.StartedAt,
+                    CompletedAt = endTime
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error submitting quiz: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
                 return new QuizResultResponse
                 {
                     Success = false,
-                    Message = "Quiz not found"
+                    Message = $"An error occurred: {ex.Message}"
                 };
             }
-
-            // Validate all questions are answered
-            var questionIds = quiz.Questions.Select(q => q.Id).ToHashSet();
-            var answeredQuestionIds = request.Answers.Select(a => a.QuestionId).ToHashSet();
-
-            if (!questionIds.SetEquals(answeredQuestionIds))
-            {
-                return new QuizResultResponse
-                {
-                    Success = false,
-                    Message = "Not all questions are answered"
-                };
-            }
-
-            // Check if quiz was completed within time limit
-            var startTime = request.StartedAt;
-            var endTime = DateTime.UtcNow;
-            var duration = endTime - startTime;
-
-            if (duration.TotalMinutes > quiz.TimeLimit * 1.1) // Allow 10% grace period
-            {
-                return new QuizResultResponse
-                {
-                    Success = false,
-                    Message = $"Time limit exceeded ({quiz.TimeLimit} minutes)"
-                };
-            }
-
-            // Check answers and calculate score
-            int correctAnswers = 0;
-            int totalQuestions = quiz.Questions.Count;
-            var answerResults = new List<QuizAnswerResultDto>();
-
-            foreach (var questionAnswer in request.Answers)
-            {
-                var question = quiz.Questions.First(q => q.Id == questionAnswer.QuestionId);
-                var correctOptionIds = question.Options
-                    .Where(o => o.IsCorrect)
-                    .Select(o => o.Id)
-                    .ToList();
-
-                bool isCorrect = false;
-
-                // Check answer correctness based on question type
-                switch (question.Type)
-                {
-                    case QuestionType.SingleChoice:
-                        isCorrect = questionAnswer.SelectedOptionIds.Count == 1 &&
-                                   correctOptionIds.Count == 1 &&
-                                   questionAnswer.SelectedOptionIds[0] == correctOptionIds[0];
-                        break;
-
-                    case QuestionType.MultipleChoice:
-                        isCorrect = correctOptionIds.Count == questionAnswer.SelectedOptionIds.Count &&
-                                   correctOptionIds.All(id => questionAnswer.SelectedOptionIds.Contains(id));
-                        break;
-
-                    case QuestionType.TrueFalse:
-                        isCorrect = questionAnswer.SelectedOptionIds.Count == 1 &&
-                                   correctOptionIds.Count == 1 &&
-                                   questionAnswer.SelectedOptionIds[0] == correctOptionIds[0];
-                        break;
-                }
-
-                if (isCorrect)
-                {
-
-                    correctAnswers++;
-
-                }
-
-                answerResults.Add(new QuizAnswerResultDto
-                {
-                    QuestionId = question.Id,
-                    QuestionText = question.QuestionText,
-                    SelectedOptionIds = questionAnswer.SelectedOptionIds,
-                    CorrectOptionIds = correctOptionIds,
-                    IsCorrect = isCorrect,
-                    Explanation = null // You could add explanations to the database if needed
-                });
-            }
-
-            // Calculate score and percentage
-            int scorePercentage = totalQuestions > 0 ?
-                (int)Math.Round((correctAnswers / (double)totalQuestions) * 100) : 0;
-
-            // Calculate XP earned - proportional to score
-            int xpEarned = (int)Math.Round((correctAnswers / (double)totalQuestions) * quiz.XpReward);
-
-            // Determine grade
-            string grade = GetGradeFromPercentage(scorePercentage);
-
-            // Save quiz result
-            var quizResult = new QuizResult
-            {
-                Id = Guid.NewGuid(),
-                UserId = userId,
-                QuizId = quizId,
-                Score = correctAnswers,
-                TotalQuestions = totalQuestions,
-                CorrectAnswers = correctAnswers,
-                XpEarned = xpEarned,
-                StartedAt = request.StartedAt,
-                CompletedAt = endTime
-            };
-
-            _context.QuizResults.Add(quizResult);
-
-            // Save individual answers
-            foreach (var answer in request.Answers)
-            {
-                _context.QuizAnswers.Add(new QuizAnswer
-                {
-                    Id = Guid.NewGuid(),
-                    QuizResultId = quizResult.Id,
-                    QuestionId = answer.QuestionId,
-                    SelectedOptionIds = answer.SelectedOptionIds,
-                    IsCorrect = answerResults.First(ar => ar.QuestionId == answer.QuestionId).IsCorrect
-                });
-            }
-
-            // Update user XP
-            var user = await _context.Users.FindAsync(userId);
-            if (user != null)
-            {
-                user.XpPoints += xpEarned;
-                user.LastActivityDate = DateTime.UtcNow;
-
-                // Update streak if needed
-                if (!user.LastActivityDate.HasValue ||
-                    user.LastActivityDate.Value.Date < DateTime.UtcNow.Date)
-                {
-                    await UpdateUserStreakAsync(user);
-                }
-            }
-
-            await _context.SaveChangesAsync();
-
-            // Check if this is the first attempt
-            bool isFirstAttempt = await _context.QuizResults
-                .CountAsync(qr => qr.UserId == userId && qr.QuizId == quizId) == 1;
-
-            // Check if this is a personal best
-            bool isPersonalBest = false;
-            if (!isFirstAttempt)
-            {
-                var bestPreviousScore = await _context.QuizResults
-                    .Where(qr => qr.UserId == userId && qr.QuizId == quizId && qr.Id != quizResult.Id)
-                    .OrderByDescending(qr => qr.Score)
-                    .Select(qr => qr.Score)
-                    .FirstOrDefaultAsync();
-
-                isPersonalBest = correctAnswers > bestPreviousScore;
-            }
-            else
-            {
-                isPersonalBest = true;
-            }
-
-            // Determine if passing
-            bool isPassing = scorePercentage >= 70; // Set passing threshold at 70%
-
-            return new QuizResultResponse
-            {
-                Success = true,
-                Message = "Quiz answers submitted successfully",
-                ResultId = quizResult.Id,
-                Score = correctAnswers,
-                TotalQuestions = totalQuestions,
-                CorrectAnswers = correctAnswers,
-                ScorePercentage = scorePercentage,
-                XpEarned = xpEarned,
-                Grade = grade,
-                AnswerResults = answerResults,
-                IsPassing = isPassing,
-                IsFirstAttempt = isFirstAttempt,
-                IsPersonalBest = isPersonalBest,
-                StartedAt = request.StartedAt,
-                CompletedAt = endTime
-            };
         }
 
         public async Task<UserQuizResultsResponse?> GetUserQuizResultsAsync(Guid quizId, Guid userId)

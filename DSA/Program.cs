@@ -123,6 +123,7 @@ if (app.Environment.IsDevelopment())
     {
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         db.Database.Migrate();
+        DbSeeder.Seed(db);
     }
 }
 
